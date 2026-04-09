@@ -498,7 +498,7 @@ nav #logo.active,
 .landingpage-title {
   font-family: var(--font-family-wordmark);
   /* ~7% smaller than prior clamp; still fluid */
-  font-size: clamp(1.625rem, min(10.75vw, 12.75vh), 9.25rem);
+  font-size: clamp(2.4rem, min(12vw, 13vh), 9.25rem);
   font-weight: 400;
   margin-top: 0;
   margin-bottom: 0.2rem;
@@ -513,6 +513,13 @@ nav #logo.active,
   opacity: 0;
   transform: translateY(30px);
   filter: blur(3px);
+}
+
+/* Keep hero wordmark larger than page headers on phones */
+@media (max-width: 550px) {
+  .landingpage-title {
+    font-size: clamp(2.6rem, 13vw, 4rem);
+  }
 }
 
 @keyframes title-reveal {
