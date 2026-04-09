@@ -68,9 +68,9 @@ return (
           </video>
         </div>
         <div className="content">
-          <h1 className="landingpage-title">S<span className="special-char">⍉</span>VA</h1>
+          <h1 className="landingpage-title">METTAIRE</h1>
           <Link to="/cache?page=1" className="no-underline">
-            <h2 className="tagline">&gt; The Cache</h2>
+            <h2 className="tagline">&gt; THE CACHE</h2>
           </Link>
         </div>
       </div>
@@ -115,7 +115,7 @@ return (
           <section className="rect-2"></section>
         </section>
         <h2>THE VISION</h2>
-        <p>Welcome to S⍉VA. I'm Daniel Nelson, and I've developed this space to store my personal works, ranging from software to paintings. Each piece delves into existential themes—absurdism, nihilism, and existentialism—inviting you to explore the intricate interplay of existential inquiry.   
+        <p>Welcome to METTAIRE. I'm Daniel Nelson, and I've developed this space to store my personal works, ranging from software to paintings. Each piece delves into existential themes—absurdism, nihilism, and existentialism—inviting you to explore the intricate interplay of existential inquiry.   
         </p>
         <div className="home-button-row">
           <Link to="/about" className="home-about-link"><button className="home-about-button">Learn More</button></Link> 

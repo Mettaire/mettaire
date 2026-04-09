@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# S⍉VA Development Startup Script
+# METTAIRE Development Startup Script
 # This script starts both the frontend and backend servers
 
-echo "🚀 Starting S⍉VA Development Environment..."
+echo "🚀 Starting METTAIRE Development Environment..."
 
 # Check if Node.js is installed
 if ! command -v node &> /dev/null; then

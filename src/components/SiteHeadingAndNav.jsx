@@ -46,7 +46,7 @@ export default function SiteHeadingAndNav() {
   return (
     <header className="nav-header">
       <nav>
-        <NavLink to='/' id="logo" onClick={closeMenu}>S<span className="special-char">⍉</span>VA </NavLink> 
+        <NavLink to='/' id="logo" onClick={closeMenu}>METTAIRE </NavLink> 
         <div className="right">
           <div className="mobile-controls">
             <Settings />

@@ -41,6 +41,8 @@
   --font-family-primary: 'Arial', sans-serif;
   --font-family-mono: 'Courier New', monospace;
   --font-family-display: "changeling-neo", Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  /* METTAIRE wordmark only — DM Serif Display is regular weight only */
+  --font-family-wordmark: "DM Serif Display", Georgia, "Times New Roman", serif;
   --font-size-xs: 0.75rem;
   --font-size-sm: 0.875rem;
   --font-size-base: 1rem;
@@ -207,9 +209,10 @@ input {
 }
 
 nav #logo {
-  font-family: var(--font-family-display);
-  font-size: var(--font-size-2xl);
-  font-weight: bold;
+  font-family: var(--font-family-wordmark);
+  font-size: calc(var(--font-size-2xl) * 1.125);
+  font-weight: 400;
+  letter-spacing: -0.02em;
   text-decoration: none;
   color: var(--color-background);
 }
@@ -362,9 +365,17 @@ button:active {
   transition: all 0.3s ease;
 }
 
-/* Special handling for logo when active - preserve special character styling */
+/* Header + footer METTAIRE wordmark: same tighter glow */
 nav #logo.active,
-.footer .logo-information h2 a.active,
+.footer .logo-information h2 a.active {
+  font-style: normal;
+  position: relative;
+  animation: wordmark-active-glow 2.2s ease-in-out infinite alternate;
+  box-shadow: none;
+  background: none;
+  border: none;
+}
+
 .footer .copyright-information p.active {
   font-style: normal;
   position: relative;
@@ -373,6 +384,35 @@ nav #logo.active,
   box-shadow: none;
   background: none;
   border: none;
+}
+
+@keyframes wordmark-active-glow {
+  0% {
+    text-shadow:
+      0 0 3px rgba(255, 255, 255, 0.42),
+      0 0 6px rgba(255, 255, 255, 0.28);
+  }
+  100% {
+    text-shadow:
+      0 0 5px rgba(255, 255, 255, 0.52),
+      0 0 12px rgba(255, 255, 255, 0.32);
+  }
+}
+
+/* Hero METTAIRE: pulse matched to header/footer + drop shadow for contrast on video */
+@keyframes landing-title-glow {
+  0% {
+    text-shadow:
+      0 0 3px rgba(255, 255, 255, 0.42),
+      0 0 6px rgba(255, 255, 255, 0.28),
+      2px 2px 4px rgba(0, 0, 0, 0.5);
+  }
+  100% {
+    text-shadow:
+      0 0 5px rgba(255, 255, 255, 0.52),
+      0 0 12px rgba(255, 255, 255, 0.32),
+      2px 2px 4px rgba(0, 0, 0, 0.5);
+  }
 }
 
 @keyframes active-glow {
@@ -436,23 +476,40 @@ nav #logo.active,
 .content {
   position: relative;
   z-index: 2;
-  text-align: left;
+  width: 100%;
+  max-width: min(96vw, 72rem);
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
   color: var(--color-secondary);
-  padding: var(--spacing-2xl);
+  padding: clamp(var(--spacing-md), 4vw, var(--spacing-2xl));
   border-radius: var(--border-radius-lg);
-  max-width: 500px;
-  margin-left: 10%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-
+/* Nudge hero stack slightly down so it sits in the “monitor” / frame, not dead page-center */
+.home-container > .content {
+  margin-top: clamp(1.5vh, 4vw, 6.5vh);
+}
 
 .landingpage-title {
-  font-family: var(--font-family-display);
-  font-size: var(--font-size-8xl);
-  font-weight: bold;
-  margin-bottom: var(--spacing-sm);
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-  animation: title-reveal 2.5s ease-out forwards;
+  font-family: var(--font-family-wordmark);
+  /* ~7% smaller than prior clamp; still fluid */
+  font-size: clamp(1.625rem, min(10.75vw, 12.75vh), 9.25rem);
+  font-weight: 400;
+  margin-top: 0;
+  margin-bottom: 0.2rem;
+  text-align: center;
+  width: 100%;
+  max-width: 100%;
+  line-height: 1.05;
+  overflow-wrap: anywhere;
+  animation:
+    title-reveal 2.5s ease-out forwards,
+    landing-title-glow 2.2s ease-in-out infinite alternate;
   opacity: 0;
   transform: translateY(30px);
   filter: blur(3px);
@@ -463,17 +520,15 @@ nav #logo.active,
     opacity: 0;
     transform: translateY(30px) scale(0.8);
     filter: blur(3px);
-    text-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
   }
   100% {
     opacity: 1;
     transform: translateY(0) scale(1);
     filter: blur(0);
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
   }
 }
 
-/* Fix for the "⍉" character alignment and weight */
+/* Optional logo glyph inside span.special-char (wordmark alignment) */
 .landingpage-title span.special-char,
 nav #logo span.special-char,
 .footer .logo-information h2 span.special-char,
@@ -500,15 +555,22 @@ nav #logo span.special-char,
 
 .tagline {
   font-family: var(--font-family-display);
-  font-size: var(--font-size-3xl);
-  font-weight: 500;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  font-size: clamp(0.65rem, min(2.35vw, 2.85vh), 1rem);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-align: center;
+  width: 100%;
+  max-width: 100%;
+  margin-top: 0;
+  line-height: 1.2;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.65);
   transition: var(--transition-normal);
-  animation: terminal-blink 1s infinite;
+  animation: terminal-blink 1.15s infinite;
 }
 
 .tagline:hover {
-  transform: scale(1.05);
+  transform: scale(1.02);
 }
 
 /* Featured Works Section */
@@ -808,19 +870,11 @@ nav #logo span.special-char,
 
 /* Mobile First - Base styles for 320px+ */
 @media (min-width: 320px) {
-  .landingpage-title {
-    font-size: var(--font-size-8xl);
-  }
-  
-  .tagline {
-    font-size: var(--font-size-3xl);
-  }
-  
   .content {
     padding: var(--spacing-lg);
-    margin-left: 0;
-    margin-right: 0;
-    max-width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: min(96vw, 72rem);
     text-align: center;
   }
   
@@ -973,18 +1027,10 @@ nav #logo span.special-char,
     max-width: 100%;
   }
   
-  .landingpage-title {
-    font-size: var(--font-size-8xl);
-  }
-  
-  .tagline {
-    font-size: var(--font-size-4xl);
-  }
-  
   .content {
-    margin-left: 0;
-    margin-right: 0;
-    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: min(96vw, 72rem);
     text-align: center;
   }
   
@@ -1023,7 +1069,7 @@ nav #logo span.special-char,
   }
   
   .philosophy-inspiration-container {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 2fr 1fr;
     gap: var(--spacing-2xl);
   }
   
@@ -1104,18 +1150,10 @@ nav #logo span.special-char,
     max-width: 100%;
   }
   
-  .landingpage-title {
-    font-size: var(--font-size-9xl);
-  }
-  
-  .tagline {
-    font-size: var(--font-size-5xl);
-  }
-  
   .content {
-    margin-left: 0;
-    margin-right: 0;
-    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: min(96vw, 72rem);
     text-align: center;
   }
   
@@ -1170,18 +1208,10 @@ nav #logo span.special-char,
     max-width: 100%;
   }
   
-  .landingpage-title {
-    font-size: var(--font-size-10xl);
-  }
-  
-  .tagline {
-    font-size: var(--font-size-6xl);
-  }
-  
   .content {
-    margin-left: 0;
-    margin-right: 0;
-    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: min(96vw, 80rem);
     text-align: center;
   }
   
@@ -1290,7 +1320,7 @@ nav #logo span.special-char,
   font-size: var(--font-size-3xl);
   margin-bottom: 0px;
   display: flex;
-  justify-content: end;
+  justify-content: flex-start;
   z-index: 2;
 }
 
@@ -1308,7 +1338,7 @@ nav #logo span.special-char,
   font-size: var(--font-size-lg);
   line-height: 1.8;
   color: var(--color-text-light);
-  text-align: right;
+  text-align: left;
 }
 
 .introduction:hover p {
@@ -1316,53 +1346,66 @@ nav #logo span.special-char,
   transition: var(--transition-normal);
 }
 
-/* Philosophy and Skills Section */
+/* Philosophy and Skills Section — carousel left (wider), text right; DOM is still section then carousel */
 .philosophy-inspiration-container {
   display: grid;
-  grid-template-columns: 1fr 2fr;
+  grid-template-columns: 2fr 1fr;
   gap: var(--spacing-3xl);
-  align-items: start;
+  align-items: center;
   padding: 0 var(--spacing-lg);
   max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
   overflow: hidden;
 }
 
-/* Beyond Canvas Section - Vertical Centering */
+.philosophy-inspiration-container > .project-carousel {
+  order: 1;
+  margin: 0;
+  width: 100%;
+  max-width: 100%;
+  align-self: start;
+}
+
+/* Beyond Canvas — text column (visually right via grid order) */
 .philosophy-inspiration-container > section:first-child {
+  order: 2;
   display: flex;
   flex-direction: column;
-  justify-content: start;
-  align-items: flex-start;
+  justify-content: center;
+  align-items: center;
   min-height: 100%;
-  text-align: left;
+  text-align: center;
+}
+
+/* Stacked layout: keep reading order (text, then carousel) */
+@media (max-width: 747px) {
+  .philosophy-inspiration-container > section:first-child {
+    order: 1;
+  }
+
+  .philosophy-inspiration-container > .project-carousel {
+    order: 2;
+  }
 }
 
 .philosophy-inspiration-container h2 {
   font-family: var(--font-family-display);
   font-size: var(--font-size-3xl);
   margin-bottom: var(--spacing-lg);
-  text-align: left;
+  text-align: center;
 }
 
 .philosophy-inspiration-container p {
   font-size: var(--font-size-lg);
   line-height: 1.8;
   color: var(--color-text-light);
-  text-align: left;
+  text-align: center;
 }
 
 /* Create a flex container for the Beyond Canvas content */
 .philosophy-inspiration-container > h2,
 .philosophy-inspiration-container > p {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  min-height: 100%;
-}
-
-/* Alternative approach - make the first column a flex container */
-.philosophy-inspiration-container > *:first-child {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -3436,8 +3479,9 @@ select option {
 }
 
 .logo-information h2 {
+  font-family: var(--font-family-wordmark);
   font-size: var(--font-size-2xl);
-  font-weight: bold;
+  font-weight: 400;
 }
 
 .logo-information a {
@@ -5266,9 +5310,9 @@ input:checked + .toggle-slider:before {
   }
   
   .philosophy-inspiration-container > section:first-child {
-    justify-content: flex-start;
-    align-items: flex-start;
-    text-align: left;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
     padding: var(--spacing-lg) 0;
   }
   
@@ -5303,16 +5347,16 @@ input:checked + .toggle-slider:before {
 @media (min-width: 748px) {
   .philosophy-inspiration-container {
     display: grid;
-    grid-template-columns: 1fr 2fr;
+    grid-template-columns: 2fr 1fr;
     gap: var(--spacing-2xl);
     padding: 0 ;
     max-width: 100%;
   }
   
   .philosophy-inspiration-container > section:first-child {
-    justify-content: flex-start;
-    align-items: flex-start;
-    text-align: left;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
     min-height: 100%;
   }
   
@@ -5352,9 +5396,9 @@ input:checked + .toggle-slider:before {
   }
   
   .philosophy-inspiration-container > section:first-child {
-    justify-content: flex-start;
-    align-items: flex-start;
-    text-align: left;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
     min-height: 100%;
   }
   
@@ -5386,9 +5430,9 @@ input:checked + .toggle-slider:before {
   }
   
   .philosophy-inspiration-container > section:first-child {
-    justify-content: flex-start;
-    align-items: flex-start;
-    text-align: left;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
     min-height: 100%;
   }
   
@@ -5432,8 +5476,7 @@ input:checked + .toggle-slider:before {
 
 [data-theme="dark"] nav #logo.active {
   color: #ffffff;
-  animation: active-glow 2s ease-in-out infinite alternate;
-  text-shadow: 0 0 8px var(--color-active);
+  animation: wordmark-active-glow 2.2s ease-in-out infinite alternate;
   box-shadow: none;
   background: none;
   border: none;

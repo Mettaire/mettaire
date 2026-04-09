@@ -2,13 +2,13 @@
   <!-- Background -->
   <rect width="32" height="32" fill="black"/>
   
-  <!-- Text: S⍉VA -->
+  <!-- Text: METTAIRE -->
   <text x="16" y="20" 
         font-family="changeling-neo, Inter, system-ui, Avenir, Helvetica, Arial, sans-serif" 
-        font-size="10" 
+        font-size="6.5" 
         font-weight="bold" 
         text-anchor="middle" 
         fill="white">
-    S⍉VA
+    METTAIRE
   </text>
 </svg> 

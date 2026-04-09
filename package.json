@@ -8,6 +8,8 @@
     },
     "scripts": {
         "dev": "vite",
+        "server": "node server/server.js",
+        "server:dev": "node --watch server/server.js",
         "build": "vite build",
         "start": "vite preview",
         "lint": "eslint src --ext js,jsx --report-unused-disable-directives --max-warnings 0",

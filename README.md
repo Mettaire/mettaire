@@ -1,10 +1,10 @@
-# S⍉VA - Portfolio
+# METTAIRE - Portfolio
 
-Welcome to S⍉VA, my portfolio showcasing my work created using React, JavaScript, and CSS. Explore various projects, learn more about me, and delve into my creative journey.
+Welcome to METTAIRE, my portfolio showcasing my work created using React, JavaScript, and CSS. Explore various projects, learn more about me, and delve into my creative journey.
 
 ## About
 
-S⍉VA is more than just a portfolio – it's an immersive experience providing insights into each project and even glimpses into my personal journey.
+METTAIRE is more than just a portfolio – it's an immersive experience providing insights into each project and even glimpses into my personal journey.
 
 ## cache
 
@@ -20,7 +20,7 @@ Looking for a specific project? Utilize the search feature to quickly locate pro
 
 ## Get Started
 
-Ready to embark on a journey through S⍉VA? Visit [here](https://s0va.run) to begin exploring my portfolio and discovering the depth of my creative endeavors.
+Ready to embark on a journey through METTAIRE? Visit [here](https://www.mettaire.com) to begin exploring my portfolio and discovering the depth of my creative endeavors.
 
 ## Connect with Me
 

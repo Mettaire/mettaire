@@ -1,3 +1,4 @@
+import './loadEnv.js';
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -5,18 +6,15 @@ import rateLimit from 'express-rate-limit';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
-import dotenv from 'dotenv';
 import fs from 'fs';
 import { processImage } from './utils/imageProcessor.js';
 import { processVideo, cleanupOldProcessedVideos } from './utils/videoProcessor.js';
 import { validateRequest } from './middleware/security.js';
 import products from './data/products.js';
-import { generateSignedUrl, fileExists, getFileMetadata } from './utils/r2Service.js';
+import { streamObjectToResponse } from './utils/r2Service.js';
 
 // Import image cache for memory management
 import { imageCache } from './utils/imageProcessor.js';
-
-dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -42,10 +40,12 @@ const limiter = rateLimit({
 });
 app.use('/api/', limiter);
 
-// CORS configuration
+// CORS configuration (FRONTEND_URL in production should be your canonical URL, e.g. https://www.mettaire.com)
 app.use(cors({
   origin: [
     'http://localhost:5173',
+    'https://mettaire.com',
+    'https://www.mettaire.com',
     'https://s0va.run',
     'https://www.s0va.run',
     process.env.FRONTEND_URL
@@ -108,72 +108,39 @@ app.get('/api/products/:id', (req, res) => {
   }
 });
 
-// Image serving endpoint - serve from R2 with signed URLs
+// Image serving endpoint — stream from R2 (same-origin URL avoids browser CORS on R2 redirects)
 app.get('/api/media/image/:filename', async (req, res) => {
   try {
     const { filename } = req.params;
-    const { width, height, quality, watermark, process } = req.query;
-    
-    // Validate filename to prevent directory traversal
+
     if (!filename || filename.includes('..') || filename.includes('/')) {
       return res.status(400).json({ error: 'Invalid filename' });
     }
 
-    const r2Key = filename; // Files are stored directly in bucket root
-    
-    // Check if file exists in R2
-    const exists = await fileExists(r2Key);
-    if (!exists) {
-      return res.status(404).json({ error: 'Image not found' });
-    }
-    
-        // Generate signed URL for protected access
-    try {
-      const signedUrl = await generateSignedUrl(r2Key, 3600); // 1 hour expiry
-      
-      // Redirect to signed URL (this prevents hotlinking and provides protection)
-      res.redirect(signedUrl);
-    } catch (error) {
-      console.error('Error generating signed URL:', error);
-      res.status(500).json({ error: 'Failed to serve image' });
-    }
+    await streamObjectToResponse(filename, req, res);
   } catch (error) {
     console.error('Image endpoint error:', error);
-    res.status(500).json({ error: 'Failed to serve image' });
+    if (!res.headersSent) {
+      res.status(500).json({ error: 'Failed to serve image' });
+    }
   }
 });
 
-// Video serving endpoint - serve from R2 with signed URLs
+// Video serving endpoint — stream from R2 (Range supported for playback / seeking)
 app.get('/api/media/video/:filename', async (req, res) => {
   try {
     const { filename } = req.params;
-    
-    // Validate filename
+
     if (!filename || filename.includes('..') || filename.includes('/')) {
       return res.status(400).json({ error: 'Invalid filename' });
     }
 
-    const r2Key = filename; // Files are stored directly in bucket root
-    
-    // Check if file exists in R2
-    const exists = await fileExists(r2Key);
-    if (!exists) {
-      return res.status(404).json({ error: 'Video not found' });
-    }
-    
-    // Generate signed URL for protected access
-    try {
-      const signedUrl = await generateSignedUrl(r2Key, 3600); // 1 hour expiry
-      
-      // Redirect to signed URL (this prevents hotlinking and provides protection)
-      res.redirect(signedUrl);
-    } catch (error) {
-      console.error('Error generating signed URL:', error);
-      res.status(500).json({ error: 'Failed to serve video' });
-    }
+    await streamObjectToResponse(filename, req, res);
   } catch (error) {
     console.error('Video endpoint error:', error);
-    res.status(500).json({ error: 'Failed to serve video' });
+    if (!res.headersSent) {
+      res.status(500).json({ error: 'Failed to serve video' });
+    }
   }
 });
 

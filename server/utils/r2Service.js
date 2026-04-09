@@ -1,8 +1,6 @@
 import { S3Client, GetObjectCommand, HeadObjectCommand, ListObjectsV2Command } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import dotenv from 'dotenv';
-
-dotenv.config();
+import '../loadEnv.js';
 
 // Debug: Log environment variables
 console.log('R2 Configuration Debug:');
@@ -40,6 +38,68 @@ export async function generateSignedUrl(key, expiresIn = 3600) {
     console.error('Error generating signed URL:', error);
     throw error;
   }
+}
+
+/**
+ * Stream an object from R2 through Express (same-origin for the browser — avoids R2 CORS).
+ * Forwards Range when present (needed for HTML5 video seeking).
+ */
+export async function streamObjectToResponse(key, req, res) {
+  const input = {
+    Bucket: BUCKET_NAME,
+    Key: key,
+  };
+  if (req.headers.range) {
+    input.Range = req.headers.range;
+  }
+
+  let response;
+  try {
+    response = await r2Client.send(new GetObjectCommand(input));
+  } catch (err) {
+    const code = err.name || err.Code;
+    const status = err.$metadata?.httpStatusCode;
+    if (code === 'NotFound' || code === 'NoSuchKey' || status === 404) {
+      if (!res.headersSent) {
+        res.status(404).json({ error: 'Not found' });
+      }
+      return;
+    }
+    throw err;
+  }
+
+  const httpStatus = response.$metadata?.httpStatusCode || 200;
+  res.status(httpStatus);
+
+  const contentType = response.ContentType || 'application/octet-stream';
+  res.setHeader('Content-Type', contentType);
+  if (response.ContentLength != null) {
+    res.setHeader('Content-Length', String(response.ContentLength));
+  }
+  if (response.ContentRange) {
+    res.setHeader('Content-Range', response.ContentRange);
+  }
+  res.setHeader('Accept-Ranges', 'bytes');
+  res.setHeader('Cache-Control', 'public, max-age=300');
+
+  const body = response.Body;
+  if (!body) {
+    if (!res.headersSent) {
+      res.status(500).json({ error: 'Empty body' });
+    }
+    return;
+  }
+
+  body.on('error', (e) => {
+    console.error('R2 stream error:', e);
+    if (!res.headersSent) {
+      res.status(500).end();
+    } else {
+      res.destroy(e);
+    }
+  });
+
+  body.pipe(res);
 }
 
 // Check if file exists in R2

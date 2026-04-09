@@ -147,7 +147,7 @@ root@wound.os ~ % $ echo 'Accessing the artist's cache.'
         <section className="introduction">
         <img src={getProtectedImageUrl(getProfileImage(), products)} loading="lazy" alt="selfportrait"/>
         <h2>THE CREATIVE</h2>
-        <p>I'm Daniel Nelson, the creator behind S⍉VA. As an artist, graphic designer, and software engineer, S⍉VA is my way of leaving a piece of myself within the machine—a space where my work exists on its own, independent of an intended audience (unless rooted in code). Inspired by thinkers like Dostoevsky, Camus, Schopenhauer, and Musashi, my creations explore individualism, transformation, and the human condition. Through code, multimedia paintings, and graphic design, I merge fine art with technology, weaving existential themes—absurdism, nihilism, and existentialism—into experiences open to being encountered, absorbed, and interpreted freely.
+        <p>I'm Daniel Nelson, the creator behind METTAIRE. As an artist, graphic designer, and software engineer, METTAIRE is my way of leaving a piece of myself within the machine—a space where my work exists on its own, independent of an intended audience (unless rooted in code). Inspired by thinkers like Dostoevsky, Camus, Schopenhauer, and Musashi, my creations explore individualism, transformation, and the human condition. Through code, multimedia paintings, and graphic design, I merge fine art with technology, weaving existential themes—absurdism, nihilism, and existentialism—into experiences open to being encountered, absorbed, and interpreted freely.
         </p>
         </section>
         <section className="philosophy-inspiration-container">
@@ -158,7 +158,7 @@ root@wound.os ~ % $ echo 'Accessing the artist's cache.'
             </section>
               <h2>Beyond the Canvas</h2>
               <p>My journey extends beyond traditional means of art and design, driven by a passion for impactful software projects like Second Wind and CareerSpring's Interest Finder feature.
-                Each line of code and project is designed to empower individuals, helping them face their paths with courage and resilience. This vision, in harmony with the themes of S⍉VA, seeks to make technology a transformative force, illuminating our collective journey and offering direction in challenging times. </p>
+                Each line of code and project is designed to empower individuals, helping them face their paths with courage and resilience. This vision, in harmony with the themes of METTAIRE, seeks to make technology a transformative force, illuminating our collective journey and offering direction in challenging times. </p>
                 </section>
                 {/* Project Carousel */}
                 <ProjectCarousel products={products} getProtectedImageUrl={getProtectedImageUrl} />

@@ -7,9 +7,11 @@ export function validateReferer(req) {
     return true;
   }
 
-  // List of allowed domains
+  // List of allowed domains (host[:port])
   const allowedDomains = [
     'localhost:5173',
+    'mettaire.com',
+    'www.mettaire.com',
     's0va.run',
     'www.s0va.run'
   ];
@@ -61,6 +63,8 @@ export function validateRequestOrigin(req) {
   // List of allowed origins
   const allowedOrigins = [
     'http://localhost:5173',
+    'https://mettaire.com',
+    'https://www.mettaire.com',
     'https://s0va.run',
     'https://www.s0va.run'
   ];

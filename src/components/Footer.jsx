@@ -35,7 +35,7 @@ const Footer = () => {
         <footer className="footer">
             <div className="footer-row">
                 <div className="logo-information">
-                    <h2><NavLink to='/'>S<span className="special-char">⍉</span>VA</NavLink></h2>
+                    <h2><NavLink to='/'>METTAIRE</NavLink></h2>
                 </div>
 
                 <div className="navigation-links">
@@ -73,7 +73,7 @@ const Footer = () => {
 
             <div className="footer-row">
                 <div className="copyright-information">
-                    <p>&copy; {currentYear} S<span className="special-char">⍉</span>VA</p>
+                    <p>&copy; {currentYear} METTAIRE</p>
                 </div>
             </div>
 

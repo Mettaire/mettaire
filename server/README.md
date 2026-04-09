@@ -1,12 +1,12 @@
-# S⍉VA - Server-Side Image Processing
+# METTAIRE - Server-Side Image Processing
 
-This backend server provides secure, server-side image and video processing for the S⍉VA art portfolio. It includes watermarking, resizing, format conversion, and access controls to protect your artwork.
+This backend server provides secure, server-side image and video processing for the METTAIRE art portfolio. It includes watermarking, resizing, format conversion, and access controls to protect your artwork.
 
 ## Features
 
 - **Image Processing**: Resize, compress, and convert images to WebP format
 - **Video Processing**: Optimize videos with FFmpeg
-- **Watermarking**: Add "S⍉VA" watermarks to images and videos
+- **Watermarking**: Add "METTAIRE" watermarks to images and videos
 - **Security**: Rate limiting, referer validation, bot detection
 - **Caching**: Efficient caching of processed media
 - **Responsive Images**: Generate multiple sizes for different devices
@@ -35,18 +35,17 @@ This backend server provides secure, server-side image and video processing for 
    **Windows:**
    Download from https://ffmpeg.org/download.html
 
-2. **Install Node.js dependencies:**
+2. **Install Node.js dependencies** (from the repository root; the app and API share one `package.json`):
    ```bash
-   cd server
-   npm install
+   yarn install
    ```
 
 3. **Set up environment variables:**
    ```bash
-   cp config.env.example .env
+   cp server/config.env.example server/.env
    ```
    
-   Edit `.env` with your configuration:
+   Edit `server/.env` with your configuration (at minimum `PORT`, `FRONTEND_URL`, and R2 credentials if you need media URLs to work):
    ```env
    PORT=3001
    FRONTEND_URL=http://localhost:5173
@@ -55,14 +54,29 @@ This backend server provides secure, server-side image and video processing for 
 
 ## Usage
 
-### Development
+### Development (API only, with Vite on port 5173)
+
+From the repository root:
+
 ```bash
-npm run dev
+yarn server
 ```
 
-### Production
+For automatic restarts when you change server files (Node 18+):
+
 ```bash
-npm start
+yarn server:dev
+```
+
+Run `yarn dev` in a second terminal for the Vite UI; the dev server proxies `/api` to `http://localhost:3001`.
+
+### Production
+
+Build the frontend, then start the API (it also serves `dist/` for static hosting):
+
+```bash
+yarn build
+yarn server
 ```
 
 ## API Endpoints
@@ -115,7 +129,7 @@ GET /api/media/video/artwork.mp4?quality=80
 ## Image Processing Options
 
 ### Watermarking
-- Semi-transparent "S⍉VA" text
+- Semi-transparent "METTAIRE" text
 - 45-degree rotation
 - Configurable opacity and size
 - Stroke outline for visibility
@@ -238,4 +252,4 @@ Set `NODE_ENV=development` for detailed logging.
 
 ## License
 
-This server is part of the S⍉VA project. All rights reserved. 
+This server is part of the METTAIRE project. All rights reserved. 
