@@ -1,26 +1,36 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useParams, useNavigate, useLocation, Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronRight, faChevronLeft, faTimes } from '@fortawesome/free-solid-svg-icons'; 
+import { faChevronRight, faChevronLeft, faTimes, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { useProducts } from '../context/ProductsProvider';
-import { ImageService } from '../utils/imageService.js';
-import DynamicBackButton from './DynamicBackButton';
 import SaveButton from './SaveButton';
+
+// Convert a media filename to its full API URL
+const getFullImageUrl = (filename) => {
+  if (filename.includes('.mp4')) {
+    return `/api/media/video/${filename}`;
+  }
+  return `/api/media/image/${filename}`;
+};
 
 const GalleryItemDetails = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const page = searchParams.get('page');
-  const { getProductById, loading, error } = useProducts();
+  const { products, getProductById, getProductsByCollection, loading, error } = useProducts();
 
-  const navigate = useNavigate();
-  
-  const product = getProductById(parseInt(id, 10));
+  // Hooks must run on every render — declare them before any early return.
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
+  // Reset image position and scroll to top whenever we open a different piece
   useEffect(() => {
     window.scrollTo(0, 0);
-  })
+    setCurrentImageIndex(0);
+    setIsModalOpen(false);
+  }, [id]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -30,58 +40,63 @@ const GalleryItemDetails = () => {
     return <div>Error: {error}</div>;
   }
 
+  const product = getProductById(parseInt(id, 10));
+
   if (!product) {
     return <p>Product not found.</p>;
   }
 
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
   const handleNextImage = () => {
-    const nextIndex = (currentImageIndex + 1) % product.image.length;
-    setCurrentImageIndex(nextIndex);
+    setCurrentImageIndex((prev) => (prev + 1) % product.image.length);
   };
 
   const handlePrevImage = () => {
-    const prevIndex = (currentImageIndex - 1 + product.image.length) % product.image.length;
-    setCurrentImageIndex(prevIndex);
+    setCurrentImageIndex((prev) => (prev - 1 + product.image.length) % product.image.length);
   };
 
   const handleThumbnailClick = (index) => {
     setCurrentImageIndex(index);
   };
 
-  const handleGoBack = () => {
-    // Use the dynamic back navigation instead of hardcoded cache page
-    navigate(-1);
-  };
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
 
-  const openModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
+  // Navigate between pieces, preserving the gallery page we came from
+  const goToProduct = (pid) => {
+    navigate(`/cache/${pid}${page ? `?page=${page}` : ''}`);
   };
 
   const currentImageUrl = product.image[currentImageIndex];
   const isVideo = currentImageUrl.includes('.mp4');
-  
-  // Convert filename to full API URL
-  const getFullImageUrl = (filename) => {
-    if (filename.includes('.mp4')) {
-      return `/api/media/video/${filename}`;
-    } else {
-      return `/api/media/image/${filename}`;
-    }
-  };
-  
   const fullImageUrl = getFullImageUrl(currentImageUrl);
+
+  // Previous / next piece across the full collection of works
+  const orderedProducts = Array.isArray(products) ? products : [];
+  const currentIndex = orderedProducts.findIndex((p) => p.id === product.id);
+  const hasSiblings = currentIndex !== -1 && orderedProducts.length > 1;
+  const prevProduct = hasSiblings
+    ? orderedProducts[(currentIndex - 1 + orderedProducts.length) % orderedProducts.length]
+    : null;
+  const nextProduct = hasSiblings
+    ? orderedProducts[(currentIndex + 1) % orderedProducts.length]
+    : null;
+
+  // Other works in the same series/collection
+  const relatedWorks = product.collection
+    ? getProductsByCollection(product.collection).filter((p) => p.id !== product.id).slice(0, 4)
+    : [];
 
   return (
     <div className="gallery-details">
       <div className="gallery-nav">
-        <DynamicBackButton className="back-button" />
+        <button
+          className="dynamic-back-button back-button"
+          onClick={() => navigate(`/cache${page ? `?page=${page}` : ''}`)}
+          title="Back to cache"
+        >
+          <FontAwesomeIcon icon={faArrowLeft} />
+          <span>Back to cache</span>
+        </button>
       </div>
       <div className="details-container">
         <div className="details-section">
@@ -90,6 +105,9 @@ const GalleryItemDetails = () => {
               <h3>{product.name}</h3>
               <SaveButton artwork={product} />
             </div>
+            {product.collection && (
+              <p className="gallery-item-collection">{product.collection} series</p>
+            )}
             <p className="gallery-item-date">{product.date}</p>
             <p>Media: {product.media}</p>
             {product.dimensions && (
@@ -136,9 +154,9 @@ const GalleryItemDetails = () => {
                           Your browser does not support the video tag.
                         </video>
                       ) : (
-                        <img 
-                          src={getFullImageUrl(image)} 
-                          loading="lazy" 
+                        <img
+                          src={getFullImageUrl(image)}
+                          loading="lazy"
                           alt={`${product.name} - Thumbnail ${index}`}
                         />
                       )}
@@ -156,6 +174,43 @@ const GalleryItemDetails = () => {
           </div>
         </div>
       </div>
+
+      {relatedWorks.length > 0 && (
+        <section className="related-works">
+            <h4 className="related-heading">More from the {product.collection} series</h4>
+            <div className="related-grid">
+              {relatedWorks.map((work) => (
+                <Link
+                  key={work.id}
+                  to={`/cache/${work.id}${page ? `?page=${page}` : ''}`}
+                  className="related-card"
+                >
+                  <img src={getFullImageUrl(work.image[0])} loading="lazy" alt={work.name} />
+                  <span className="related-card-title">{work.name}</span>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {hasSiblings && (
+          <nav className="artwork-pager">
+            <button className="artwork-pager-btn prev" onClick={() => goToProduct(prevProduct.id)}>
+              <FontAwesomeIcon icon={faChevronLeft} />
+              <span className="artwork-pager-meta">
+                <span className="artwork-pager-label">Previous</span>
+                <span className="artwork-pager-name">{prevProduct.name}</span>
+              </span>
+            </button>
+            <button className="artwork-pager-btn next" onClick={() => goToProduct(nextProduct.id)}>
+              <span className="artwork-pager-meta">
+                <span className="artwork-pager-label">Next</span>
+                <span className="artwork-pager-name">{nextProduct.name}</span>
+              </span>
+              <FontAwesomeIcon icon={faChevronRight} />
+            </button>
+          </nav>
+        )}
 
       {/* Modal for Enlarged Image */}
       {isModalOpen && (
