@@ -3,23 +3,25 @@
    Responsive design from 320px to 3000px
    ======================================== */
 
-/* Font Face Declarations */
+/* Font Face Declarations
+   Note: "changeling-neo" (display) is served by Adobe Typekit (see index.html);
+   it cannot be self-hosted, so it is intentionally not declared here.
+   Body text uses Helvetica Neue via system font stack (proprietary — not bundled).
+   Wordmark uses changeling-neo (Typekit, see index.html).
+   The font below is self-hosted (OFL): Space Mono (mono). */
+
+/* Space Mono — mono labels / techno accents */
 @font-face {
-  font-family: "changeling-neo";
-  src: url('/fonts/Changeling-Neo.woff2') format('woff2'),
-       url('/fonts/Changeling-Neo.woff') format('woff'),
-       url('/fonts/Changeling-Neo.ttf') format('truetype');
-  font-weight: normal;
+  font-family: "Space Mono";
+  src: url('/fonts/space-mono-400.woff2') format('woff2');
+  font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
-
 @font-face {
-  font-family: "changeling-neo";
-  src: url('/fonts/Changeling-Neo-Bold.woff2') format('woff2'),
-       url('/fonts/Changeling-Neo-Bold.woff') format('woff'),
-       url('/fonts/Changeling-Neo-Bold.ttf') format('truetype');
-  font-weight: bold;
+  font-family: "Space Mono";
+  src: url('/fonts/space-mono-700.woff2') format('woff2');
+  font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
@@ -38,11 +40,11 @@
   --color-active: #e8e8e8;
   
   /* Typography */
-  --font-family-primary: 'Arial', sans-serif;
-  --font-family-mono: 'Courier New', monospace;
+  --font-family-primary: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-family-mono: "Space Mono", "Courier New", monospace;
   --font-family-display: "changeling-neo", Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  /* METTAIRE wordmark only — DM Serif Display is regular weight only */
-  --font-family-wordmark: "DM Serif Display", Georgia, "Times New Roman", serif;
+  /* METTAIRE wordmark — changeling-neo (Typekit), regular cut for a thinner, connected look */
+  --font-family-wordmark: "changeling-neo", sans-serif;
   --font-size-xs: 0.75rem;
   --font-size-sm: 0.875rem;
   --font-size-base: 1rem;
@@ -212,7 +214,7 @@ nav #logo {
   font-family: var(--font-family-wordmark);
   font-size: calc(var(--font-size-2xl) * 1.125);
   font-weight: 400;
-  letter-spacing: -0.02em;
+  letter-spacing: 0.04em;
   text-decoration: none;
   color: var(--color-background);
 }
@@ -389,13 +391,15 @@ nav #logo.active,
 @keyframes wordmark-active-glow {
   0% {
     text-shadow:
-      0 0 3px rgba(255, 255, 255, 0.42),
-      0 0 6px rgba(255, 255, 255, 0.28);
+      0 0 6px rgba(255, 255, 255, 0.55),
+      0 0 14px rgba(255, 255, 255, 0.38),
+      0 0 26px rgba(255, 255, 255, 0.22);
   }
   100% {
     text-shadow:
-      0 0 5px rgba(255, 255, 255, 0.52),
-      0 0 12px rgba(255, 255, 255, 0.32);
+      0 0 10px rgba(255, 255, 255, 0.75),
+      0 0 22px rgba(255, 255, 255, 0.50),
+      0 0 38px rgba(255, 255, 255, 0.30);
   }
 }
 
@@ -403,14 +407,16 @@ nav #logo.active,
 @keyframes landing-title-glow {
   0% {
     text-shadow:
-      0 0 3px rgba(255, 255, 255, 0.42),
-      0 0 6px rgba(255, 255, 255, 0.28),
+      0 0 8px rgba(255, 255, 255, 0.55),
+      0 0 18px rgba(255, 255, 255, 0.40),
+      0 0 34px rgba(255, 255, 255, 0.22),
       2px 2px 4px rgba(0, 0, 0, 0.5);
   }
   100% {
     text-shadow:
-      0 0 5px rgba(255, 255, 255, 0.52),
-      0 0 12px rgba(255, 255, 255, 0.32),
+      0 0 14px rgba(255, 255, 255, 0.75),
+      0 0 30px rgba(255, 255, 255, 0.55),
+      0 0 52px rgba(255, 255, 255, 0.35),
       2px 2px 4px rgba(0, 0, 0, 0.5);
   }
 }
@@ -500,6 +506,7 @@ nav #logo.active,
   /* ~7% smaller than prior clamp; still fluid */
   font-size: clamp(2.4rem, min(12vw, 13vh), 9.25rem);
   font-weight: 400;
+  letter-spacing: 0.04em;
   margin-top: 0;
   margin-bottom: 0.2rem;
   text-align: center;
@@ -3489,11 +3496,15 @@ select option {
   font-family: var(--font-family-wordmark);
   font-size: var(--font-size-2xl);
   font-weight: 400;
+  letter-spacing: 0.04em;
 }
 
 .logo-information a {
   color: var(--color-secondary);
   text-decoration: none;
+  font-family: var(--font-family-wordmark);
+  font-weight: 400;
+  letter-spacing: 0.04em;
 }
 
 .navigation-links {

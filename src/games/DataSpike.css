@@ -11,7 +11,7 @@
   justify-content: center;
   z-index: 1000;
   padding: 20px;
-  font-family: 'Courier New', monospace;
+  font-family: 'Space Mono', 'Courier New', monospace;
 }
 
 .data-spike-modal {
@@ -155,7 +155,7 @@
   cursor: pointer;
   transition: all 0.3s ease;
   letter-spacing: 2px;
-  font-family: 'Courier New', monospace;
+  font-family: 'Space Mono', 'Courier New', monospace;
   margin-bottom: 30px;
   position: relative;
   overflow: hidden;
@@ -245,7 +245,7 @@
   cursor: pointer;
   border-radius: 4px;
   transition: all 0.3s ease;
-  font-family: 'Courier New', monospace;
+  font-family: 'Space Mono', 'Courier New', monospace;
 }
 
 .pause-btn:hover {
@@ -447,7 +447,7 @@
   cursor: pointer;
   transition: all 0.3s ease;
   letter-spacing: 2px;
-  font-family: 'Courier New', monospace;
+  font-family: 'Space Mono', 'Courier New', monospace;
 }
 
 .resume-btn:hover {
@@ -474,7 +474,7 @@
   padding: 20px;
   margin: 20px 0;
   text-align: left;
-  font-family: 'Courier New', monospace;
+  font-family: 'Space Mono', 'Courier New', monospace;
   animation: log-flicker 0.1s infinite;
   box-shadow: none !important;
 }
@@ -509,7 +509,7 @@
   cursor: pointer;
   transition: all 0.3s ease;
   letter-spacing: 1px;
-  font-family: 'Courier New', monospace;
+  font-family: 'Space Mono', 'Courier New', monospace;
 }
 
 .retry-btn:hover, .menu-btn:hover {
