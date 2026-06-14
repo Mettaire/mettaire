@@ -1,18 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { 
-  faArrowLeft, 
-  faTrash, 
-  faHeartBroken,
-  faEye,
-  faEyeSlash
+import {
+  faArrowLeft,
+  faTrash,
+  faHeartBroken
 } from '@fortawesome/free-solid-svg-icons';
 import { getSavedArtworks, removeSavedArtwork, clearAllSavedArtworks } from '../utils/savedArtworks';
 import { useProducts } from '../context/ProductsProvider';
 import SearchBar from '../components/SearchBar';
-import GalleryFilterSection from '../components/GalleryFilterSection';
-import SortSection from '../components/SortSection';
+import GalleryConsole from '../components/GalleryConsole';
 import Loading from '../components/Loading';
 
 // Get protected image/video URL from products data
@@ -42,8 +39,6 @@ const SavedArtworks = () => {
     media: 'all',
   });
   const [sortBy, setSortBy] = useState('recent');
-  const [showFilters, setShowFilters] = useState(false);
-  const [showSort, setShowSort] = useState(false);
   const [showViolentContent, setShowViolentContent] = useState(false);
   const [loadingDueToViewerDiscretion, setLoadingDueToViewerDiscretion] = useState(false);
 
@@ -214,24 +209,17 @@ const SavedArtworks = () => {
               <SearchBar searchTerm={searchTerm} setSearchTerm={handleSearchChange} className="gallery-search-bar" />
             </div>
             <div className="filter-and-sort-row">
-              <GalleryFilterSection 
-                filters={filters} 
-                setFilters={setFilters} 
-                showFilters={showFilters} 
-                setShowFilters={setShowFilters} 
-                handleFilterChange={handleFilterChange} 
+              <GalleryConsole
+                filters={filters}
+                setFilters={setFilters}
+                handleFilterChange={handleFilterChange}
+                sortOptions={sortOptions}
+                sortBy={sortBy}
+                setSortBy={setSortBy}
+                handleSortChange={handleSortChange}
+                showViolentContent={showViolentContent}
+                handleViewerDiscretionToggle={handleViewerDiscretionToggle}
               />
-              <SortSection 
-                sortOptions={sortOptions} 
-                sortBy={sortBy} 
-                setSortBy={setSortBy} 
-                showSort={showSort} 
-                setShowSort={setShowSort} 
-                handleSortChange={handleSortChange} 
-              />
-              <button onClick={handleViewerDiscretionToggle} className="viewer-discretion-button">
-                {showViolentContent ? <FontAwesomeIcon icon={faEye} /> : <FontAwesomeIcon icon={faEyeSlash} />}
-              </button>
             </div>
           </div>
 
