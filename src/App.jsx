@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
+import { AnimatePresence, motion } from 'framer-motion';
 import Home from './pages/Home';
 import GalleryPage from './pages/Gallery';
 import AboutPage from './pages/About';
@@ -20,15 +21,16 @@ export default function App() {
   const location = useLocation();
 
   useEffect(() => {
-    // Simulate a delay for loading
-    setLoading(true);
+    // Intro loading screen on initial app load only.
+    // (Inter-page transitions are handled by Framer Motion below, so we no
+    // longer gate every route change behind a 2s loader.)
     const delay = setTimeout(() => {
       setLoading(false);
     }, 2000);
 
     // Cleanup the timeout to avoid potential memory leaks
     return () => clearTimeout(delay);
-  }, [location.pathname]);
+  }, []);
 
   useEffect(() => {
     // Initialize keyboard shortcuts
@@ -71,17 +73,27 @@ export default function App() {
         {loading ? (
           <Loading />
         ) : (
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<AboutPage />} />
-            <Route path="/cache" element={<GalleryPage />} />
-            <Route path="/cache/:id" element={<GalleryItemDetail />} />
-            <Route path="/saved" element={<SavedArtworks />} />
-            <Route path="/terms" element={<TermsAndConditions />} />
-            <Route path="/programs" element={<ProgramsAccess />} />
-            <Route path="/programs/blacksite" element={<BlackSite />} />
-            <Route path="*" element={<NotFoundPage />} />
-          </Routes>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={location.pathname}
+              initial={{ opacity: 0, y: 12, filter: 'blur(6px)' }}
+              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+              exit={{ opacity: 0, y: -8, filter: 'blur(6px)' }}
+              transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <Routes location={location}>
+                <Route path="/" element={<Home />} />
+                <Route path="/about" element={<AboutPage />} />
+                <Route path="/cache" element={<GalleryPage />} />
+                <Route path="/cache/:id" element={<GalleryItemDetail />} />
+                <Route path="/saved" element={<SavedArtworks />} />
+                <Route path="/terms" element={<TermsAndConditions />} />
+                <Route path="/programs" element={<ProgramsAccess />} />
+                <Route path="/programs/blacksite" element={<BlackSite />} />
+                <Route path="*" element={<NotFoundPage />} />
+              </Routes>
+            </motion.div>
+          </AnimatePresence>
         )}
       </main>
       <Footer />
