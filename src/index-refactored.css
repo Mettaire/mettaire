@@ -621,25 +621,30 @@ nav #logo span.special-char,
 }
 
 
+/* The frame shrink-wraps to each image (no background/letterboxing), while a
+   ~square bounding box caps the size so tall images scale down to a similar
+   footprint as wide ones instead of dominating vertically. */
 .mini-gallery {
   position: relative;
-  width: 100%;
-  max-width: 600px;
-  aspect-ratio: 9/9;
+  width: fit-content;
+  max-width: min(100%, 500px);
+  margin-inline: auto;
   border-radius: var(--border-radius-lg);
   overflow: hidden;
   box-shadow: var(--shadow-lg);
 }
 
 .mini-gallery-img {
-  width: 100%;
-  height: 100%;
+  width: fit-content;
+  line-height: 0; /* no inline gap under the image */
 }
 
 .mini-gallery-img img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 500px;
   transition: var(--transition-normal);
 }
 
@@ -3440,8 +3445,7 @@ select option {
 /* Featured Image Link */
 .featured-image-link {
   display: block;
-  width: 100%;
-  height: 100%;
+  width: fit-content;
   transition: var(--transition-normal);
   cursor: pointer;
 }
@@ -3451,9 +3455,11 @@ select option {
 }
 
 .featured-image-link img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 500px;
   transition: var(--transition-normal);
 }
 
