@@ -2,12 +2,11 @@ import React, { useState, useEffect } from 'react';
 import GalleryCard from './GalleryCard';
 import SearchBar from './SearchBar';
 import { useNavigate } from 'react-router-dom';
-import GalleryFilterSection from './GalleryFilterSection';
-import SortSection from './SortSection';
+import GalleryConsole from './GalleryConsole';
 import Loading from './Loading';
 import { useProducts } from '../context/ProductsProvider';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronRight, faChevronLeft, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'; 
+import { faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 
 const itemsPerPage = 16;
 const maxButtonsToShow = 4;
@@ -22,9 +21,7 @@ const GalleryList = () => {
     media: 'all',
   });
   const [searchTerm, setSearchTerm] = useState('');
-  const [showFilters, setShowFilters] = useState(false);
   const [sortBy, setSortBy] = useState('recent'); // Default sorting by name
-  const [showSort, setShowSort] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true); // Loading state
   const [showViolentContent, setShowViolentContent] = useState(false); 
@@ -195,11 +192,17 @@ const GalleryList = () => {
         <SearchBar searchTerm={searchTerm} setSearchTerm={handleSearchChange} className="gallery-search-bar" />
         </div>
         <div className="filter-and-sort-row">
-        <GalleryFilterSection filters={filters} setFilters={setFilters} showFilters={showFilters} setShowFilters={setShowFilters} handleFilterChange={handleFilterChange} />
-        <SortSection sortOptions={sortOptions} sortBy={sortBy} setSortBy={setSortBy} showSort={showSort} setShowSort={setShowSort} handleSortChange={handleSortChange} />
-        <button onClick={handleViewerDiscretionToggle} className="viewer-discretion-button">
-    {showViolentContent ? <FontAwesomeIcon icon={faEye} /> : <FontAwesomeIcon icon={faEyeSlash} />}
-  </button>
+          <GalleryConsole
+            filters={filters}
+            setFilters={setFilters}
+            handleFilterChange={handleFilterChange}
+            sortOptions={sortOptions}
+            sortBy={sortBy}
+            setSortBy={setSortBy}
+            handleSortChange={handleSortChange}
+            showViolentContent={showViolentContent}
+            handleViewerDiscretionToggle={handleViewerDiscretionToggle}
+          />
       </div>
       </div>
 

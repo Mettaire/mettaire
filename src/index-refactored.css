@@ -1962,6 +1962,7 @@ nav #logo span.special-char,
   justify-content: start;
   justify-content: space-evenly;
   padding-right: 0px;
+  position: relative; /* anchor for the console dropdown panel */
 }
 
 .filter-section {
@@ -2259,6 +2260,186 @@ select option {
     0 12px 40px rgba(0, 0, 0, 0.4),
     inset 0 1px 0 rgba(255, 255, 255, 0.15),
     inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+}
+
+/* ========================================
+   CACHE INSTRUMENT CONSOLE
+   Unified filter/sort/discretion dashboard
+   ======================================== */
+.gallery-console {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-left: auto; /* push the cluster to the right of the row */
+}
+
+/* PANEL trigger — glass/bevel, mono label (matches button family) */
+.console-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: #ffffff;
+  cursor: pointer;
+  min-height: 44px;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.95) 0%,
+    rgba(10, 10, 10, 0.9) 25%,
+    rgba(25, 25, 25, 0.85) 50%,
+    rgba(10, 10, 10, 0.9) 75%,
+    rgba(0, 0, 0, 0.95) 100%
+  );
+  background-size: 200% 200%;
+  animation: liquid-shimmer 3s ease-in-out infinite;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.console-toggle::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transition: left 0.5s ease;
+}
+
+.console-toggle:hover::before {
+  left: 100%;
+}
+
+.console-toggle:hover {
+  transform: translateY(-2px);
+}
+
+/* Lit-up state when the console is open */
+.console-toggle.active {
+  border-color: rgba(255, 255, 255, 0.5);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.35),
+    0 0 14px rgba(255, 255, 255, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.console-toggle-label {
+  font-weight: 700;
+}
+
+/* The dashboard panel that drops below the cluster */
+.console-panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  z-index: 300;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: min(92vw, 640px);
+  padding: 14px 16px;
+  border-radius: 10px;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.96) 0%,
+    rgba(12, 12, 12, 0.92) 50%,
+    rgba(0, 0, 0, 0.96) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow:
+    0 16px 48px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  animation: console-drop 0.22s ease;
+}
+
+@keyframes console-drop {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* One labeled readout row: [LABEL] [ chips... ] */
+.console-row {
+  display: grid;
+  grid-template-columns: 58px 1fr;
+  align-items: start;
+  gap: 10px;
+}
+
+.console-row + .console-row {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 10px;
+}
+
+.console-label {
+  font-family: var(--font-family-display);
+  font-size: 0.8rem;
+  letter-spacing: 0.14em;
+  color: rgba(255, 255, 255, 0.5);
+  padding-top: 7px;
+  white-space: nowrap;
+}
+
+.console-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+/* LED-style toggle chip — monochrome (white lights up when active) */
+.console-chip {
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.72);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 4px;
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: color 0.18s ease, background 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.console-chip:not(.active):hover {
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.console-chip.active {
+  color: #0a0a0a;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(255, 255, 255, 0.92);
+  box-shadow:
+    0 0 10px rgba(255, 255, 255, 0.35),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.4);
+}
+
+/* Win over [data-theme="dark"] button { color:#fff !important } so the
+   selected chip's text stays dark on its light fill. */
+[data-theme="dark"] .console-chip.active {
+  color: #0a0a0a !important;
+}
+
+/* Keep the discretion toggle compact and height-matched inside the cluster */
+.gallery-console .viewer-discretion-button {
+  max-width: none;
+  min-height: 44px;
+  flex-shrink: 0;
 }
 
 /* Gallery Container */
@@ -4993,6 +5174,19 @@ input:checked + .toggle-slider:before {
     margin-top: var(--spacing-lg);
     margin-bottom: var(--spacing-lg);
   }
+
+  /* Center the console cluster on mobile (right-aligned only on desktop) */
+  .gallery-console {
+    margin-left: 0;
+  }
+
+  /* Center the dropdown panel in the viewport so it isn't cut off-frame */
+  .console-panel {
+    left: 0;
+    right: 0;
+    margin-inline: auto;
+    width: min(94vw, 560px);
+  }
   
   .filter-section,
   .sort-section {
@@ -5109,10 +5303,21 @@ input:checked + .toggle-slider:before {
   }
   
   .filter-and-sort-row {
-    width: 40%;
+    width: auto;
+    flex-shrink: 0;
     flex-direction: row;
+    margin-right: var(--spacing-xl);
   }
-  
+
+  /* Reset the mobile-centered panel back to right-anchored on tablet+
+     (the 320px rule has no upper bound, so it would otherwise overflow right). */
+  .console-panel {
+    left: auto;
+    right: 0;
+    margin-inline: 0;
+    width: min(80vw, 620px);
+  }
+
   .filter-button,
   .sort-button,
   .viewer-discretion-button {
@@ -5195,7 +5400,8 @@ input:checked + .toggle-slider:before {
   }
   
   .filter-and-sort-row {
-    width: 35%;
+    width: auto;
+    flex-shrink: 0;
   }
   
   .filter-button,
