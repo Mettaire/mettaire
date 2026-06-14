@@ -1,5 +1,5 @@
 /* ========================================
-   SVNT - Refactored CSS
+   METTAIRE - Refactored CSS
    Responsive design from 320px to 3000px
    ======================================== */
 
@@ -38,6 +38,9 @@
   --color-border: #e0e0e0;
   --color-hover: #f5f5f5;
   --color-active: #e8e8e8;
+  /* Cold "soft club" accent — cyan neon (wordmark glow + interactive cues) */
+  --color-club: #5ce1e6;
+  --color-club-rgb: 92, 225, 230;
   
   /* Typography */
   --font-family-primary: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -391,15 +394,17 @@ nav #logo.active,
 @keyframes wordmark-active-glow {
   0% {
     text-shadow:
-      0 0 6px rgba(255, 255, 255, 0.55),
-      0 0 14px rgba(255, 255, 255, 0.38),
-      0 0 26px rgba(255, 255, 255, 0.22);
+      0 0 2px rgba(255, 255, 255, 0.80),
+      0 0 7px rgba(255, 255, 255, 0.40),
+      0 0 14px rgba(var(--color-club-rgb), 0.24),
+      0 0 22px rgba(var(--color-club-rgb), 0.12);
   }
   100% {
     text-shadow:
-      0 0 10px rgba(255, 255, 255, 0.75),
-      0 0 22px rgba(255, 255, 255, 0.50),
-      0 0 38px rgba(255, 255, 255, 0.30);
+      0 0 4px rgba(255, 255, 255, 0.90),
+      0 0 11px rgba(255, 255, 255, 0.48),
+      0 0 20px rgba(var(--color-club-rgb), 0.34),
+      0 0 30px rgba(var(--color-club-rgb), 0.18);
   }
 }
 
@@ -407,16 +412,18 @@ nav #logo.active,
 @keyframes landing-title-glow {
   0% {
     text-shadow:
-      0 0 8px rgba(255, 255, 255, 0.55),
-      0 0 18px rgba(255, 255, 255, 0.40),
-      0 0 34px rgba(255, 255, 255, 0.22),
+      0 0 3px rgba(255, 255, 255, 0.80),
+      0 0 9px rgba(255, 255, 255, 0.40),
+      0 0 18px rgba(var(--color-club-rgb), 0.24),
+      0 0 30px rgba(var(--color-club-rgb), 0.13),
       2px 2px 4px rgba(0, 0, 0, 0.5);
   }
   100% {
     text-shadow:
-      0 0 14px rgba(255, 255, 255, 0.75),
-      0 0 30px rgba(255, 255, 255, 0.55),
-      0 0 52px rgba(255, 255, 255, 0.35),
+      0 0 5px rgba(255, 255, 255, 0.90),
+      0 0 13px rgba(255, 255, 255, 0.48),
+      0 0 26px rgba(var(--color-club-rgb), 0.34),
+      0 0 42px rgba(var(--color-club-rgb), 0.19),
       2px 2px 4px rgba(0, 0, 0, 0.5);
   }
 }
@@ -3509,7 +3516,7 @@ select option {
 
 .navigation-links {
   max-width: 50%;
-  margin-left: var(--spacing-5xl);
+  margin-left: 0;
 }
 
 .navigation-links ul {
@@ -3842,10 +3849,27 @@ select option {
     flex-direction: row;
     text-align: left;
   }
-  
+
+  /* 3-column grid keeps the nav links dead-center regardless of the
+     differing widths of the wordmark (left) and Back to Top (right). */
+  .footer-row:first-child {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+  }
+  .footer-row:first-child .logo-information {
+    justify-self: start;
+  }
+  .footer-row:first-child .navigation-links {
+    justify-self: center;
+  }
+  .footer-row:first-child .back-to-top-button {
+    justify-self: end;
+  }
+
   .navigation-links {
-    max-width: 50%;
-    margin-left: var(--spacing-5xl);
+    max-width: 100%;
+    margin-left: 0;
   }
   
   .navigation-links ul {
@@ -3872,18 +3896,16 @@ select option {
 
 @media (min-width: 748px) and (max-width: 830px) {
   .footer-row:first-child {
-    flex-wrap: nowrap;
     gap: var(--spacing-md);
   }
-  
+
   .navigation-links {
-    max-width: 40%;
-    margin-left: var(--spacing-lg);
+    max-width: 100%;
+    margin-left: 0;
   }
-  
+
   .back-to-top-button {
     white-space: nowrap;
-    flex-shrink: 0;
   }
 }
 

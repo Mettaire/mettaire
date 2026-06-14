@@ -55,7 +55,6 @@ export default function SiteHeadingAndNav() {
             </button>
           </div>
           <ul className={`main-menu ${isMenuOpen ? 'show' : ''}`} ref={menuRef}>
-            <li><NavLink to='/' onClick={closeMenu}>Home</NavLink></li>
             <li><NavLink to='/about' onClick={closeMenu}>About</NavLink></li>
             <li><NavLink to='/cache' onClick={closeMenu}>Cache</NavLink></li>
             <li><NavLink to='/saved' onClick={closeMenu}>Saved</NavLink></li>
