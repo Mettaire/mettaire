@@ -878,6 +878,8 @@ nav #logo span.special-char,
   width: 100%;
   flex-direction: column;
   position: relative;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 45%, #0c0c0c 0%, #050505 70%);
 }
 
 .loading-image {
@@ -887,7 +889,118 @@ nav #logo span.special-char,
   position: absolute;
   top: 0;
   left: 0;
-  /* Removed rotation animation */
+}
+
+/* ---- Branded loading screen ---- */
+.loading-inner {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 0 var(--spacing-lg);
+}
+
+.loading-wordmark {
+  font-family: var(--font-family-wordmark);
+  font-size: clamp(2.5rem, 9vw, 6rem);
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  color: #ffffff;
+  margin: 0 0 var(--spacing-lg);
+  animation:
+    loading-glow 1.8s ease-in-out infinite alternate,
+    loading-flicker 5s steps(1) infinite;
+}
+
+@keyframes loading-glow {
+  0% {
+    text-shadow:
+      0 0 4px rgba(255, 255, 255, 0.8),
+      0 0 14px rgba(var(--color-club-rgb), 0.4),
+      0 0 30px rgba(var(--color-club-rgb), 0.2);
+  }
+  100% {
+    text-shadow:
+      0 0 6px rgba(255, 255, 255, 0.95),
+      0 0 22px rgba(var(--color-club-rgb), 0.55),
+      0 0 46px rgba(var(--color-club-rgb), 0.3);
+  }
+}
+
+/* Subtle CRT flicker on the wordmark */
+@keyframes loading-flicker {
+  0%, 92%, 100% { opacity: 1; }
+  93% { opacity: 0.72; }
+  94% { opacity: 1; }
+  96% { opacity: 0.85; }
+  97% { opacity: 1; }
+}
+
+.loading-bar {
+  width: min(260px, 60vw);
+  height: 2px;
+  margin: 0 auto var(--spacing-md);
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.loading-bar span {
+  display: block;
+  width: 40%;
+  height: 100%;
+  background: var(--color-club);
+  box-shadow: 0 0 10px rgba(var(--color-club-rgb), 0.8);
+  animation: loading-sweep 1.2s ease-in-out infinite;
+}
+
+@keyframes loading-sweep {
+  0% { transform: translateX(-120%); }
+  100% { transform: translateX(320%); }
+}
+
+.loading-status {
+  font-family: var(--font-family-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.35em;
+  color: rgba(var(--color-club-rgb), 0.85);
+  margin: 0;
+  padding-left: 0.35em; /* offset the letter-spacing on the right */
+}
+
+.loading-status::after {
+  content: '';
+  animation: loading-dots 1.4s steps(1) infinite;
+}
+
+@keyframes loading-dots {
+  0% { content: ''; }
+  25% { content: '.'; }
+  50% { content: '..'; }
+  75% { content: '...'; }
+}
+
+/* CRT scanline overlay */
+.loading-scanlines {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.035) 0,
+    rgba(255, 255, 255, 0.035) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  opacity: 0.6;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loading-wordmark,
+  .loading-bar span,
+  .loading-status::after {
+    animation: none;
+  }
 }
 
 /* ========================================
@@ -3892,6 +4005,10 @@ select option {
   overflow: hidden;
 }
 
+.back-to-top-button h4 {
+  margin-bottom: 0;
+}
+
 .back-to-top-button::before {
   content: '';
   position: absolute;
@@ -4144,8 +4261,12 @@ select option {
     position: fixed;
     bottom: var(--spacing-md);
     right: var(--spacing-md);
-    padding: var(--spacing-xs) var(--spacing-md);
+    padding: var(--spacing-xs) var(--spacing-sm);
     font-size: var(--font-size-sm);
+  }
+
+  .back-to-top-button h4 {
+    font-size: var(--font-size-xs);
   }
 }
 
@@ -4194,8 +4315,12 @@ select option {
     position: static;
     bottom: auto;
     right: auto;
-    padding: var(--spacing-sm) var(--spacing-lg);
+    padding: var(--spacing-xs) var(--spacing-md);
     font-size: var(--font-size-base);
+  }
+
+  .back-to-top-button h4 {
+    font-size: var(--font-size-sm);
   }
 }
 
@@ -4217,6 +4342,15 @@ select option {
 @media (min-width: 1400px) {
   .footer {
     padding: var(--spacing-4xl) var(--spacing-lg);
+  }
+
+  /* Restore the larger desktop back-to-top size (mobile/tablet are scaled down) */
+  .back-to-top-button {
+    padding: var(--spacing-sm) var(--spacing-lg);
+  }
+
+  .back-to-top-button h4 {
+    font-size: var(--font-size-xl);
   }
   
   .contact-information-container .social-media-links a svg {

@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons'; 
 import { useProducts } from '../context/ProductsProvider';
+import Reveal from '../components/Reveal';
 
 export default function HomePage() {
 const { products } = useProducts();
@@ -76,7 +77,7 @@ return (
       </div>
     </div>
     <div className="featured-art-content">
-      <div className="featured-art-container">
+      <Reveal className="featured-art-container">
         <div className="featured-work-title">
           <h2 className="rotate-text">Featured Works</h2>
         </div>
@@ -108,8 +109,8 @@ return (
             <FontAwesomeIcon icon={faChevronRight} onClick={handleNextImage} className="next"/>
           </div>
         </div>
-      </div>
-      <div className="detailed-bio">
+      </Reveal>
+      <Reveal className="detailed-bio">
         <section className="rect-home-container">
           <section className="rect-1"></section>
           <section className="rect-2"></section>
@@ -121,7 +122,7 @@ return (
           <Link to="/about" className="home-about-link"><button className="home-about-button">Learn More</button></Link> 
           <Link to='/cache?page=1' className="explore-gallery-link"><button className="explore-gallery-button">Explore cache</button></Link>
         </div>
-      </div>
+      </Reveal>
     </div>
   </div>
 )

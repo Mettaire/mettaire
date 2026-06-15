@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import SaveButton from './SaveButton';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
@@ -10,11 +11,21 @@ const getProtectedVideoUrl = (filename) => {
 };
 
 const GalleryCard = ({ product, currentPage, showViolentContent }) => {
-  const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-  const page = searchParams.get('page');
-  
-  // Add safety checks for product data
+  // Hooks must run before any early return
+  const [isHovered, setIsHovered] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  const imageCount = product?.image?.length ?? 0;
+
+  useEffect(() => {
+    if (imageCount <= 1) return undefined;
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => (prevIndex === imageCount - 1 ? 0 : prevIndex + 1));
+    }, 5000); // Change the duration here for the image transition
+    return () => clearInterval(interval);
+  }, [imageCount]);
+
+  // Safety check for product data (after hooks)
   if (!product || !product.image || !Array.isArray(product.image) || product.image.length === 0) {
     return (
       <div className="gallery-card">
@@ -24,19 +35,6 @@ const GalleryCard = ({ product, currentPage, showViolentContent }) => {
       </div>
     );
   }
-  
-  const hasVideo = product.image.some((item) => item.includes('.mp4'));
-  const [isHovered, setIsHovered] = useState(false);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
- 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentImageIndex((prevIndex) =>
-        prevIndex === product.image.length - 1 ? 0 : prevIndex + 1
-      );
-    }, 5000); // Change the duration here for the image transition
-    return () => clearInterval(interval);
-  }, [product.image.length]);
 
   const handleHover = () => {
     setIsHovered(true);
@@ -61,7 +59,13 @@ const GalleryCard = ({ product, currentPage, showViolentContent }) => {
   const fullImageUrl = getFullImageUrl(currentImageUrl);
 
   return (
-    <div className="gallery-card">
+    <motion.div
+      className="gallery-card"
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-40px' }}
+      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+    >
       <div className="gallery-card-content">
         <Link to={`${product.id}?page=${currentPage}`} className="link-no-underline">
           {showViolentContent || !product.hasViolence ? (
@@ -106,7 +110,7 @@ const GalleryCard = ({ product, currentPage, showViolentContent }) => {
           <SaveButton artwork={product} />
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

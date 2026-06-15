@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Loading from '../components/Loading';
 import ProjectCarousel from '../components/ProjectCarousel';
+import Reveal from '../components/Reveal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInstagram, faGithub, faMedium, faLinkedin} from '@fortawesome/free-brands-svg-icons';
 import { useProducts } from '../context/ProductsProvider';
@@ -143,7 +144,7 @@ root@wound.os ~ % $ echo 'Accessing the artist's cache.'
         </section>
       </header>
 
-      <section className="about-row-1">
+      <Reveal as="section" className="about-row-1">
         <section className="introduction">
         <img src={getProtectedImageUrl(getProfileImage(), products)} loading="lazy" alt="selfportrait"/>
         <h2>THE CREATIVE</h2>
@@ -164,9 +165,9 @@ root@wound.os ~ % $ echo 'Accessing the artist's cache.'
                 <ProjectCarousel products={products} getProtectedImageUrl={getProtectedImageUrl} />
                 
                 </section>
-                </section>
-    
-      <section className="about-row-3">
+                </Reveal>
+
+      <Reveal as="section" className="about-row-3">
       <section className="upcoming-projects">
       <section className="rect-container">
             <section className="rect-1"></section>
@@ -210,9 +211,9 @@ root@wound.os ~ % $ echo 'Accessing the artist's cache.'
     </div>
     </div>
       </section>
-      </section>
+      </Reveal>
 
-      <section className="contact-container">
+      <Reveal as="section" className="contact-container">
         <div className='contact-information-container'>
           <section className="rect-container">
               <section className="rect-1"></section>
@@ -244,7 +245,7 @@ root@wound.os ~ % $ echo 'Accessing the artist's cache.'
             </video>
           </div>
         </div>
-      </section>
+      </Reveal>
     </div>
   );
 };
