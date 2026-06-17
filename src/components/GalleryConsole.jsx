@@ -73,7 +73,7 @@ const GalleryConsole = ({
         aria-label="Filter and sort panel"
       >
         <FontAwesomeIcon icon={faSliders} />
-        <span className="console-toggle-label">PANEL</span>
+        <span className="console-toggle-label">FILTERS</span>
       </button>
 
       <button
@@ -87,7 +87,7 @@ const GalleryConsole = ({
       {open && (
         <div className="console-panel">
           <div className="console-row">
-            <span className="console-label">DATE</span>
+            <span className="console-label">YEAR</span>
             <div className="console-chips">
               {DATE_OPTIONS.map((d) => (
                 <button
