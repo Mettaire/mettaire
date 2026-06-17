@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLayerGroup } from '@fortawesome/free-solid-svg-icons';
 import SaveButton from './SaveButton';
+import { useReducedMotionPref } from '../utils/useReducedMotionPref';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
 
@@ -17,6 +18,7 @@ const getFullImageUrl = (filename) =>
 
 const GalleryCard = ({ product, currentPage, showViolentContent }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const reduced = useReducedMotionPref();
 
   // Safety check for product data
   if (!product || !product.image || !Array.isArray(product.image) || product.image.length === 0) {
@@ -44,10 +46,10 @@ const GalleryCard = ({ product, currentPage, showViolentContent }) => {
   return (
     <motion.div
       className="gallery-card"
-      initial={{ opacity: 0, y: 36 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={reduced ? false : { opacity: 0, y: 36 }}
+      whileInView={reduced ? undefined : { opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.15 }}
-      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+      transition={reduced ? { duration: 0 } : { duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
     >
       <div className="gallery-card-content">
         <Link to={`${product.id}?page=${currentPage}`} className="link-no-underline">
