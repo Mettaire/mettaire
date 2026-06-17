@@ -99,9 +99,21 @@ const SavedArtworks = () => {
     return dateFilter && mediaFilter;
   };
 
+  // Multi-field, multi-keyword search (mirrors the cache page)
   const searchFilter = (artwork) => {
-    return artwork.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-           artwork.description?.toLowerCase().includes(searchTerm.toLowerCase());
+    const query = searchTerm.trim().toLowerCase();
+    if (!query) return true;
+    const haystack = [
+      artwork.name,
+      artwork.media,
+      artwork.collection,
+      artwork.description,
+      artwork.date != null ? String(artwork.date) : '',
+    ]
+      .filter(Boolean)
+      .join(' ')
+      .toLowerCase();
+    return query.split(/\s+/).every((token) => haystack.includes(token));
   };
 
   const sortArtworks = (a, b) => {

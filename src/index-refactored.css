@@ -1991,6 +1991,7 @@ nav #logo span.special-char,
 .search-bar {
   width: 100%;
   margin-left: var(--spacing-sm);
+  position: relative;
 }
 
 .search-bar-input {
@@ -2138,6 +2139,75 @@ nav #logo span.special-char,
     0 12px 40px rgba(0, 0, 0, 0.4),
     inset 0 1px 0 rgba(255, 255, 255, 0.15),
     inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+}
+
+/* ========================================
+   SEARCH AUTOCOMPLETE DROPDOWN
+   ======================================== */
+.search-suggest {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 3%;
+  z-index: 300;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  border-radius: 10px;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.96) 0%,
+    rgba(12, 12, 12, 0.94) 50%,
+    rgba(0, 0, 0, 0.96) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+.search-suggest li {
+  list-style: none;
+}
+.search-suggest-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  font-family: var(--font-family-mono);
+  font-size: 0.85rem;
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.82);
+  background: none;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 12px;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+.search-suggest-item:hover,
+.search-suggest-item.highlight {
+  color: #ffffff;
+  background: rgba(var(--color-club-rgb), 0.16);
+}
+
+/* Clear-all affordance in the empty state */
+.clear-filters-button {
+  margin-top: var(--spacing-md);
+  font-family: var(--font-family-mono);
+  letter-spacing: 0.06em;
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border-radius: 8px;
+  cursor: pointer;
+  color: #ffffff;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(var(--color-club-rgb), 0.5);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.clear-filters-button:hover {
+  border-color: var(--color-club);
+  box-shadow: 0 0 14px rgba(var(--color-club-rgb), 0.3);
 }
 
 /* ========================================
