@@ -1,5 +1,6 @@
 import { S3Client, GetObjectCommand, HeadObjectCommand, ListObjectsV2Command } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import { NodeHttpHandler } from '@smithy/node-http-handler';
 import '../loadEnv.js';
 
 // Debug: Log environment variables
@@ -17,6 +18,12 @@ const r2Client = new S3Client({
     accessKeyId: process.env.R2_ACCESS_KEY_ID,
     secretAccessKey: process.env.R2_SECRET_ACCESS_KEY,
   },
+  // Fail fast instead of hanging forever if a connection to R2 stalls.
+  maxAttempts: 3,
+  requestHandler: new NodeHttpHandler({
+    connectionTimeout: 5000, // ms to establish a socket
+    requestTimeout: 20000, // ms of socket inactivity before aborting
+  }),
 });
 
 const BUCKET_NAME = process.env.R2_BUCKET_NAME || 'soluscore-media';
