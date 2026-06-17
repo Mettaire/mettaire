@@ -5,3 +5,6 @@
 public/images/HCT-16.JPG filter=lfs diff=lfs merge=lfs -text
 public/videos/export.mp4 filter=lfs diff=lfs merge=lfs -text
 *.mp4 filter=lfs diff=lfs merge=lfs -text
+
+# Keep the OG share card as a normal blob (not LFS) so Vercel serves it reliably
+public/og-image.jpg -filter -diff -merge -text
