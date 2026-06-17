@@ -57,7 +57,7 @@ const TermsAndConditions = () => {
             <section className="rect-2"></section>
         </section>
       <h2 className="text-xl font-semibold mt-6">7. Contact</h2>
-      <p>If you have any questions about these Terms and Conditions, please contact me at <a href="mailto:[Your Email]" className="text-blue-500 underline">lukannelson@gmail.com</a>.</p>
+      <p>If you have any questions about these Terms and Conditions, please contact me at <a href="mailto:lukannelson@gmail.com" className="text-blue-500 underline">lukannelson@gmail.com</a>.</p>
     </div>
   );
 };
