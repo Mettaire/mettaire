@@ -3683,12 +3683,12 @@ nav #logo span.special-char,
   color: rgba(var(--color-club-rgb), 0.95);
 }
 
+/* Touch devices have no hover, so the label would otherwise sit permanently
+   over every card — inconsistent on short images. Keep the grid clean and
+   let users tap through to the detail page (which shows full title/medium). */
 @media (hover: none) {
-  /* Touch devices: keep the label visible rather than hover-gated */
   .card-overlay {
-    opacity: 1;
-    transform: translateY(0);
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 100%);
+    display: none;
   }
 }
 
@@ -5027,22 +5027,26 @@ input:checked + .toggle-slider:before {
 }
 
 .carousel-dot {
-  width: 12px;
-  height: 12px;
+  width: 10px;
+  height: 10px;
+  padding: 0; /* override the global button padding that stretched these into ovals */
+  box-sizing: border-box;
   border-radius: 50%;
-  border: none;
-  background-color: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  background-color: transparent;
   cursor: pointer;
   transition: var(--transition-fast);
 }
 
 .carousel-dot:hover {
-  background-color: rgba(255, 255, 255, 0.8);
+  border-color: rgba(var(--color-club-rgb), 0.8);
+  background-color: rgba(var(--color-club-rgb), 0.25);
 }
 
 .carousel-dot.active {
-  background-color: var(--color-secondary);
-  transform: scale(1.2);
+  background-color: var(--color-club);
+  border-color: var(--color-club);
+  box-shadow: 0 0 8px rgba(var(--color-club-rgb), 0.7);
 }
 
 /* ========================================

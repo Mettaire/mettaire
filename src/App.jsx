@@ -15,46 +15,7 @@ import GalleryItemDetail from './components/GalleryItemDetails';
 import SavedArtworks from './pages/SavedArtworks';
 import { initializeKeyboardShortcuts } from './utils/keyboardShortcuts';
 import { NavigationProvider } from './context/NavigationContext';
-
-const nextFrame = () => new Promise((resolve) => requestAnimationFrame(resolve));
-
-// Resolve once the above-the-fold media (images + videos currently in view)
-// has actually loaded — so the loading screen only lifts onto real content.
-function waitForVisibleMedia(root, timeLeft) {
-  return new Promise((resolve) => {
-    const inViewport = (el) => {
-      const r = el.getBoundingClientRect();
-      return r.bottom > 0 && r.top < window.innerHeight && r.right > 0 && r.left < window.innerWidth;
-    };
-
-    const pending = Array.from(root.querySelectorAll('img, video')).filter((el) => {
-      if (!inViewport(el)) return false; // don't block on off-screen / lazy media
-      if (el.tagName === 'IMG') return !el.complete || el.naturalWidth === 0;
-      return el.readyState < 3; // video: < HAVE_FUTURE_DATA
-    });
-
-    let settled = false;
-    const finish = () => {
-      if (settled) return;
-      settled = true;
-      resolve();
-    };
-
-    if (pending.length === 0) return finish();
-
-    let remaining = pending.length;
-    const onOne = () => {
-      remaining -= 1;
-      if (remaining <= 0) finish();
-    };
-    pending.forEach((el) => {
-      const events = el.tagName === 'IMG' ? ['load', 'error'] : ['loadeddata', 'canplay', 'error'];
-      events.forEach((ev) => el.addEventListener(ev, onOne, { once: true }));
-    });
-
-    window.setTimeout(finish, Math.max(0, timeLeft));
-  });
-}
+import { nextFrame, waitForVisibleMedia } from './utils/mediaReady';
 
 // Hold the loading overlay until the new route is genuinely ready: first wait
 // out any in-content loader the page shows while it fetches data (it renders

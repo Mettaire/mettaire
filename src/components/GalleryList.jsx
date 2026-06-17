@@ -7,6 +7,7 @@ import Loading from './Loading';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useProducts } from '../context/ProductsProvider';
 import { matchesSearch } from '../utils/search';
+import { nextFrame, waitForVisibleMedia } from '../utils/mediaReady';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 
@@ -34,20 +35,32 @@ const GalleryList = () => {
   const [loading, setLoading] = useState(false); // in-page loader (route entry is covered by the app overlay)
   const [showViolentContent, setShowViolentContent] = useState(false);
 
-  const loadTimerRef = useRef(null);
+  const loadTokenRef = useRef(0);
 
-  // Brief full-screen loader for deliberate in-page navigation (pagination /
-  // filter / sort / discretion) so it matches the route-entry loading screen.
+  // Full-screen loader for deliberate in-page navigation (pagination / filter /
+  // sort / discretion). Holds until the new page's visible card images have
+  // actually loaded (no pop-in), bounded by a min display + max timeout.
   const triggerLoader = () => {
     window.scrollTo(0, 0);
     setLoading(true);
-    if (loadTimerRef.current) clearTimeout(loadTimerRef.current);
-    loadTimerRef.current = setTimeout(() => setLoading(false), 650);
-  };
+    loadTokenRef.current += 1;
+    const token = loadTokenRef.current;
+    const start = Date.now();
+    const MIN_MS = 350; // avoid an on/off flash when images are cached
+    const MAX_MS = 4000; // safety cap
 
-  useEffect(() => () => {
-    if (loadTimerRef.current) clearTimeout(loadTimerRef.current);
-  }, []);
+    (async () => {
+      // let the new page's cards render, then wait for their visible images
+      await nextFrame();
+      await nextFrame();
+      await waitForVisibleMedia(document.querySelector('.gallery-list'), MAX_MS - (Date.now() - start));
+      if (token !== loadTokenRef.current) return; // superseded by a newer action
+      const remaining = Math.max(0, MIN_MS - (Date.now() - start));
+      window.setTimeout(() => {
+        if (token === loadTokenRef.current) setLoading(false);
+      }, remaining);
+    })();
+  };
 
   const handleViewerDiscretionToggle = () => {
     setShowViolentContent((prev) => !prev); // Toggle the state
