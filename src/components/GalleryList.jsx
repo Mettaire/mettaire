@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import GalleryCard from './GalleryCard';
 import SearchBar from './SearchBar';
 import { useNavigate } from 'react-router-dom';
@@ -114,16 +114,27 @@ const GalleryList = () => {
     setCurrentPage(pageParam);    
   }, []);
   
+   const isInitialMount = useRef(true);
+
    useEffect(() => {
-     setLoading(true); // Set loading to true when component mounts or when filters, sorting, or search term change
-     setLoadingDueToViewerDiscretion(false);
      window.scrollTo(0, 0);
 
-     // Simulate an API call or any asynchronous operation
-     setTimeout(() => {
-       setLoading(false); // Set loading to false once the operation is complete
-       
-     }, 1000); // Reduced timeout since we're now loading from API
+     // On first mount the app-level loading overlay already covers route entry,
+     // so skip the local loader here to avoid a double loading screen.
+     if (isInitialMount.current) {
+       isInitialMount.current = false;
+       setLoading(false);
+       return;
+     }
+
+     // For in-page changes (filter / sort / search / page / discretion), which
+     // don't trigger the route-level overlay, show the local loader briefly.
+     setLoading(true);
+     setLoadingDueToViewerDiscretion(false);
+     const timer = setTimeout(() => {
+       setLoading(false);
+     }, 1000);
+     return () => clearTimeout(timer);
    }, [currentPage, filters, sortBy, searchTerm, showViolentContent]);
 
   // Show loading if products are still loading

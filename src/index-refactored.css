@@ -891,6 +891,14 @@ nav #logo span.special-char,
   left: 0;
 }
 
+/* Full-screen overlay used for route-change loading (covers nav + footer) */
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  will-change: opacity;
+}
+
 /* ---- Branded loading screen ---- */
 .loading-inner {
   position: relative;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import Home from './pages/Home';
@@ -16,21 +16,97 @@ import SavedArtworks from './pages/SavedArtworks';
 import { initializeKeyboardShortcuts } from './utils/keyboardShortcuts';
 import { NavigationProvider } from './context/NavigationContext';
 
+const nextFrame = () => new Promise((resolve) => requestAnimationFrame(resolve));
+
+// Resolve once the above-the-fold media (images + videos currently in view)
+// has actually loaded — so the loading screen only lifts onto real content.
+function waitForVisibleMedia(root, timeLeft) {
+  return new Promise((resolve) => {
+    const inViewport = (el) => {
+      const r = el.getBoundingClientRect();
+      return r.bottom > 0 && r.top < window.innerHeight && r.right > 0 && r.left < window.innerWidth;
+    };
+
+    const pending = Array.from(root.querySelectorAll('img, video')).filter((el) => {
+      if (!inViewport(el)) return false; // don't block on off-screen / lazy media
+      if (el.tagName === 'IMG') return !el.complete || el.naturalWidth === 0;
+      return el.readyState < 3; // video: < HAVE_FUTURE_DATA
+    });
+
+    let settled = false;
+    const finish = () => {
+      if (settled) return;
+      settled = true;
+      resolve();
+    };
+
+    if (pending.length === 0) return finish();
+
+    let remaining = pending.length;
+    const onOne = () => {
+      remaining -= 1;
+      if (remaining <= 0) finish();
+    };
+    pending.forEach((el) => {
+      const events = el.tagName === 'IMG' ? ['load', 'error'] : ['loadeddata', 'canplay', 'error'];
+      events.forEach((ev) => el.addEventListener(ev, onOne, { once: true }));
+    });
+
+    window.setTimeout(finish, Math.max(0, timeLeft));
+  });
+}
+
+// Hold the loading overlay until the new route is genuinely ready: first wait
+// out any in-content loader the page shows while it fetches data (it renders
+// the branded loader, detected via .loading-wordmark), then wait for the
+// visible media. Bounded by maxTimeout so it can never hang.
+function waitForPageReady(maxTimeout) {
+  return new Promise((resolve) => {
+    const root = document.querySelector('main');
+    if (!root) return resolve();
+    const deadline = Date.now() + maxTimeout;
+
+    const poll = () => {
+      const pageStillFetching = root.querySelector('.loading-wordmark');
+      if (pageStillFetching && Date.now() < deadline) {
+        window.setTimeout(poll, 150);
+      } else {
+        waitForVisibleMedia(root, deadline - Date.now()).then(resolve);
+      }
+    };
+    poll();
+  });
+}
+
 export default function App() {
   const [loading, setLoading] = useState(true);
   const location = useLocation();
 
+  // Show the loading screen on every route change and hold it until the new
+  // page's visible media has finished loading (bounded by a min + max time).
   useEffect(() => {
-    // Intro loading screen on initial app load only.
-    // (Inter-page transitions are handled by Framer Motion below, so we no
-    // longer gate every route change behind a 2s loader.)
-    const delay = setTimeout(() => {
-      setLoading(false);
-    }, 2000);
+    let cancelled = false;
+    setLoading(true);
+    const start = Date.now();
+    const MIN_MS = 500; // avoid a jarring flash on fast loads
+    const MAX_MS = 8000; // hard cap so we never hang forever
 
-    // Cleanup the timeout to avoid potential memory leaks
-    return () => clearTimeout(delay);
-  }, []);
+    (async () => {
+      // Let the new route paint before we inspect its media
+      await nextFrame();
+      await nextFrame();
+      await waitForPageReady(MAX_MS - (Date.now() - start));
+      if (cancelled) return;
+      const wait = Math.max(0, MIN_MS - (Date.now() - start));
+      window.setTimeout(() => {
+        if (!cancelled) setLoading(false);
+      }, wait);
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [location.pathname]);
 
   useEffect(() => {
     // Initialize keyboard shortcuts
@@ -70,33 +146,34 @@ export default function App() {
     <NavigationProvider>
       <SiteHeadingAndNav />
       <main>
-        {loading ? (
-          <Loading />
-        ) : (
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={location.pathname}
-              initial={{ opacity: 0, y: 12, filter: 'blur(6px)' }}
-              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-              exit={{ opacity: 0, y: -8, filter: 'blur(6px)' }}
-              transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-            >
-              <Routes location={location}>
-                <Route path="/" element={<Home />} />
-                <Route path="/about" element={<AboutPage />} />
-                <Route path="/cache" element={<GalleryPage />} />
-                <Route path="/cache/:id" element={<GalleryItemDetail />} />
-                <Route path="/saved" element={<SavedArtworks />} />
-                <Route path="/terms" element={<TermsAndConditions />} />
-                <Route path="/programs" element={<ProgramsAccess />} />
-                <Route path="/programs/blacksite" element={<BlackSite />} />
-                <Route path="*" element={<NotFoundPage />} />
-              </Routes>
-            </motion.div>
-          </AnimatePresence>
-        )}
+        {/* Always mounted so the new route's media starts loading while the
+            loading overlay is up — then the overlay lifts onto real content. */}
+        <Routes location={location}>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/cache" element={<GalleryPage />} />
+          <Route path="/cache/:id" element={<GalleryItemDetail />} />
+          <Route path="/saved" element={<SavedArtworks />} />
+          <Route path="/terms" element={<TermsAndConditions />} />
+          <Route path="/programs" element={<ProgramsAccess />} />
+          <Route path="/programs/blacksite" element={<BlackSite />} />
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
       </main>
       <Footer />
+      <AnimatePresence>
+        {loading && (
+          <motion.div
+            className="loading-overlay"
+            initial={{ opacity: 1 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.4, ease: 'easeInOut' }}
+          >
+            <Loading />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </NavigationProvider>
   );
 }
