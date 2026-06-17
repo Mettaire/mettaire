@@ -3829,6 +3829,7 @@ nav #logo span.special-char,
   font-size: var(--font-size-2xl);
   font-weight: 400;
   letter-spacing: 0.04em;
+  margin: 0; /* drop the global h2 margin so it sits close to the nav links */
 }
 
 .logo-information a {
@@ -4143,9 +4144,9 @@ nav #logo span.special-char,
   .footer-row {
     flex-direction: column;
     text-align: center;
-    gap: var(--spacing-lg);
+    gap: var(--spacing-md);
   }
-  
+
   .navigation-links {
     max-width: 100%;
     margin-left: 0;
