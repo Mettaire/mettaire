@@ -1,6 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faLayerGroup } from '@fortawesome/free-solid-svg-icons';
 import SaveButton from './SaveButton';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
@@ -10,22 +12,13 @@ const getProtectedVideoUrl = (filename) => {
   return `${API_BASE_URL}/media/video/${filename}`;
 };
 
+const getFullImageUrl = (filename) =>
+  filename.includes('.mp4') ? `/api/media/video/${filename}` : `/api/media/image/${filename}`;
+
 const GalleryCard = ({ product, currentPage, showViolentContent }) => {
-  // Hooks must run before any early return
   const [isHovered, setIsHovered] = useState(false);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  const imageCount = product?.image?.length ?? 0;
-
-  useEffect(() => {
-    if (imageCount <= 1) return undefined;
-    const interval = setInterval(() => {
-      setCurrentImageIndex((prevIndex) => (prevIndex === imageCount - 1 ? 0 : prevIndex + 1));
-    }, 5000); // Change the duration here for the image transition
-    return () => clearInterval(interval);
-  }, [imageCount]);
-
-  // Safety check for product data (after hooks)
+  // Safety check for product data
   if (!product || !product.image || !Array.isArray(product.image) || product.image.length === 0) {
     return (
       <div className="gallery-card">
@@ -36,27 +29,17 @@ const GalleryCard = ({ product, currentPage, showViolentContent }) => {
     );
   }
 
-  const handleHover = () => {
-    setIsHovered(true);
-  };
+  const handleHover = () => setIsHovered(true);
+  const handleMouseLeave = () => setIsHovered(false);
 
-  const handleMouseLeave = () => {
-    setIsHovered(false);
-  };
-
-  const currentImageUrl = product.image[currentImageIndex];
-  const isVideo = currentImageUrl.includes('.mp4');
-  
-  // Convert filename to full API URL
-  const getFullImageUrl = (filename) => {
-    if (filename.includes('.mp4')) {
-      return `/api/media/video/${filename}`;
-    } else {
-      return `/api/media/image/${filename}`;
-    }
-  };
-  
-  const fullImageUrl = getFullImageUrl(currentImageUrl);
+  // Show only the first media in the grid (cards keep their natural size so the
+  // masonry layout doesn't reflow/jolt). All versions are viewable on the
+  // detail page; a badge signals when a piece has more than one.
+  const primaryMedia = product.image[0];
+  const isVideo = primaryMedia.includes('.mp4');
+  const fullImageUrl = getFullImageUrl(primaryMedia);
+  const hasMultiple = product.image.length > 1;
+  const isVisible = showViolentContent || !product.hasViolence;
 
   return (
     <motion.div
@@ -68,7 +51,7 @@ const GalleryCard = ({ product, currentPage, showViolentContent }) => {
     >
       <div className="gallery-card-content">
         <Link to={`${product.id}?page=${currentPage}`} className="link-no-underline">
-          {showViolentContent || !product.hasViolence ? (
+          {isVisible ? (
             <>
               {isVideo ? (
                 <video
@@ -86,12 +69,18 @@ const GalleryCard = ({ product, currentPage, showViolentContent }) => {
                   Your browser does not support the video tag.
                 </video>
               ) : (
-                <img 
-                  src={fullImageUrl} 
-                  loading="lazy" 
-                  alt={product.name} 
+                <img
+                  src={fullImageUrl}
+                  loading="lazy"
+                  alt={product.name}
                   className="gallery-image"
                 />
+              )}
+              {hasMultiple && (
+                <span className="card-media-count" aria-label={`${product.image.length} items — view all on the piece's page`}>
+                  <FontAwesomeIcon icon={faLayerGroup} />
+                  {product.image.length}
+                </span>
               )}
               <div className="card-overlay">
                 <span className="card-overlay-title">{product.name}</span>
