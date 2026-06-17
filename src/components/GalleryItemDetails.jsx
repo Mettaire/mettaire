@@ -4,6 +4,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronRight, faChevronLeft, faTimes, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { useProducts } from '../context/ProductsProvider';
 import SaveButton from './SaveButton';
+import Reveal from './Reveal';
+import Loading from './Loading';
 
 // Convert a media filename to its full API URL
 const getFullImageUrl = (filename) => {
@@ -33,7 +35,7 @@ const GalleryItemDetails = () => {
   }, [id]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   if (error) {
@@ -176,25 +178,35 @@ const GalleryItemDetails = () => {
       </div>
 
       {relatedWorks.length > 0 && (
-        <section className="related-works">
+        <Reveal as="section" className="related-works">
             <h4 className="related-heading">More from the {product.collection} series</h4>
             <div className="related-grid">
-              {relatedWorks.map((work) => (
-                <Link
-                  key={work.id}
-                  to={`/cache/${work.id}${page ? `?page=${page}` : ''}`}
-                  className="related-card"
-                >
-                  <img src={getFullImageUrl(work.image[0])} loading="lazy" alt={work.name} />
-                  <span className="related-card-title">{work.name}</span>
-                </Link>
-              ))}
+              {relatedWorks.map((work) => {
+                // Prefer a still image for the thumbnail; fall back to a video
+                // element only when the piece has no image (video-only).
+                const thumb = work.image.find((m) => !m.includes('.mp4')) || work.image[0];
+                const thumbIsVideo = thumb.includes('.mp4');
+                return (
+                  <Link
+                    key={work.id}
+                    to={`/cache/${work.id}${page ? `?page=${page}` : ''}`}
+                    className="related-card"
+                  >
+                    {thumbIsVideo ? (
+                      <video src={getFullImageUrl(thumb)} muted loop autoPlay playsInline />
+                    ) : (
+                      <img src={getFullImageUrl(thumb)} loading="lazy" alt={work.name} />
+                    )}
+                    <span className="related-card-title">{work.name}</span>
+                  </Link>
+                );
+              })}
             </div>
-          </section>
+          </Reveal>
         )}
 
         {hasSiblings && (
-          <nav className="artwork-pager">
+          <Reveal as="nav" className="artwork-pager">
             <button className="artwork-pager-btn prev" onClick={() => goToProduct(prevProduct.id)}>
               <FontAwesomeIcon icon={faChevronLeft} />
               <span className="artwork-pager-meta">
@@ -209,7 +221,7 @@ const GalleryItemDetails = () => {
               </span>
               <FontAwesomeIcon icon={faChevronRight} />
             </button>
-          </nav>
+          </Reveal>
         )}
 
       {/* Modal for Enlarged Image */}

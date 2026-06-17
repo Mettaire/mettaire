@@ -7,15 +7,16 @@ import { motion } from 'framer-motion';
  *   - delay: stagger in seconds
  *   - y: starting offset in px
  */
-const Reveal = ({ children, as = 'div', className = '', delay = 0, y = 28, ...rest }) => {
+const Reveal = ({ children, as = 'div', className = '', delay = 0, y = 48, ...rest }) => {
   const MotionTag = motion[as] || motion.div;
   return (
     <MotionTag
       className={className}
       initial={{ opacity: 0, y }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-60px' }}
-      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay }}
+      viewport={{ once: true, amount: 0.18 }}
+      // Longer travel + expo ease-out = the smooth Apple-style settle
+      transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1], delay }}
       {...rest}
     >
       {children}

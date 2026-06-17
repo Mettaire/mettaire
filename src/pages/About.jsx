@@ -144,14 +144,14 @@ root@wound.os ~ % $ echo 'Accessing the artist's cache.'
         </section>
       </header>
 
-      <Reveal as="section" className="about-row-1">
-        <section className="introduction">
+      <section className="about-row-1">
+        <Reveal as="section" className="introduction">
         <img src={getProtectedImageUrl(getProfileImage(), products)} loading="lazy" alt="selfportrait"/>
         <h2>THE CREATIVE</h2>
         <p>I'm Daniel Nelson, the creator behind METTAIRE. As an artist, graphic designer, and software engineer, METTAIRE is my way of leaving a piece of myself within the machine—a space where my work exists on its own, independent of an intended audience (unless rooted in code). Inspired by thinkers like Dostoevsky, Camus, Schopenhauer, and Musashi, my creations explore individualism, transformation, and the human condition. Through code, multimedia paintings, and graphic design, I merge fine art with technology, weaving existential themes—absurdism, nihilism, and existentialism—into experiences open to being encountered, absorbed, and interpreted freely.
         </p>
-        </section>
-        <section className="philosophy-inspiration-container">
+        </Reveal>
+        <Reveal as="section" className="philosophy-inspiration-container">
           <section>
             <section className="rect-container">
               <section className="rect-1"></section>
@@ -164,22 +164,22 @@ root@wound.os ~ % $ echo 'Accessing the artist's cache.'
                 {/* Project Carousel */}
                 <ProjectCarousel products={products} getProtectedImageUrl={getProtectedImageUrl} />
                 
-                </section>
                 </Reveal>
+                </section>
 
-      <Reveal as="section" className="about-row-3">
+      <section className="about-row-3">
       <section className="upcoming-projects">
       <section className="rect-container">
             <section className="rect-1"></section>
             <section className="rect-2"></section>
             </section>
-        <div className="upcoming-projects-text-section">
-          
+        <Reveal className="upcoming-projects-text-section">
+
         <h2>Projects in Progress</h2>
         <p>* Not limited to the showcased.</p>
-        </div>
+        </Reveal>
         <div className="upcoming-projects-column-2">
-        <div className="image-with-description" id="chrome-container" >
+        <Reveal className="image-with-description" id="chrome-container">
       <video autoPlay muted width="auto" loop playsInline controls={false}>
             <source src={getProtectedVideoUrl('HCteaser.mp4', products)} type="video/mp4" />
             Your browser does not support the video tag.
@@ -190,9 +190,9 @@ root@wound.os ~ % $ echo 'Accessing the artist's cache.'
         <br /><br /> 
         * You can now check out some concept designs for <i>Heart in Chrome</i> in the cache section!</p>
       </div>
-    </div>
-    
-    <div className="image-with-description" id="tats">
+    </Reveal>
+
+    <Reveal className="image-with-description" id="tats">
     <div className="tattoo-text">
       <h3>Tattooing</h3>
       <p> As my journey unfolds, I aim to use tattooing as another layer of my creative odyssey to explore different ways to connect art with personal experiences and cultural influences.
@@ -208,10 +208,10 @@ root@wound.os ~ % $ echo 'Accessing the artist's cache.'
                   <img src={getProtectedImageUrl(tattooImages[3], products)} alt={"tat-3"} />
       </div>  
     </div>
-    </div>
+    </Reveal>
     </div>
       </section>
-      </Reveal>
+      </section>
 
       <Reveal as="section" className="contact-container">
         <div className='contact-information-container'>

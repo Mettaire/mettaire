@@ -2724,7 +2724,8 @@ nav #logo span.special-char,
     0 0 14px rgba(var(--color-club-rgb), 0.25);
 }
 
-.related-card img {
+.related-card img,
+.related-card video {
   width: 100%;
   aspect-ratio: 1 / 1;
   object-fit: cover;
@@ -3540,6 +3541,77 @@ nav #logo span.special-char,
   position: relative;
   width: 100%;
   height: 100%;
+  overflow: hidden;
+  border-radius: var(--border-radius);
+}
+
+/* ---- Gallery card hover: lift + glow, image zoom, museum-label overlay ---- */
+.gallery-card {
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+.gallery-card:hover {
+  transform: translateY(-6px);
+  box-shadow:
+    0 16px 40px rgba(0, 0, 0, 0.3),
+    0 0 18px rgba(var(--color-club-rgb), 0.22);
+}
+
+.gallery-card-content img,
+.gallery-card-content .gallery-video {
+  display: block;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.gallery-card:hover .gallery-card-content img,
+.gallery-card:hover .gallery-card-content .gallery-video {
+  transform: scale(1.05);
+}
+
+.card-overlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--spacing-md);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.88) 0%, rgba(0, 0, 0, 0) 100%);
+  color: #ffffff;
+  opacity: 0;
+  transform: translateY(40%);
+  transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+.gallery-card:hover .card-overlay {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.card-overlay-title {
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-base);
+  line-height: 1.2;
+}
+
+.card-overlay-meta {
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-xs);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(var(--color-club-rgb), 0.95);
+}
+
+@media (hover: none) {
+  /* Touch devices: keep the label visible rather than hover-gated */
+  .card-overlay {
+    opacity: 1;
+    transform: translateY(0);
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 100%);
+  }
 }
 
 .save-button-container {

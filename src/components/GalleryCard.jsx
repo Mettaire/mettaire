@@ -61,10 +61,10 @@ const GalleryCard = ({ product, currentPage, showViolentContent }) => {
   return (
     <motion.div
       className="gallery-card"
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 36 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-40px' }}
-      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+      viewport={{ once: true, amount: 0.15 }}
+      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
     >
       <div className="gallery-card-content">
         <Link to={`${product.id}?page=${currentPage}`} className="link-no-underline">
@@ -93,6 +93,12 @@ const GalleryCard = ({ product, currentPage, showViolentContent }) => {
                   className="gallery-image"
                 />
               )}
+              <div className="card-overlay">
+                <span className="card-overlay-title">{product.name}</span>
+                <span className="card-overlay-meta">
+                  {product.media}{product.date ? ` · ${product.date}` : ''}
+                </span>
+              </div>
             </>
           ) : (
             <div className="restricted-content-container">
