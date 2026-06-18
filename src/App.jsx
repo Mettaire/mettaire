@@ -16,6 +16,7 @@ import SavedArtworks from './pages/SavedArtworks';
 import { initializeKeyboardShortcuts } from './utils/keyboardShortcuts';
 import { NavigationProvider } from './context/NavigationContext';
 import { nextFrame, waitForVisibleMedia } from './utils/mediaReady';
+import { recordPath } from './utils/navTracker';
 
 // Hold the loading overlay until the new route is genuinely ready: first wait
 // out any in-content loader the page shows while it fetches data (it renders
@@ -67,6 +68,12 @@ export default function App() {
     return () => {
       cancelled = true;
     };
+  }, [location.pathname]);
+
+  // Record the route AFTER page effects run (App is an ancestor), so a page
+  // mounting can read where the user came from via getLastPath().
+  useEffect(() => {
+    recordPath(location.pathname);
   }, [location.pathname]);
 
   useEffect(() => {

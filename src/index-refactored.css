@@ -2469,8 +2469,9 @@ nav #logo span.special-char,
   display: flex;
   align-content: center;
   justify-content: space-evenly;
-  margin: 2% 41%;
-  margin-bottom: var(--spacing-4xl) !important;
+  /* Horizontal centering is set per breakpoint via margin-inline below. */
+  margin-top: var(--spacing-3xl); /* breathing room above, off the gallery grid */
+  margin-bottom: var(--spacing-xl); /* tighter to the footer (was 6rem) */
 }
 
 .pagination-prev, .pagination-next {
@@ -5392,7 +5393,7 @@ input:checked + .toggle-slider:before {
   }
   
   .pagination {
-    margin: 2% 20%;
+    margin-inline: 20%;
   }
   
   .gallery-details {
@@ -5514,7 +5515,7 @@ input:checked + .toggle-slider:before {
   }
   
   .pagination {
-    margin: 2% 30%;
+    margin-inline: 30%;
   }
   
   .gallery-details {
@@ -5593,7 +5594,7 @@ input:checked + .toggle-slider:before {
   }
   
   .pagination {
-    margin: 2% 41%;
+    margin-inline: 41%;
   }
   
   .gallery-details {
