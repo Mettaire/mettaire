@@ -1949,8 +1949,7 @@ nav #logo span.special-char,
 }
 
 .contact-information-container .social-media-links a:hover {
-  color: var(--color-accent);
-  background-color: var(--color-background);
+  color: var(--color-club);
   transform: translateY(-2px);
 }
 
@@ -3828,7 +3827,7 @@ nav #logo span.special-char,
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: var(--spacing-2xl);
+  margin-bottom: var(--spacing-xl); /* consistent rhythm between footer sections */
   flex-wrap: wrap;
   gap: var(--spacing-lg);
 }
@@ -4004,8 +4003,7 @@ nav #logo span.special-char,
 }
 
 .social-media-links a:hover {
-  color: var(--color-accent);
-  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--color-club);
   transform: translateY(-2px);
 }
 
