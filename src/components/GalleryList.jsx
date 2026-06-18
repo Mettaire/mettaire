@@ -8,7 +8,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useProducts } from '../context/ProductsProvider';
 import { matchesSearch } from '../utils/search';
 import { nextFrame, waitForVisibleMedia } from '../utils/mediaReady';
-import { getLastPath } from '../utils/navTracker';
+import { useGalleryScrollRestore } from '../utils/useScrollRestore';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 
@@ -179,34 +179,8 @@ const GalleryList = () => {
     setCurrentPage(pageParam);
   }, []);
 
-  // Scroll handling on entry: if the user came back from a piece's detail page
-  // restore where they left off in the list; otherwise (a fresh visit to the
-  // cache) start at the top like every other page.
-  useEffect(() => {
-    const cameFromDetail = getLastPath().startsWith('/cache/');
-    const saved = parseInt(sessionStorage.getItem('cacheScrollY') || '0', 10);
-
-    if (cameFromDetail && saved > 0) {
-      // Lazy masonry images make the page grow as we approach the target, so
-      // keep nudging toward the saved position until it sticks (or we give up).
-      let tries = 0;
-      const restore = () => {
-        window.scrollTo(0, saved);
-        tries += 1;
-        if (Math.abs(window.scrollY - saved) > 2 && tries < 60) {
-          requestAnimationFrame(restore);
-        }
-      };
-      requestAnimationFrame(restore);
-    } else {
-      window.scrollTo(0, 0);
-    }
-
-    // Save the scroll position when leaving the cache (e.g. opening a piece).
-    return () => {
-      sessionStorage.setItem('cacheScrollY', String(window.scrollY));
-    };
-  }, []);
+  // Top on fresh entry; restore position when returning from a piece's detail.
+  useGalleryScrollRestore('cacheScrollY');
 
   // Show loading if products are still loading
   if (productsLoading) {

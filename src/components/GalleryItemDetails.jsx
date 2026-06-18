@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, useLocation, Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronRight, faChevronLeft, faTimes, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
@@ -6,6 +6,10 @@ import { useProducts } from '../context/ProductsProvider';
 import SaveButton from './SaveButton';
 import Reveal from './Reveal';
 import Loading from './Loading';
+import { getLastPath } from '../utils/navTracker';
+
+// Where the back button should return to, based on the route the user came from
+const PAGE_LABELS = { '/': 'home', '/cache': 'cache', '/saved': 'saved', '/about': 'about' };
 
 // Convert a media filename to its full API URL
 const getFullImageUrl = (filename) => {
@@ -26,6 +30,8 @@ const GalleryItemDetails = () => {
   // Hooks must run on every render — declare them before any early return.
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  // Capture, at mount, the route the user came from so "back" returns there.
+  const originRef = useRef(getLastPath());
 
   // Reset image position and scroll to top whenever we open a different piece
   useEffect(() => {
@@ -68,6 +74,14 @@ const GalleryItemDetails = () => {
     navigate(`/cache/${pid}${page ? `?page=${page}` : ''}`);
   };
 
+  // Dynamic back target: return to wherever the user entered from. Coming from
+  // a related piece (another detail) or anywhere unknown falls back to the cache.
+  const origin = originRef.current;
+  const cacheUrl = `/cache${page ? `?page=${page}` : ''}`;
+  const originLabel = PAGE_LABELS[origin];
+  const backTo = origin === '/cache' ? cacheUrl : originLabel ? origin : cacheUrl;
+  const backLabel = `Back to ${originLabel || 'cache'}`;
+
   const currentImageUrl = product.image[currentImageIndex];
   const isVideo = currentImageUrl.includes('.mp4');
   const fullImageUrl = getFullImageUrl(currentImageUrl);
@@ -93,11 +107,11 @@ const GalleryItemDetails = () => {
       <div className="gallery-nav">
         <button
           className="dynamic-back-button back-button"
-          onClick={() => navigate(`/cache${page ? `?page=${page}` : ''}`)}
-          title="Back to cache"
+          onClick={() => navigate(backTo)}
+          title={backLabel}
         >
           <FontAwesomeIcon icon={faArrowLeft} />
-          <span>Back to cache</span>
+          <span>{backLabel}</span>
         </button>
       </div>
       <div className="details-container">

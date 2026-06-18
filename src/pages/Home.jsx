@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons'; 
 import { useProducts } from '../context/ProductsProvider';
 import Reveal from '../components/Reveal';
+import { useGalleryScrollRestore } from '../utils/useScrollRestore';
 
 export default function HomePage() {
 const { products } = useProducts();
 const [currentImageIndex, setCurrentImageIndex ] = useState(0);
-const location = useLocation();
 
 // Get the intro video URL from products data
 const introVideo = products && products.length > 0 ? products.find(p => p.image && p.image.some(img => img.includes('intro.mp4'))) : null;
@@ -38,9 +38,8 @@ const handlePrevImage = () => {
   setCurrentImageIndex((prevIndex) =>(prevIndex - 1 + featuredImages.length) % featuredImages.length);
 }
 
-useEffect (() => {
-    window.scrollTo(0, 0);
- }, [location.pathname]);
+// Top on fresh entry; restore to the mini-gallery when returning from a piece.
+useGalleryScrollRestore('homeScrollY');
 
  // Set up interval to automatically change the image every 5 seconds
  useEffect(() => {
