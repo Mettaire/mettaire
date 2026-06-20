@@ -5140,17 +5140,35 @@ input:checked + .toggle-slider:before {
   overflow: hidden;
   cursor: pointer;
   background: linear-gradient(160deg, #0b0b0b 0%, #171717 50%, #0b0b0b 100%);
-  border: 1px solid rgba(var(--color-club-rgb), 0.35);
-  box-shadow:
-    0 0 28px rgba(var(--color-club-rgb), 0.45),
-    0 0 28px rgba(var(--color-club-rgb), 0.22);
-  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.55s ease;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.5);
+  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.55s ease,
+    box-shadow 0.4s ease, border-color 0.4s ease;
   backface-visibility: hidden;
   will-change: transform;
 }
 
+/* Dim the side faces so the focused card owns the spotlight */
+.coverflow-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+/* Only the front/active card glows — keeps the row from looking noisy */
 .coverflow-card.active {
+  border-color: rgba(var(--color-club-rgb), 0.55);
+  box-shadow:
+    0 0 30px rgba(var(--color-club-rgb), 0.5),
+    0 14px 34px rgba(0, 0, 0, 0.5);
   animation: coverflow-glow 2s ease-in-out infinite alternate;
+}
+
+.coverflow-card.active::after {
+  opacity: 0;
 }
 
 .coverflow-card img {
@@ -5163,8 +5181,8 @@ input:checked + .toggle-slider:before {
 @keyframes coverflow-glow {
   to {
     box-shadow:
-      0 0 46px rgba(var(--color-club-rgb), 0.85),
-      0 0 46px rgba(var(--color-club-rgb), 0.5);
+      0 0 50px rgba(var(--color-club-rgb), 0.85),
+      0 14px 34px rgba(0, 0, 0, 0.5);
   }
 }
 
@@ -5832,7 +5850,7 @@ input:checked + .toggle-slider:before {
 @media (min-width: 320px) {
   .philosophy-inspiration-container {
     grid-template-columns: 1fr;
-    gap: var(--spacing-lg);
+    gap: var(--spacing-sm);
     padding: 0;
     max-width: 100%;
   }
