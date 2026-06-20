@@ -5201,6 +5201,11 @@ input:checked + .toggle-slider:before {
   display: block;
 }
 
+/* Image-only coverflow (no caption): the image fills the whole card */
+.coverflow-bare .coverflow-card img {
+  height: 100%;
+}
+
 /* Caption inside each card with the same shimmer effect as chrome/tattoo text */
 .coverflow-card-text {
   flex: 1 1 auto;

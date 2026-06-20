@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import Coverflow from './Coverflow';
 
 const ProjectCarousel = ({ products, getProtectedImageUrl }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
-  const navigate = useNavigate();
 
   const projects = [
     {
@@ -65,16 +65,6 @@ const ProjectCarousel = ({ products, getProtectedImageUrl }) => {
     return () => mq.removeEventListener('change', handler);
   }, []);
 
-  // Track viewport width so the coverflow tilt can scale with it
-  const [viewportW, setViewportW] = useState(
-    () => (typeof window !== 'undefined' ? window.innerWidth : 375)
-  );
-  useEffect(() => {
-    const onResize = () => setViewportW(window.innerWidth);
-    window.addEventListener('resize', onResize);
-    return () => window.removeEventListener('resize', onResize);
-  }, []);
-
   // Auto-play (pauses on hover or touch)
   useEffect(() => {
     if (!isAutoPlaying) return;
@@ -84,22 +74,6 @@ const ProjectCarousel = ({ products, getProtectedImageUrl }) => {
 
   const handleMouseEnter = () => setIsAutoPlaying(false);
   const handleMouseLeave = () => setIsAutoPlaying(true);
-
-  // Swipe handling for the mobile coverflow
-  const touchX = useRef(null);
-  const onTouchStart = (e) => {
-    setIsAutoPlaying(false);
-    touchX.current = e.touches[0].clientX;
-  };
-  const onTouchEnd = (e) => {
-    if (touchX.current != null) {
-      const dx = e.changedTouches[0].clientX - touchX.current;
-      if (dx > 40) prevSlide();
-      else if (dx < -40) nextSlide();
-    }
-    touchX.current = null;
-    setIsAutoPlaying(true);
-  };
 
   // Size the (flat) viewport to the active slide so the controls sit right under
   // the caption. Only runs for the tablet/desktop slider.
@@ -119,25 +93,6 @@ const ProjectCarousel = ({ products, getProtectedImageUrl }) => {
     return () => ro.disconnect();
   }, [currentSlide, isMobile]);
 
-  // 3D placement for a card based on its distance from the active one
-  const cardStyle = (index) => {
-    const n = projects.length;
-    let offset = index - currentSlide;
-    if (offset > n / 2) offset -= n;
-    if (offset < -n / 2) offset += n;
-    const abs = Math.abs(offset);
-    const hidden = abs >= 2; // only the centre + immediate neighbours show
-    // Ease the side-face tilt off as the viewport widens: steeper on small
-    // phones, flatter/more open on larger screens (60deg @320 -> 44deg @748).
-    const tilt = Math.max(44, Math.min(68, 68 - ((viewportW - 320) / 428) * 24));
-    return {
-      transform: `translateX(calc(-50% + ${offset * 40}vw)) translateY(-50%) translateZ(${abs === 0 ? 40 : -120}px) rotateY(${offset * tilt}deg)`,
-      zIndex: 10 - abs,
-      opacity: hidden ? 0 : 1,
-      pointerEvents: hidden ? 'none' : 'auto',
-    };
-  };
-
   const dots = (
     <div className="carousel-dots">
       {projects.map((_, i) => (
@@ -151,55 +106,24 @@ const ProjectCarousel = ({ products, getProtectedImageUrl }) => {
     </div>
   );
 
-  // ---- Mobile: 3D glowing coverflow ----
+  // ---- Mobile: 3D glowing coverflow (shared component) ----
   if (isMobile) {
+    const items = projects.map((p) => {
+      const detailId = findProductId(p.image);
+      return {
+        key: p.id,
+        image: p.image,
+        to: detailId ? `/cache/${detailId}` : null,
+        title: p.title,
+        description: p.description,
+      };
+    });
     return (
-      <div
-        className="project-carousel coverflow"
-        onTouchStart={onTouchStart}
-        onTouchEnd={onTouchEnd}
-      >
-        <div className="coverflow-stage">
-          {projects.map((project, index) => {
-            const isActive = index === currentSlide;
-            const detailId = findProductId(project.image);
-            return (
-              <div
-                key={project.id}
-                className={`coverflow-card ${isActive ? 'active' : ''}`}
-                style={cardStyle(index)}
-                onClick={() =>
-                  isActive
-                    ? detailId && navigate(`/cache/${detailId}`)
-                    : goToSlide(index)
-                }
-                role="button"
-                aria-label={isActive ? `Open ${project.title}` : `Go to ${project.title}`}
-              >
-                <img
-                  src={getProtectedImageUrl(project.image, products)}
-                  loading="lazy"
-                  alt={project.title}
-                />
-                <div className="coverflow-card-text">
-                  <h3>{project.title}</h3>
-                  <p>{project.description}</p>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        <div className="carousel-controls">
-          <button className="carousel-nav carousel-prev" onClick={prevSlide} aria-label="Previous project">
-            <FontAwesomeIcon icon={faChevronLeft} />
-          </button>
-          {dots}
-          <button className="carousel-nav carousel-next" onClick={nextSlide} aria-label="Next project">
-            <FontAwesomeIcon icon={faChevronRight} />
-          </button>
-        </div>
-      </div>
+      <Coverflow
+        items={items}
+        getImageUrl={(img) => getProtectedImageUrl(img, products)}
+        showCaption
+      />
     );
   }
 

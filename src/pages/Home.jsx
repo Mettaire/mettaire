@@ -1,14 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link } from "react-router-dom";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons'; 
 import { useProducts } from '../context/ProductsProvider';
 import Reveal from '../components/Reveal';
+import Coverflow from '../components/Coverflow';
 import { useGalleryScrollRestore } from '../utils/useScrollRestore';
 
 export default function HomePage() {
 const { products } = useProducts();
-const [currentImageIndex, setCurrentImageIndex ] = useState(0);
 
 // Get the intro video URL from products data
 const introVideo = products && products.length > 0 ? products.find(p => p.image && p.image.some(img => img.includes('intro.mp4'))) : null;
@@ -24,32 +22,20 @@ const findProductByImage = (imageFilename) => {
     return { id: 103 };
   }
   
-  return products.find(product => 
-    product.image && 
+  return products.find(product =>
+    product.image &&
     product.image.some(img => img.includes(imageFilename))
   );
 };
 
-const handleNextImage = () => {
-  setCurrentImageIndex((prevIndex)=> (prevIndex + 1) % featuredImages.length);
-}
-
-const handlePrevImage = () => {
-  setCurrentImageIndex((prevIndex) =>(prevIndex - 1 + featuredImages.length) % featuredImages.length);
-}
+// Featured items for the 3D coverflow, each linking to its detail page
+const featuredItems = featuredImages.map((image) => {
+  const product = findProductByImage(image);
+  return { key: image, image, to: product ? `/cache/${product.id}` : null };
+});
 
 // Top on fresh entry; restore to the mini-gallery when returning from a piece.
 useGalleryScrollRestore('homeScrollY');
-
- // Set up interval to automatically change the image every 5 seconds
- useEffect(() => {
-  const interval = setInterval(() => {
-    handleNextImage();
-  }, 5000); // Change every 5 seconds
-
-  // Clean up the interval when the component unmounts
-  return () => clearInterval(interval);
-}, []);
 
 // Get protected image URL from products data
 const getProtectedImageUrl = (filename) => {
@@ -80,34 +66,7 @@ return (
         <div className="featured-work-title">
           <h2 className="rotate-text">Featured Works</h2>
         </div>
-        <div className="mini-gallery">
-          <div className="mini-gallery-img">
-            {(() => {
-              const currentProduct = findProductByImage(featuredImages[currentImageIndex]);
-              if (currentProduct) {
-                return (
-                  <Link to={`/cache/${currentProduct.id}`} className="featured-image-link">
-                    <img 
-                      src={getProtectedImageUrl(featuredImages[currentImageIndex])} 
-                      alt={`Artwork ${currentImageIndex + 1}`} 
-                    />
-                  </Link>
-                );
-              } else {
-                return (
-                  <img 
-                    src={getProtectedImageUrl(featuredImages[currentImageIndex])} 
-                    alt={`Artwork ${currentImageIndex + 1}`} 
-                  />
-                );
-              }
-            })()}
-          </div>
-          <div className="featured-art-icon-row">
-            <FontAwesomeIcon icon={faChevronLeft} onClick={handlePrevImage} className="prev" />
-            <FontAwesomeIcon icon={faChevronRight} onClick={handleNextImage} className="next"/>
-          </div>
-        </div>
+        <Coverflow items={featuredItems} getImageUrl={getProtectedImageUrl} />
       </Reveal>
       <Reveal className="detailed-bio">
         <section className="rect-home-container">
