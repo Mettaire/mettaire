@@ -2007,6 +2007,23 @@ nav #logo span.special-char,
   position: relative;
 }
 
+/* Center the search bar on mobile + tablet (instead of hugging the left) */
+@media (max-width: 1024px) {
+  .search-bar {
+    margin-left: 0;
+  }
+
+  .search-bar label {
+    display: block;
+  }
+
+  .search-bar-input {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
 .search-bar-input {
   width: 97%;
   height: 70px;
@@ -2030,7 +2047,7 @@ nav #logo span.special-char,
   border-top-right-radius: 40px;
   border-bottom-right-radius: 40px;
   font-size: 1.5em;
-  margin: auto 0;
+  margin-block: auto; /* vertical only — horizontal handled per breakpoint */
   padding: 0 2% 0 4%;
   position: relative;
   overflow: hidden;
@@ -5166,9 +5183,8 @@ input:checked + .toggle-slider:before {
 
 /* Only the front/active card glows — keeps the row from looking noisy */
 .coverflow-card.active {
-  border-color: rgba(var(--color-club-rgb), 0.55);
   box-shadow:
-    0 0 30px rgba(var(--color-club-rgb), 0.5),
+    0 0 22px rgba(var(--color-club-rgb), 0.38),
     0 14px 34px rgba(0, 0, 0, 0.5);
   animation: coverflow-glow 2s ease-in-out infinite alternate;
 }
@@ -5234,7 +5250,7 @@ input:checked + .toggle-slider:before {
 @keyframes coverflow-glow {
   to {
     box-shadow:
-      0 0 50px rgba(var(--color-club-rgb), 0.85),
+      0 0 36px rgba(var(--color-club-rgb), 0.6),
       0 14px 34px rgba(0, 0, 0, 0.5);
   }
 }
