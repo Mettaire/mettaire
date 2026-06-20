@@ -142,7 +142,6 @@ const ProjectCarousel = ({ products, getProtectedImageUrl }) => {
 
   // ---- Mobile: 3D glowing coverflow ----
   if (isMobile) {
-    const active = projects[currentSlide];
     return (
       <div
         className="project-carousel coverflow"
@@ -171,6 +170,10 @@ const ProjectCarousel = ({ products, getProtectedImageUrl }) => {
                   loading="lazy"
                   alt={project.title}
                 />
+                <div className="coverflow-card-text">
+                  <h3>{project.title}</h3>
+                  <p>{project.description}</p>
+                </div>
               </div>
             );
           })}
@@ -184,11 +187,6 @@ const ProjectCarousel = ({ products, getProtectedImageUrl }) => {
           <button className="carousel-nav carousel-next" onClick={nextSlide} aria-label="Next project">
             <FontAwesomeIcon icon={faChevronRight} />
           </button>
-        </div>
-
-        <div className="coverflow-caption">
-          <h3>{active.title}</h3>
-          <p>{active.description}</p>
         </div>
       </div>
     );

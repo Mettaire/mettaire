@@ -734,7 +734,7 @@ nav #logo span.special-char,
   display: flex;
   justify-content: center;
   gap: var(--spacing-md);
-  margin-bottom: var(--spacing-2xl);
+  margin-bottom: var(--spacing-md);
 }
 
 .rect-1, .rect-2 {
@@ -1632,7 +1632,7 @@ nav #logo span.special-char,
   display: flex;
   justify-content: center;
   gap: var(--spacing-md);
-  margin-bottom: var(--spacing-2xl);
+  margin-bottom: var(--spacing-md);
 }
 
 .rect-1, .rect-2 {
@@ -1730,8 +1730,8 @@ nav #logo span.special-char,
 
 /* Projects in Progress Section - More Compact */
 .about-row-3 {
-  padding: var(--spacing-xl) var(--spacing-lg);
-  margin-top: var(--spacing-md);
+  padding: 0 var(--spacing-lg);
+  margin-top: var(--spacing-4xl); /* match the Creative -> Beyond the Canvas gap */
 }
 
 .upcoming-projects {
@@ -1893,7 +1893,7 @@ nav #logo span.special-char,
   justify-content: center;
   padding: var(--spacing-3xl) var(--spacing-lg);
   background-color: var(--color-background);
-  margin-top: var(--spacing-lg);
+  margin-top: var(--spacing-4xl); /* match the spacing between the other sections */
 }
 
 .contact-information-container {
@@ -5122,8 +5122,8 @@ input:checked + .toggle-slider:before {
 
 .coverflow-stage {
   position: relative;
-  height: 80vw;
-  max-height: 380px;
+  height: 86vw;
+  max-height: 410px;
   margin: 0 auto var(--spacing-md);
   perspective: 900px;
   transform-style: preserve-3d;
@@ -5135,7 +5135,10 @@ input:checked + .toggle-slider:before {
   left: 50%;
   width: 60vw;
   max-width: 285px;
-  aspect-ratio: 4 / 5;
+  height: 84vw;
+  max-height: 400px;
+  display: flex;
+  flex-direction: column;
   border-radius: 16px;
   overflow: hidden;
   cursor: pointer;
@@ -5173,9 +5176,54 @@ input:checked + .toggle-slider:before {
 
 .coverflow-card img {
   width: 100%;
-  height: 100%;
-  object-fit: cover; /* fill the whole card */
+  height: 60%;
+  object-fit: cover;
+  flex-shrink: 0;
   display: block;
+}
+
+/* Caption inside each card with the same shimmer effect as chrome/tattoo text */
+.coverflow-card-text {
+  flex: 1 1 auto;
+  position: relative;
+  overflow: hidden;
+  padding: var(--spacing-sm) var(--spacing-md);
+  text-align: center;
+  background: linear-gradient(
+    135deg,
+    rgba(170, 170, 170, 0.1) 0%,
+    rgba(170, 170, 170, 0.2) 25%,
+    rgba(170, 170, 170, 0.3) 50%,
+    rgba(170, 170, 170, 0.2) 75%,
+    rgba(170, 170, 170, 0.1) 100%
+  );
+  background-size: 200% 200%;
+  animation: liquid-shimmer 2s ease-in-out infinite;
+}
+
+.coverflow-card-text::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+  animation: shimmer-sweep 2s ease-in-out infinite;
+}
+
+.coverflow-card-text h3 {
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-base);
+  font-weight: bold;
+  margin-bottom: var(--spacing-xs);
+  color: #ffffff;
+}
+
+.coverflow-card-text p {
+  font-size: var(--font-size-xs);
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.72);
 }
 
 @keyframes coverflow-glow {
