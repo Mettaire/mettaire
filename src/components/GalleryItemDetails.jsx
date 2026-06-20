@@ -80,7 +80,8 @@ const GalleryItemDetails = () => {
   const cacheUrl = `/cache${page ? `?page=${page}` : ''}`;
   const originLabel = PAGE_LABELS[origin];
   const backTo = origin === '/cache' ? cacheUrl : originLabel ? origin : cacheUrl;
-  const backLabel = `Back to ${originLabel || 'cache'}`;
+  const backWhere = originLabel || 'cache';
+  const backLabel = `Back to ${backWhere}`;
 
   const currentImageUrl = product.image[currentImageIndex];
   const isVideo = currentImageUrl.includes('.mp4');
@@ -111,7 +112,9 @@ const GalleryItemDetails = () => {
           title={backLabel}
         >
           <FontAwesomeIcon icon={faArrowLeft} />
-          <span>{backLabel}</span>
+          <span>
+            Back<span className="back-button-suffix">{` to ${backWhere}`}</span>
+          </span>
         </button>
       </div>
       <div className="details-container">

@@ -3742,6 +3742,9 @@ nav #logo span.special-char,
 /* Dynamic Back Button */
 .dynamic-back-button {
   display: inline-flex;
+  max-width: none; /* override the .back-button 25% cap that clipped the label */
+  flex-shrink: 0;
+  white-space: nowrap;
   align-items: center;
   gap: var(--spacing-sm);
   padding: var(--spacing-sm) var(--spacing-md);
@@ -3795,10 +3798,17 @@ nav #logo span.special-char,
 
 .dynamic-back-button:hover {
   transform: translateY(-2px);
-  box-shadow: 
+  box-shadow:
     0 12px 40px rgba(0, 0, 0, 0.4),
     inset 0 1px 0 rgba(255, 255, 255, 0.15),
     inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+}
+
+/* On small screens just show "Back" so the label doesn't get cramped */
+@media (max-width: 569px) {
+  .back-button-suffix {
+    display: none;
+  }
 }
 
 /* Featured Image Link */
