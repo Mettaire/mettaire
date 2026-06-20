@@ -1494,11 +1494,10 @@ nav #logo span.special-char,
   grid-template-columns: 2fr 1fr;
   gap: var(--spacing-3xl);
   align-items: center;
-  padding: 0 var(--spacing-lg);
+  padding: 0; /* no extra inset — align with the intro/upcoming sections' margin */
   max-width: 100%;
   margin-left: auto;
   margin-right: auto;
-  overflow: hidden;
 }
 
 .philosophy-inspiration-container > .project-carousel {
@@ -1506,6 +1505,7 @@ nav #logo span.special-char,
   margin: 0;
   width: 100%;
   max-width: 100%;
+  min-width: 0; /* allow the column to shrink below the image's intrinsic width */
   align-self: start;
 }
 
@@ -1514,13 +1514,15 @@ nav #logo span.special-char,
   order: 2;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  justify-content: flex-start;
+  align-items: flex-start;
+  min-width: 0; /* let the text column shrink/wrap instead of overflowing */
   min-height: 100%;
-  text-align: center;
+  text-align: left;
 }
 
-/* Stacked layout: keep reading order (text, then carousel) */
+/* Mobile (stacked): text above, carousel below — sized to match the
+   introduction image so the column reads cohesively. */
 @media (max-width: 747px) {
   .philosophy-inspiration-container > section:first-child {
     order: 1;
@@ -1528,21 +1530,29 @@ nav #logo span.special-char,
 
   .philosophy-inspiration-container > .project-carousel {
     order: 2;
+    max-width: 250px; /* same as the introduction self-portrait */
+    margin: 0 auto;
   }
 }
 
 .philosophy-inspiration-container h2 {
   font-family: var(--font-family-display);
   font-size: var(--font-size-3xl);
-  margin-bottom: var(--spacing-lg);
-  text-align: center;
+  margin-bottom: var(--spacing-sm);
+  text-align: left;
+}
+
+/* Keep the accent, heading and body reading as one tight group */
+.philosophy-inspiration-container .rect-container {
+  justify-content: flex-start;
+  margin-bottom: var(--spacing-md);
 }
 
 .philosophy-inspiration-container p {
   font-size: var(--font-size-lg);
   line-height: 1.8;
   color: var(--color-text-light);
-  text-align: center;
+  text-align: left;
 }
 
 /* Create a flex container for the Beyond Canvas content */
@@ -4855,21 +4865,21 @@ input:checked + .toggle-slider:before {
   width: 100%;
   max-width: 800px;
   margin: var(--spacing-3xl) auto;
-  overflow: hidden;
-  border-radius: var(--border-radius-lg);
-  box-shadow: var(--shadow-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .carousel-container {
   position: relative;
   width: 100%;
-  height: 100%;
   overflow: hidden;
+  transition: height 0.4s ease; /* height is synced to the active slide via JS */
 }
 
 .carousel-track {
   display: flex;
-  height: 100%;
+  align-items: flex-start; /* each slide keeps its own height so we can measure it */
   transition: transform 0.5s ease-in-out;
 }
 
@@ -4880,32 +4890,30 @@ input:checked + .toggle-slider:before {
 }
 
 .carousel-slide .image-with-description-v1 {
-  height: 100%;
+  height: auto;
   display: flex;
   flex-direction: column;
+  width: 100%; /* fill the carousel; the carousel itself scales with the viewport */
   background-color: transparent;
-  border-radius: var(--border-radius-lg);
-  overflow: hidden;
-  box-shadow: var(--shadow-md);
   transition: var(--transition-normal);
   border: none;
   gap: 0;
 }
 
-.carousel-slide .image-with-description-v1:hover {
-  transform: translateY(-5px);
-  box-shadow: var(--shadow-lg);
-}
-
+/* Image displayed clean like the home mini-gallery — natural aspect, no frame,
+   with its own gentle zoom on hover. */
 .carousel-slide .image-with-description-v1 img {
-  width: 100%;
-  height: 250px;
-  object-fit: cover;
-  flex-shrink: 0;
+  display: block;
+  width: 100%; /* fill the carousel so the image and caption are exactly the same width */
+  height: auto; /* natural aspect — never cropped, never letterboxed */
   margin: 0;
   padding: 0;
   border: none;
-  display: block;
+  transition: var(--transition-normal);
+}
+
+.carousel-slide .image-with-description-v1:hover img {
+  transform: scale(1.03);
 }
 
 .project-content {
@@ -4913,6 +4921,8 @@ input:checked + .toggle-slider:before {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  text-align: center; /* h3 + caption share the carousel's centered axis */
   background: linear-gradient(
     to bottom,
     rgba(170, 170, 170, 0.05) 0%,
@@ -4933,7 +4943,7 @@ input:checked + .toggle-slider:before {
   font-family: var(--font-family-display);
   font-size: var(--font-size-xl);
   font-weight: bold;
-  margin-bottom: var(--spacing-md);
+  margin-bottom: var(--spacing-xs);
   color: var(--color-text);
 }
 
@@ -4958,7 +4968,6 @@ input:checked + .toggle-slider:before {
   font-size: var(--font-size-sm);
   line-height: 1.6;
   color: var(--color-text-light);
-  flex-grow: 1;
 }
 
 .project-link {
@@ -4976,11 +4985,26 @@ input:checked + .toggle-slider:before {
   opacity: 0.9;
 }
 
+/* Controls sit inside each card's caption (so they slide with the card),
+   centered just under the paragraph. */
+.carousel-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-lg);
+  margin-top: var(--spacing-sm);
+}
+
+/* More room at ≥748px lets the controls ride up closer to the paragraph */
+@media (min-width: 748px) {
+  .carousel-controls {
+    margin-top: calc(-1 * var(--spacing-xs));
+  }
+}
+
 /* Navigation Arrows */
 .carousel-nav {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
+  flex-shrink: 0;
   background: linear-gradient(
     135deg,
     rgba(0, 0, 0, 0.95) 0%,
@@ -5009,7 +5033,6 @@ input:checked + .toggle-slider:before {
   justify-content: center;
   font-size: var(--font-size-lg);
   transition: var(--transition-fast);
-  z-index: 10;
 }
 
 .carousel-nav::before {
@@ -5033,30 +5056,17 @@ input:checked + .toggle-slider:before {
 }
 
 .carousel-nav:hover {
-  transform: translateY(-50%) scale(1.1);
-  box-shadow: 
+  transform: scale(1.1);
+  box-shadow:
     0 12px 40px rgba(0, 0, 0, 0.4),
     inset 0 1px 0 rgba(255, 255, 255, 0.15),
     inset 0 -1px 0 rgba(0, 0, 0, 0.3);
 }
 
-.carousel-prev {
-  left: var(--spacing-md);
-}
-
-.carousel-next {
-  right: var(--spacing-md);
-}
-
 /* Dots Indicator */
 .carousel-dots {
-  position: absolute;
-  bottom: var(--spacing-2xl);
-  left: 50%;
-  transform: translateX(-50%);
   display: flex;
   gap: var(--spacing-sm);
-  z-index: 10;
 }
 
 .carousel-dot {
@@ -5099,18 +5109,13 @@ input:checked + .toggle-slider:before {
     padding: var(--spacing-sm);
   }
   
-  .carousel-slide .image-with-description-v1 img {
-    height: 400px;
-    object-position: center 30%; /* Move image down to show more of the bottom portion */
-  }
-  
   .project-content {
     padding: var(--spacing-sm);
   }
   
   .project-content h3 {
     font-size: var(--font-size-base);
-    margin-bottom: var(--spacing-sm);
+    margin-bottom: var(--spacing-xs);
   }
   
   .project-content p {
@@ -5174,17 +5179,13 @@ input:checked + .toggle-slider:before {
     padding: var(--spacing-md);
   }
   
-  .carousel-slide .image-with-description-v1 img {
-    height: 400px;
-  }
-  
   .project-content {
     padding: var(--spacing-md);
   }
   
   .project-content h3 {
     font-size: var(--font-size-lg);
-    margin-bottom: var(--spacing-md);
+    margin-bottom: var(--spacing-xs);
   }
   
   .project-content p {
@@ -5229,17 +5230,13 @@ input:checked + .toggle-slider:before {
     padding: var(--spacing-lg);
   }
   
-  .carousel-slide .image-with-description-v1 img {
-    height: 250px;
-  }
-  
   .project-content {
     padding: var(--spacing-lg);
   }
   
   .project-content h3 {
     font-size: var(--font-size-xl);
-    margin-bottom: var(--spacing-md);
+    margin-bottom: var(--spacing-xs);
   }
   
   .project-content p {
@@ -5284,17 +5281,13 @@ input:checked + .toggle-slider:before {
     padding: var(--spacing-xl);
   }
   
-  .carousel-slide .image-with-description-v1 img {
-    height: 300px;
-  }
-  
   .project-content {
     padding: var(--spacing-xl);
   }
   
   .project-content h3 {
     font-size: var(--font-size-2xl);
-    margin-bottom: var(--spacing-lg);
+    margin-bottom: var(--spacing-xs);
   }
   
   .project-content p {
@@ -5324,7 +5317,15 @@ input:checked + .toggle-slider:before {
     width: 14px;
     height: 14px;
   }
-} 
+}
+
+/* From tablet up, drop the right padding so the carousel reaches the right edge */
+@media (min-width: 748px) {
+  .project-carousel,
+  .carousel-slide {
+    padding-right: 0;
+  }
+}
 
 /* ========================================
    RESPONSIVE BREAKPOINTS - GALLERY PAGE
@@ -5350,14 +5351,14 @@ input:checked + .toggle-slider:before {
   
   .search-bar {
     width: 100%;
-    margin-left: var(--spacing-xl);
+    margin-left: 0; /* was spacing-xl, which overflowed the row to the right */
   }
   
   .search-bar-input {
     height: 50px;
     font-size: 1.2em;
     border-radius: 25px;
-    width: 95%;
+    width: 97%; /* match the dropdown (left:0, right:3%) so they line up */
     max-width: 100%;
   }
   
@@ -5731,14 +5732,14 @@ input:checked + .toggle-slider:before {
   .philosophy-inspiration-container {
     grid-template-columns: 1fr;
     gap: var(--spacing-lg);
-    padding: 0 var(--spacing-sm);
+    padding: 0;
     max-width: 100%;
   }
   
   .philosophy-inspiration-container > section:first-child {
-    justify-content: center;
-    align-items: center;
-    text-align: center;
+    justify-content: flex-start;
+    align-items: flex-start;
+    text-align: left;
     padding: var(--spacing-lg) 0;
   }
   
@@ -5773,7 +5774,7 @@ input:checked + .toggle-slider:before {
 @media (min-width: 748px) {
   .philosophy-inspiration-container {
     display: grid;
-    grid-template-columns: 2fr 1fr;
+    grid-template-columns: 1fr 1.4fr; /* tablet and up: text + carousel on one row */
     gap: var(--spacing-2xl);
     padding: 0 ;
     max-width: 100%;
@@ -5781,8 +5782,8 @@ input:checked + .toggle-slider:before {
   
   .philosophy-inspiration-container > section:first-child {
     justify-content: center;
-    align-items: center;
-    text-align: center;
+    align-items: flex-start;
+    text-align: left;
     min-height: 100%;
   }
   
@@ -5817,14 +5818,14 @@ input:checked + .toggle-slider:before {
 @media (min-width: 1400px) {
   .philosophy-inspiration-container {
     gap: var(--spacing-3xl);
-    padding: 0 var(--spacing-lg);
+    padding: 0;
     max-width: 100%;
   }
   
   .philosophy-inspiration-container > section:first-child {
     justify-content: center;
-    align-items: center;
-    text-align: center;
+    align-items: flex-start;
+    text-align: left;
     min-height: 100%;
   }
   
@@ -5851,14 +5852,14 @@ input:checked + .toggle-slider:before {
 @media (min-width: 2000px) {
   .philosophy-inspiration-container {
     gap: var(--spacing-4xl);
-    padding: 0 var(--spacing-xl);
+    padding: 0;
     max-width: 100%;
   }
   
   .philosophy-inspiration-container > section:first-child {
     justify-content: center;
-    align-items: center;
-    text-align: center;
+    align-items: flex-start;
+    text-align: left;
     min-height: 100%;
   }
   
@@ -5888,7 +5889,35 @@ input:checked + .toggle-slider:before {
     max-width: 900px;
     margin: var(--spacing-3xl) auto;
   }
-} 
+}
+
+/* Beyond the Canvas goes two-column from tablet up: text on the left (1fr),
+   carousel on the right (1.4fr), capped so it isn't too wide. Below 748px it
+   stacks (see the mobile rule) with the carousel matching the intro image. */
+@media (min-width: 748px) {
+  .philosophy-inspiration-container {
+    grid-template-columns: 1fr 1.4fr;
+  }
+
+  .philosophy-inspiration-container > section:first-child {
+    order: 1;
+  }
+
+  .philosophy-inspiration-container > .project-carousel {
+    order: 2;
+    max-width: 520px;
+    margin: 0 auto;
+  }
+}
+
+/* Narrow tablet: the long paragraph makes the left column tall, so stretch the
+   carousel to that same height and center its content to keep the row balanced. */
+@media (min-width: 748px) and (max-width: 767px) {
+  .philosophy-inspiration-container > .project-carousel {
+    align-self: stretch;
+    justify-content: center;
+  }
+}
 
 /* Dark Mode Navigation Bar */
 [data-theme="dark"] .nav-header {

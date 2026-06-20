@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import Loading from '../components/Loading';
 import ProjectCarousel from '../components/ProjectCarousel';
@@ -6,6 +6,7 @@ import Reveal from '../components/Reveal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInstagram, faGithub, faMedium, faLinkedin} from '@fortawesome/free-brands-svg-icons';
 import { useProducts } from '../context/ProductsProvider';
+import { getLastPath } from '../utils/navTracker';
 
 // Get protected image URL from products data
 const getProtectedImageUrl = (filename, products) => {
@@ -21,6 +22,9 @@ const getProtectedVideoUrl = (filename, products) => {
 
 const AboutPage = () => {
   const { products } = useProducts();
+  // Whether we arrived from a piece's detail page — captured at first render,
+  // before the app-level route tracker overwrites the "came from" path.
+  const cameFromDetailRef = useRef(getLastPath().startsWith('/cache/'));
   const tattooImages = ["tattoopray.webp", "tat-2.webp", "tat-3.webp", "customsnake.webp"]
   const [loading, setLoading] = useState(true);
   const [typedText, setTypedText] = useState('');
@@ -74,15 +78,33 @@ const AboutPage = () => {
   };
 
   useEffect(() => {
-    window.scrollTo(0, 0);
+    let raf;
+    if (cameFromDetailRef.current) {
+      // Returning from a piece: anchor to the carousel and keep it pinned while
+      // the lazy media above (profile image, videos, carousel art) loads. A
+      // saved pixel offset drifts onto the wrong section as the page grows.
+      const start = performance.now();
+      const pin = () => {
+        const el = document.querySelector('.project-carousel');
+        if (el) el.scrollIntoView({ block: 'center', behavior: 'auto' });
+        if (performance.now() - start < 1200) raf = requestAnimationFrame(pin);
+      };
+      raf = requestAnimationFrame(pin);
+    } else {
+      window.scrollTo(0, 0);
+    }
+
     // Simulate a delay for loading
     const delay = setTimeout(() => {
       setLoading(false);
     }, 2000);
 
     // Cleanup the timeout to avoid potential memory leaks
-    return () => clearTimeout(delay);
-  }, []); 
+    return () => {
+      if (raf) cancelAnimationFrame(raf);
+      clearTimeout(delay);
+    };
+  }, []);
 
   useEffect(() => {
     // Get current time for Last login

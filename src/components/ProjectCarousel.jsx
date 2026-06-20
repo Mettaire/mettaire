@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
@@ -12,31 +12,34 @@ const ProjectCarousel = ({ products, getProtectedImageUrl }) => {
       id: 1,
       image: "secondwind.webp",
       title: "Second Wind",
-      description: "Second Wind, a full stack online community-based platform that provide resources, support, and employment for those impacted by the criminal justice system.",
-      link: null
+      description: "Full-stack platform connecting people impacted by the justice system to resources, support, and employment."
     },
     {
       id: 2,
       image: "careerspring.webp",
       title: "CareerSpring Interest Finder",
-      description: "As a Developer Contractor, I've been instrumental in developing software like CareerSpring's Career Interest Profiler by leveraging JavaScript, HTML & CSS. This custom career assessment tool seamlessly integrated into WordPress serves as a beacon for individuals exploring their professional paths. *Click on to try out the tool for yourself.",
-      link: "https://interestfinder.careerspring.org/?page_id=2"
+      description: "A custom WordPress career-interest assessment tool built with JavaScript, HTML & CSS to help people map their professional paths."
     },
     {
       id: 3,
       image: "SAP.webp",
       title: "SAP (FORTHESOUL)",
-      description: "SAP (FORTHESOUL), represents a convergence of 3D modeling with AutoCAD, incorporating components such as a PIR motion sensor, DFPlayer, SD card, jumper wires, and Arduino Uno. Within the intricate model, the sculpture delivers a spoken narrative drawn from a fusion of written words by Jean-Paul Sartre, Albert Camus, and my own alterations through text-to-speech software.",
-      link: null
+      description: "An Arduino-powered sculpture that speaks an existential narrative drawn from Sartre, Camus, and my own words."
     },
     {
       id: 4,
       image: "metvoyager.webp",
       title: "METVoyager",
-      description: "METVoyager is a web platform I developed that leverages the MET API to deliver artwork recommendations based on search functionality or by selecting specific categories to generate art that matches. The platform also allows users to save and revisit favorite artworks in their own personal gallery. *Click on to try out the tool for yourself.",
-      link: "https://danielnelson37.github.io/METVoyager/"
+      description: "A web app that taps the MET API to recommend artworks and save favorites to a personal gallery."
     }
   ];
+
+  // Map a carousel image to its piece on the site, so each card opens that
+  // work's detail page — the same behavior as the home mini-gallery.
+  const findProductId = (image) =>
+    (Array.isArray(products)
+      ? products.find((p) => p.image && p.image.some((img) => img.includes(image)))
+      : null)?.id ?? null;
 
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % projects.length);
@@ -65,14 +68,31 @@ const ProjectCarousel = ({ products, getProtectedImageUrl }) => {
   const handleMouseEnter = () => setIsAutoPlaying(false);
   const handleMouseLeave = () => setIsAutoPlaying(true);
 
+  // Size the viewport to the active slide so the controls sit right under the
+  // caption — no extra space above or below — whatever each slide's height is.
+  const containerRef = useRef(null);
+  const slideRefs = useRef([]);
+  useEffect(() => {
+    const slide = slideRefs.current[currentSlide];
+    const container = containerRef.current;
+    if (!slide || !container) return;
+    const sync = () => {
+      container.style.height = `${slide.offsetHeight}px`;
+    };
+    sync();
+    const ro = new ResizeObserver(sync);
+    ro.observe(slide);
+    return () => ro.disconnect();
+  }, [currentSlide]);
+
   return (
     <div 
       className="project-carousel"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <div className="carousel-container">
-        <div 
+      <div className="carousel-container" ref={containerRef}>
+        <div
           className="carousel-track"
           style={{
             transform: `translateX(-${currentSlide * (100 / projects.length)}%)`,
@@ -81,63 +101,68 @@ const ProjectCarousel = ({ products, getProtectedImageUrl }) => {
           }}
         >
           {projects.map((project, index) => (
-            <div 
-              key={project.id} 
+            <div
+              key={project.id}
+              ref={(el) => (slideRefs.current[index] = el)}
               className="carousel-slide"
               style={{ width: `${100 / projects.length}%` }}
             >
               <div className="image-with-description-v1">
-                {project.link ? (
-                  <Link to={project.link} target="_blank" className="project-link">
-                    <img 
-                      src={getProtectedImageUrl(project.image, products)} 
-                      loading="lazy" 
+                {(() => {
+                  const detailId = findProductId(project.image);
+                  const img = (
+                    <img
+                      src={getProtectedImageUrl(project.image, products)}
+                      loading="lazy"
                       alt={project.title}
                     />
-                  </Link>
-                ) : (
-                  <img 
-                    src={getProtectedImageUrl(project.image, products)} 
-                    loading="lazy" 
-                    alt={project.title}
-                  />
-                )}
+                  );
+                  return detailId ? (
+                    <Link to={`/cache/${detailId}`} className="project-link">
+                      {img}
+                    </Link>
+                  ) : (
+                    img
+                  );
+                })()}
                 <div className="project-content">
                   <h3>{project.title}</h3>
                   <p>{project.description}</p>
+
+                  {/* Controls live inside each card so they slide with it */}
+                  <div className="carousel-controls">
+                    <button
+                      className="carousel-nav carousel-prev"
+                      onClick={prevSlide}
+                      aria-label="Previous project"
+                    >
+                      <FontAwesomeIcon icon={faChevronLeft} />
+                    </button>
+
+                    <div className="carousel-dots">
+                      {projects.map((_, i) => (
+                        <button
+                          key={i}
+                          className={`carousel-dot ${i === currentSlide ? 'active' : ''}`}
+                          onClick={() => goToSlide(i)}
+                          aria-label={`Go to project ${i + 1}`}
+                        />
+                      ))}
+                    </div>
+
+                    <button
+                      className="carousel-nav carousel-next"
+                      onClick={nextSlide}
+                      aria-label="Next project"
+                    >
+                      <FontAwesomeIcon icon={faChevronRight} />
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
           ))}
         </div>
-      </div>
-
-      {/* Navigation Arrows */}
-      <button 
-        className="carousel-nav carousel-prev" 
-        onClick={prevSlide}
-        aria-label="Previous project"
-      >
-        <FontAwesomeIcon icon={faChevronLeft} />
-      </button>
-      <button 
-        className="carousel-nav carousel-next" 
-        onClick={nextSlide}
-        aria-label="Next project"
-      >
-        <FontAwesomeIcon icon={faChevronRight} />
-      </button>
-
-      {/* Dots Indicator */}
-      <div className="carousel-dots">
-        {projects.map((_, index) => (
-          <button
-            key={index}
-            className={`carousel-dot ${index === currentSlide ? 'active' : ''}`}
-            onClick={() => goToSlide(index)}
-            aria-label={`Go to project ${index + 1}`}
-          />
-        ))}
       </div>
     </div>
   );
