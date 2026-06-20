@@ -65,6 +65,16 @@ const ProjectCarousel = ({ products, getProtectedImageUrl }) => {
     return () => mq.removeEventListener('change', handler);
   }, []);
 
+  // Track viewport width so the coverflow tilt can scale with it
+  const [viewportW, setViewportW] = useState(
+    () => (typeof window !== 'undefined' ? window.innerWidth : 375)
+  );
+  useEffect(() => {
+    const onResize = () => setViewportW(window.innerWidth);
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
+
   // Auto-play (pauses on hover or touch)
   useEffect(() => {
     if (!isAutoPlaying) return;
@@ -117,10 +127,11 @@ const ProjectCarousel = ({ products, getProtectedImageUrl }) => {
     if (offset < -n / 2) offset += n;
     const abs = Math.abs(offset);
     const hidden = abs >= 2; // only the centre + immediate neighbours show
-    // Steep rotation + tight spacing so the centre and its two neighbours read
-    // as three faces of a 3D shape; the side faces tilt outward.
+    // Ease the side-face tilt off as the viewport widens: steeper on small
+    // phones, flatter/more open on larger screens (60deg @320 -> 44deg @748).
+    const tilt = Math.max(44, Math.min(68, 68 - ((viewportW - 320) / 428) * 24));
     return {
-      transform: `translateX(calc(-50% + ${offset * 34}vw)) translateY(-50%) translateZ(${abs === 0 ? 40 : -120}px) rotateY(${offset * 60}deg)`,
+      transform: `translateX(calc(-50% + ${offset * 40}vw)) translateY(-50%) translateZ(${abs === 0 ? 40 : -120}px) rotateY(${offset * tilt}deg)`,
       zIndex: 10 - abs,
       opacity: hidden ? 0 : 1,
       pointerEvents: hidden ? 'none' : 'auto',

@@ -1774,14 +1774,16 @@ nav #logo span.special-char,
 
 .chrome-text,
 .tattoo-text {
-  background: linear-gradient(
-    135deg,
-    rgba(170, 170, 170, 0.1) 0%,
-    rgba(170, 170, 170, 0.2) 25%,
-    rgba(170, 170, 170, 0.3) 50%,
-    rgba(170, 170, 170, 0.2) 75%,
-    rgba(170, 170, 170, 0.1) 100%
-  );
+  background:
+    linear-gradient(
+      135deg,
+      rgba(170, 170, 170, 0.04) 0%,
+      rgba(170, 170, 170, 0.07) 25%,
+      rgba(170, 170, 170, 0.11) 50%,
+      rgba(170, 170, 170, 0.07) 75%,
+      rgba(170, 170, 170, 0.04) 100%
+    ),
+    #060606;
   background-size: 200% 200%;
   animation: liquid-shimmer 2s ease-in-out infinite;
   position: relative;
@@ -1828,7 +1830,7 @@ nav #logo span.special-char,
   font-size: var(--font-size-xl);
   font-weight: bold;
   margin-bottom: var(--spacing-md);
-  color: var(--color-text);
+  color: #ffffff;
   padding: var(--spacing-md) var(--spacing-md) 0 var(--spacing-md);
 }
 
@@ -1836,7 +1838,7 @@ nav #logo span.special-char,
   padding: var(--spacing-md);
   font-size: var(--font-size-sm);
   line-height: 1.5;
-  color: var(--color-text-light);
+  color: rgba(255, 255, 255, 0.72);
   flex-grow: 1;
 }
 
@@ -1850,14 +1852,14 @@ nav #logo span.special-char,
   font-size: var(--font-size-xl);
   font-weight: bold;
   margin-bottom: var(--spacing-md);
-  color: var(--color-text);
+  color: #ffffff;
   padding: var(--spacing-md) var(--spacing-md) 0 var(--spacing-md);
 }
 
 .tattoo-text p {
   font-size: var(--font-size-sm);
   line-height: 1.5;
-  color: var(--color-text-light);
+  color: rgba(255, 255, 255, 0.72);
   margin-bottom: var(--spacing-md);
   padding: 0 var(--spacing-md) var(--spacing-md) var(--spacing-md);
 }
@@ -4935,15 +4937,16 @@ input:checked + .toggle-slider:before {
   flex-direction: column;
   align-items: center;
   text-align: center; /* h3 + caption share the carousel's centered axis */
-  background: linear-gradient(
-    to bottom,
-    rgba(170, 170, 170, 0.05) 0%,
-    rgba(170, 170, 170, 0.1) 20%,
-    rgba(170, 170, 170, 0.2) 40%,
-    rgba(170, 170, 170, 0.3) 60%,
-    rgba(170, 170, 170, 0.2) 80%,
-    rgba(170, 170, 170, 0.1) 100%
-  );
+  background:
+    linear-gradient(
+      135deg,
+      rgba(170, 170, 170, 0.04) 0%,
+      rgba(170, 170, 170, 0.07) 25%,
+      rgba(170, 170, 170, 0.11) 50%,
+      rgba(170, 170, 170, 0.07) 75%,
+      rgba(170, 170, 170, 0.04) 100%
+    ),
+    #060606;
   background-size: 200% 200%;
   animation: liquid-shimmer 2s ease-in-out infinite;
   position: relative;
@@ -5133,8 +5136,8 @@ input:checked + .toggle-slider:before {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 60vw;
-  max-width: 285px;
+  width: 54vw;
+  max-width: 270px;
   height: 84vw;
   max-height: 400px;
   display: flex;
@@ -5189,14 +5192,16 @@ input:checked + .toggle-slider:before {
   overflow: hidden;
   padding: var(--spacing-sm) var(--spacing-md);
   text-align: center;
-  background: linear-gradient(
-    135deg,
-    rgba(170, 170, 170, 0.1) 0%,
-    rgba(170, 170, 170, 0.2) 25%,
-    rgba(170, 170, 170, 0.3) 50%,
-    rgba(170, 170, 170, 0.2) 75%,
-    rgba(170, 170, 170, 0.1) 100%
-  );
+  background:
+    linear-gradient(
+      135deg,
+      rgba(170, 170, 170, 0.04) 0%,
+      rgba(170, 170, 170, 0.07) 25%,
+      rgba(170, 170, 170, 0.11) 50%,
+      rgba(170, 170, 170, 0.07) 75%,
+      rgba(170, 170, 170, 0.04) 100%
+    ),
+    #060606;
   background-size: 200% 200%;
   animation: liquid-shimmer 2s ease-in-out infinite;
 }
@@ -6482,23 +6487,18 @@ input:checked + .toggle-slider:before {
 
 /* Dark Mode - Tattoo Text with Details Title Gradient */
 [data-theme="dark"] .tattoo-text {
-  background: linear-gradient(
-    135deg,
-    rgba(0, 0, 0, 0.9) 0%,
-    rgba(20, 20, 20, 0.8) 25%,
-    rgba(40, 40, 40, 0.7) 50%,
-    rgba(20, 20, 20, 0.8) 75%,
-    rgba(0, 0, 0, 0.9) 100%
-  );
+  background:
+    linear-gradient(
+      135deg,
+      rgba(170, 170, 170, 0.04) 0%,
+      rgba(170, 170, 170, 0.07) 25%,
+      rgba(170, 170, 170, 0.11) 50%,
+      rgba(170, 170, 170, 0.07) 75%,
+      rgba(170, 170, 170, 0.04) 100%
+    ),
+    #060606;
   background-size: 200% 200%;
-  animation: liquid-shimmer 10s ease-in-out infinite;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+  animation: liquid-shimmer 2s ease-in-out infinite;
   position: relative;
   overflow: hidden;
 }
@@ -6530,23 +6530,18 @@ input:checked + .toggle-slider:before {
 
 /* Dark Mode - Chrome Text with Details Title Gradient */
 [data-theme="dark"] .chrome-text {
-  background: linear-gradient(
-    135deg,
-    rgba(0, 0, 0, 0.9) 0%,
-    rgba(20, 20, 20, 0.8) 25%,
-    rgba(40, 40, 40, 0.7) 50%,
-    rgba(20, 20, 20, 0.8) 75%,
-    rgba(0, 0, 0, 0.9) 100%
-  );
+  background:
+    linear-gradient(
+      135deg,
+      rgba(170, 170, 170, 0.04) 0%,
+      rgba(170, 170, 170, 0.07) 25%,
+      rgba(170, 170, 170, 0.11) 50%,
+      rgba(170, 170, 170, 0.07) 75%,
+      rgba(170, 170, 170, 0.04) 100%
+    ),
+    #060606;
   background-size: 200% 200%;
-  animation: liquid-shimmer 10s ease-in-out infinite;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+  animation: liquid-shimmer 2s ease-in-out infinite;
   position: relative;
   overflow: hidden;
 }
