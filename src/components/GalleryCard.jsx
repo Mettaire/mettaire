@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -18,7 +18,39 @@ const getFullImageUrl = (filename) =>
 
 const GalleryCard = ({ product, currentPage, showViolentContent }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const reduced = useReducedMotionPref();
+
+  // Swipe-to-cycle: track the touch start so we can tell a horizontal swipe
+  // (change image) from a tap (open the piece). didSwipe blocks the Link's
+  // click after a swipe so the card doesn't navigate mid-gesture.
+  const touchStartX = useRef(0);
+  const touchStartY = useRef(0);
+  const didSwipe = useRef(false);
+  const linkRef = useRef(null);
+
+  // Laptop/trackpad horizontal swipes arrive as wheel events (deltaX), not
+  // touch. React binds wheel passively, so attach a native non-passive listener
+  // to cycle the image and stop the gesture from triggering browser back/fwd.
+  const imageCount = product.image?.length ?? 0;
+  useEffect(() => {
+    const el = linkRef.current;
+    if (!el || imageCount <= 1) return;
+    let lock = false;
+    let resetTimer;
+    const onWheel = (e) => {
+      if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return; // vertical → scroll
+      e.preventDefault();
+      clearTimeout(resetTimer);
+      resetTimer = setTimeout(() => { lock = false; }, 150); // one step per gesture
+      if (lock || Math.abs(e.deltaX) < 20) return;
+      lock = true;
+      const dir = e.deltaX > 0 ? 1 : -1;
+      setCurrentIndex((i) => (i + dir + imageCount) % imageCount);
+    };
+    el.addEventListener('wheel', onWheel, { passive: false });
+    return () => { el.removeEventListener('wheel', onWheel); clearTimeout(resetTimer); };
+  }, [imageCount]);
 
   // Safety check for product data
   if (!product || !product.image || !Array.isArray(product.image) || product.image.length === 0) {
@@ -34,14 +66,42 @@ const GalleryCard = ({ product, currentPage, showViolentContent }) => {
   const handleHover = () => setIsHovered(true);
   const handleMouseLeave = () => setIsHovered(false);
 
-  // Show only the first media in the grid (cards keep their natural size so the
-  // masonry layout doesn't reflow/jolt). All versions are viewable on the
-  // detail page; a badge signals when a piece has more than one.
-  const primaryMedia = product.image[0];
-  const isVideo = primaryMedia.includes('.mp4');
-  const fullImageUrl = getFullImageUrl(primaryMedia);
   const hasMultiple = product.image.length > 1;
   const isVisible = showViolentContent || !product.hasViolence;
+
+  // Show the swiped-to media (defaults to the first). All versions are also
+  // viewable on the detail page; the badge signals when a piece has more.
+  const currentMedia = product.image[currentIndex] ?? product.image[0];
+  const isVideo = currentMedia.includes('.mp4');
+  const fullImageUrl = getFullImageUrl(currentMedia);
+
+  // Cycle the on-card image with a horizontal swipe; vertical drags scroll.
+  const cycle = (dir) =>
+    setCurrentIndex((i) => (i + dir + product.image.length) % product.image.length);
+
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
+    didSwipe.current = false;
+  };
+
+  const handleTouchEnd = (e) => {
+    if (!hasMultiple) return;
+    const dx = e.changedTouches[0].clientX - touchStartX.current;
+    const dy = e.changedTouches[0].clientY - touchStartY.current;
+    if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) {
+      didSwipe.current = true;
+      cycle(dx < 0 ? 1 : -1);
+    }
+  };
+
+  // Swallow the click the browser fires after a swipe so we don't navigate.
+  const handleClickCapture = (e) => {
+    if (didSwipe.current) {
+      e.preventDefault();
+      didSwipe.current = false;
+    }
+  };
 
   return (
     <motion.div
@@ -52,11 +112,20 @@ const GalleryCard = ({ product, currentPage, showViolentContent }) => {
       transition={reduced ? { duration: 0 } : { duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
     >
       <div className="gallery-card-content">
-        <Link to={`${product.id}?page=${currentPage}`} className="link-no-underline">
+        <Link
+          ref={linkRef}
+          to={`${product.id}?page=${currentPage}`}
+          className="link-no-underline"
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+          onClickCapture={handleClickCapture}
+          style={hasMultiple ? { touchAction: 'pan-y' } : undefined}
+        >
           {isVisible ? (
             <>
               {isVideo ? (
                 <video
+                  key={currentMedia}
                   className="gallery-video"
                   autoPlay
                   width="auto"
@@ -79,10 +148,20 @@ const GalleryCard = ({ product, currentPage, showViolentContent }) => {
                 />
               )}
               {hasMultiple && (
-                <span className="card-media-count" aria-label={`${product.image.length} items — view all on the piece's page`}>
+                <span className="card-media-count" aria-label={`${product.image.length} items — swipe to browse, view all on the piece's page`}>
                   <FontAwesomeIcon icon={faLayerGroup} />
                   {product.image.length}
                 </span>
+              )}
+              {hasMultiple && (
+                <div className="card-swipe-dots" aria-hidden="true">
+                  {product.image.map((_, i) => (
+                    <span
+                      key={i}
+                      className={`card-swipe-dot ${i === currentIndex ? 'active' : ''}`}
+                    />
+                  ))}
+                </div>
               )}
               <div className="card-overlay">
                 <span className="card-overlay-title">{product.name}</span>
