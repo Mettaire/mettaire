@@ -2045,6 +2045,15 @@ nav #logo span.special-char,
     margin-left: auto;
     margin-right: auto;
   }
+
+  /* The input is 97% wide and centered here, so match the suggestions dropdown
+     to it (1.5% margin each side) instead of the left-aligned desktop default.
+     Scoped under .search-bar to outrank the base .search-suggest (which is
+     later in the file). */
+  .search-bar .search-suggest {
+    left: 1.5%;
+    right: 1.5%;
+  }
 }
 
 .search-bar-input {
