@@ -257,6 +257,14 @@ nav .right {
   border: none;
   cursor: pointer;
   padding: var(--spacing-sm);
+  /* No focus ring / tap highlight on the hamburger when tapped */
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.dropdown-btn:focus,
+.dropdown-btn:focus-visible {
+  outline: none;
 }
 
 .main-menu {
@@ -4189,25 +4197,56 @@ nav #logo span.special-char,
   .main-menu {
     display: none;
     position: absolute;
-    top: 80%;
+    /* Sit just below the bar so the menu lines up under the hamburger icon */
+    top: calc(100% + 0.6vh);
     right: 1vh;
     list-style-type: none;
     padding: 2vh;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
     z-index: 2;
     border-radius: 8px;
-    background-color: black;
+    /* Shimmering liquid-glass background, matching the coverflow cards */
+    background:
+      linear-gradient(
+        135deg,
+        rgba(170, 170, 170, 0.04) 0%,
+        rgba(170, 170, 170, 0.07) 25%,
+        rgba(170, 170, 170, 0.11) 50%,
+        rgba(170, 170, 170, 0.07) 75%,
+        rgba(170, 170, 170, 0.04) 100%
+      ),
+      #060606;
+    background-size: 200% 200%;
+    animation: liquid-shimmer 2s ease-in-out infinite;
     border: 1px solid rgba(255, 255, 255, 0.3);
     font-size: 2.5vh;
+    overflow: hidden;
   }
-  
+
+  /* Light sweep across the menu background */
+  .main-menu::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.12), transparent);
+    animation: shimmer-sweep 3s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 0;
+  }
+
   .main-menu.show {
     display: block;
   }
-  
+
   .main-menu li {
     display: block;
     padding: 2%;
+    /* Keep links above the shimmer sweep */
+    position: relative;
+    z-index: 1;
   }
   
   .main-menu li a {
@@ -4232,13 +4271,11 @@ nav #logo span.special-char,
     font-weight: bold;
     opacity: 1;
   }
-  
-  .dropdown-btn:hover + .main-menu,
-  .dropdown-btn:focus + .main-menu,
-  .main-menu:hover {
-    display: block;
-  }
-  
+
+  /* The menu is driven solely by the `.show` state (toggled in React) so it
+     reliably closes when a link is tapped. The old :hover/:focus openers
+     left it stuck open on touch after navigating. */
+
   nav {
     position: relative;
   }
