@@ -28,6 +28,19 @@ const GalleryCard = ({ product, currentPage, showViolentContent }) => {
   const touchStartY = useRef(0);
   const didSwipe = useRef(false);
   const linkRef = useRef(null);
+  const videoRef = useRef(null);
+
+  // When a swipe lands on a video, point the element at it and play. Changing
+  // React's src alone doesn't restart a <video>, and forcing a remount with a
+  // key breaks autoplay (the cover freezes) — so reload it imperatively.
+  useEffect(() => {
+    const v = videoRef.current;
+    const media = product?.image?.[currentIndex] ?? product?.image?.[0];
+    if (!v || !media || !media.includes('.mp4')) return;
+    v.load();
+    const played = v.play();
+    if (played && played.catch) played.catch(() => {});
+  }, [product, currentIndex]);
 
   // Laptop/trackpad horizontal swipes arrive as wheel events (deltaX), not
   // touch. React binds wheel passively, so attach a native non-passive listener
@@ -125,7 +138,7 @@ const GalleryCard = ({ product, currentPage, showViolentContent }) => {
             <>
               {isVideo ? (
                 <video
-                  key={currentMedia}
+                  ref={videoRef}
                   className="gallery-video"
                   autoPlay
                   width="auto"
