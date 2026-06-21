@@ -486,6 +486,14 @@ nav #logo.active,
   object-fit: cover;
 }
 
+/* On phones the full-bleed cover crop lops the (landscape) video off — scale
+   the whole thing down to fit the portrait viewport instead. */
+@media (max-width: 768px) {
+  .landingpage-image {
+    object-fit: contain;
+  }
+}
+
 .content {
   position: relative;
   z-index: 2;
@@ -5166,6 +5174,10 @@ input:checked + .toggle-slider:before {
   width: 100%;
   margin: 0 auto;
   text-align: center;
+  /* Side cards spread past the wrapper; clip horizontally so they peek to the
+     screen edge without making the whole page scroll sideways on mobile.
+     `clip` (not `hidden`) keeps the vertical glow and the stage's 3D intact. */
+  overflow-x: clip;
 }
 
 /* The About coverflow spans its own (now full-width) row, capped + centered
