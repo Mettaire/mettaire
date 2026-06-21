@@ -111,11 +111,6 @@ const Coverflow = ({ items = [], getImageUrl, showCaption = false, onNavigate })
               {showCaption && (
                 <div className="coverflow-card-text">
                   <h3>{item.title}</h3>
-                  <p>
-                    {viewportW >= 1200 && item.descriptionFull
-                      ? item.descriptionFull
-                      : item.description}
-                  </p>
                 </div>
               )}
             </div>
