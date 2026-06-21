@@ -2,30 +2,36 @@ import React from 'react';
 import Coverflow from './Coverflow';
 
 const ProjectCarousel = ({ products, getProtectedImageUrl }) => {
+  // Short captions fit the smaller mobile/tablet cards; the full descriptions
+  // are restored on desktop, where the taller caption area has room for them.
   const projects = [
     {
       id: 1,
       image: "secondwind.webp",
       title: "Second Wind",
-      description: "Full-stack platform connecting people impacted by the justice system to resources, support, and employment."
+      description: "Full-stack platform connecting people impacted by the justice system to resources, support, and employment.",
+      descriptionFull: "Second Wind, a full stack online community-based platform that provides resources, support, and employment for those impacted by the criminal justice system."
     },
     {
       id: 2,
       image: "careerspring.webp",
       title: "CareerSpring Interest Finder",
-      description: "A custom WordPress career-interest assessment tool built with JavaScript, HTML & CSS to help people map their professional paths."
+      description: "A custom WordPress career-interest assessment tool built with JavaScript, HTML & CSS to help people map their professional paths.",
+      descriptionFull: "As a Developer Contractor, I've been instrumental in developing software like CareerSpring's Career Interest Profiler by leveraging JavaScript, HTML & CSS. This custom career assessment tool, seamlessly integrated into WordPress, serves as a beacon for individuals exploring their professional paths."
     },
     {
       id: 3,
       image: "SAP.webp",
       title: "SAP (FORTHESOUL)",
-      description: "An Arduino-powered sculpture that speaks an existential narrative drawn from Sartre, Camus, and my own words."
+      description: "An Arduino-powered sculpture that speaks an existential narrative drawn from Sartre, Camus, and my own words.",
+      descriptionFull: "SAP (FORTHESOUL) represents a convergence of 3D modeling with AutoCAD, incorporating components such as a PIR motion sensor, DFPlayer, SD card, jumper wires, and Arduino Uno. Within the intricate model, the sculpture delivers a spoken narrative drawn from a fusion of written words by Jean-Paul Sartre, Albert Camus, and my own alterations through text-to-speech software."
     },
     {
       id: 4,
       image: "metvoyager.webp",
       title: "METVoyager",
-      description: "A web app that taps the MET API to recommend artworks and save favorites to a personal gallery."
+      description: "A web app that taps the MET API to recommend artworks and save favorites to a personal gallery.",
+      descriptionFull: "METVoyager is a web platform I developed that leverages the MET API to deliver artwork recommendations based on search functionality or by selecting specific categories to generate matching art. The platform also lets users save and revisit favorite artworks in their own personal gallery."
     }
   ];
 
@@ -44,6 +50,7 @@ const ProjectCarousel = ({ products, getProtectedImageUrl }) => {
       to: detailId ? `/cache/${detailId}` : null,
       title: p.title,
       description: p.description,
+      descriptionFull: p.descriptionFull,
     };
   });
 

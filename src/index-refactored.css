@@ -5172,6 +5172,10 @@ input:checked + .toggle-slider:before {
 .project-carousel.coverflow {
   display: block;
   width: 100%;
+  /* Widens on larger viewports (see media queries) so the row can use the
+     horizontal space; shared by the home and About coverflows. */
+  --cf-max: 800px;
+  max-width: var(--cf-max);
   margin: 0 auto;
   text-align: center;
   /* Side cards spread past the wrapper; clip horizontally so they peek to the
@@ -5183,13 +5187,27 @@ input:checked + .toggle-slider:before {
 /* The About coverflow spans its own (now full-width) row, capped + centered
    like the home Featured Works rather than the old narrow carousel column. */
 .philosophy-inspiration-container > .project-carousel.coverflow {
-  max-width: 800px;
+  max-width: var(--cf-max, 800px);
+}
+
+/* On phones the coverflow needs the whole screen: let the spread side cards
+   spill out of the row's horizontal padding (so they aren't clipped by the
+   wrapper) and clip the sideways overflow at the full-width page root instead,
+   which keeps every card fully visible without letting the page scroll. */
+@media (max-width: 747px) {
+  .project-carousel.coverflow {
+    overflow-x: visible;
+  }
+  .about-container,
+  .home-page {
+    overflow-x: clip;
+  }
 }
 
 .coverflow-stage {
   position: relative;
-  height: 86vw;
-  max-height: 410px;
+  height: 100vw;
+  max-height: 460px;
   margin: 0 auto var(--spacing-md);
   perspective: 900px;
   transform-style: preserve-3d;
@@ -5199,10 +5217,10 @@ input:checked + .toggle-slider:before {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 54vw;
+  width: 52vw;
   max-width: 270px;
-  height: 84vw;
-  max-height: 400px;
+  height: 98vw;
+  max-height: 450px;
   display: flex;
   flex-direction: column;
   border-radius: 16px;
@@ -5210,7 +5228,12 @@ input:checked + .toggle-slider:before {
   cursor: pointer;
   background: linear-gradient(160deg, #0b0b0b 0%, #171717 50%, #0b0b0b 100%);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.5);
+  /* Soft, layered, light-mode-friendly shadows. The side cards sit further
+     back so they cast a lighter shadow than the focused card; dark mode
+     deepens both (a faint light-mode shadow would vanish on a dark page). */
+  --cf-ground-side: 0 10px 24px rgba(0, 0, 0, 0.14), 0 3px 8px rgba(0, 0, 0, 0.10);
+  --cf-ground: 0 22px 44px rgba(0, 0, 0, 0.20), 0 7px 16px rgba(0, 0, 0, 0.12);
+  box-shadow: var(--cf-ground-side);
   transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.55s ease,
     box-shadow 0.4s ease, border-color 0.4s ease;
   backface-visibility: hidden;
@@ -5231,12 +5254,46 @@ input:checked + .toggle-slider:before {
 .coverflow-card.active {
   box-shadow:
     0 0 22px rgba(var(--color-club-rgb), 0.38),
-    0 14px 34px rgba(0, 0, 0, 0.5);
+    var(--cf-ground);
   animation: coverflow-glow 2s ease-in-out infinite alternate;
 }
 
 .coverflow-card.active::after {
   opacity: 0;
+}
+
+/* Deepen the card shadows in dark mode, where soft light shadows disappear */
+[data-theme="dark"] .coverflow-card {
+  --cf-ground-side: 0 14px 30px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.38);
+  --cf-ground: 0 22px 44px rgba(0, 0, 0, 0.55), 0 7px 16px rgba(0, 0, 0, 0.42);
+}
+
+/* Larger viewports: let the coverflow grow taller (and a touch wider) so it
+   isn't a small card stranded in a big row on tablet and desktop. */
+@media (min-width: 748px) {
+  .project-carousel.coverflow {
+    --cf-max: min(92vw, 860px);
+  }
+  .coverflow-stage {
+    max-height: 520px;
+  }
+  .coverflow-card {
+    max-width: 340px;
+    max-height: 510px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .project-carousel.coverflow {
+    --cf-max: min(92vw, 1080px);
+  }
+  .coverflow-stage {
+    max-height: 570px;
+  }
+  .coverflow-card {
+    max-width: 400px;
+    max-height: 560px;
+  }
 }
 
 .coverflow-card img {
@@ -5302,7 +5359,7 @@ input:checked + .toggle-slider:before {
   to {
     box-shadow:
       0 0 36px rgba(var(--color-club-rgb), 0.6),
-      0 14px 34px rgba(0, 0, 0, 0.5);
+      var(--cf-ground);
   }
 }
 

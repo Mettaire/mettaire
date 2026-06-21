@@ -64,8 +64,9 @@ const Coverflow = ({ items = [], getImageUrl, showCaption = false }) => {
     const hidden = abs >= 2; // only the centre + immediate neighbours show
     // Steeper tilt on small phones, flatter/more open on larger screens
     const tilt = Math.max(44, Math.min(68, 68 - ((viewportW - 320) / 428) * 24));
-    // Side spread scales with width but caps so desktop cards don't fly apart
-    const spread = Math.min(viewportW * 0.4, 300);
+    // Side spread scales with width but caps so desktop cards don't fly apart.
+    // The cap is generous so the row keeps widening through tablet/desktop.
+    const spread = Math.min(viewportW * 0.44, 360);
     return {
       transform: `translateX(calc(-50% + ${offset * spread}px)) translateY(-50%) translateZ(${abs === 0 ? 40 : -120}px) rotateY(${offset * tilt}deg)`,
       zIndex: 10 - abs,
@@ -106,7 +107,11 @@ const Coverflow = ({ items = [], getImageUrl, showCaption = false }) => {
               {showCaption && (
                 <div className="coverflow-card-text">
                   <h3>{item.title}</h3>
-                  <p>{item.description}</p>
+                  <p>
+                    {viewportW >= 1200 && item.descriptionFull
+                      ? item.descriptionFull
+                      : item.description}
+                  </p>
                 </div>
               )}
             </div>
