@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCog, faSun, faMoon, faEye, faEyeSlash, faVolumeUp, faVolumeMute } from '@fortawesome/free-solid-svg-icons';
+import Loading from './Loading';
 
 export default function Settings() {
   const [isOpen, setIsOpen] = useState(false);
@@ -9,6 +10,23 @@ export default function Settings() {
   const [reducedMotion, setReducedMotion] = useState(false);
   const [largeText, setLargeText] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(true);
+  // Flash the METTAIRE loading screen while a toggled change applies
+  const [applying, setApplying] = useState(false);
+  const applyTimer = useRef(null);
+
+  const triggerLoad = () => {
+    setApplying(true);
+    clearTimeout(applyTimer.current);
+    applyTimer.current = setTimeout(() => setApplying(false), 1000);
+  };
+
+  // Set a toggle's value and show the loading screen while it takes effect
+  const updateSetting = (setter) => (e) => {
+    setter(e.target.checked);
+    triggerLoad();
+  };
+
+  useEffect(() => () => clearTimeout(applyTimer.current), []);
 
   // Load settings from localStorage on component mount
   useEffect(() => {
@@ -148,7 +166,7 @@ export default function Settings() {
                     <input
                       type="checkbox"
                       checked={isDarkMode}
-                      onChange={(e) => setIsDarkMode(e.target.checked)}
+                      onChange={updateSetting(setIsDarkMode)}
                     />
                     <span className="toggle-slider"></span>
                   </label>
@@ -169,7 +187,7 @@ export default function Settings() {
                     <input
                       type="checkbox"
                       checked={highContrast}
-                      onChange={(e) => setHighContrast(e.target.checked)}
+                      onChange={updateSetting(setHighContrast)}
                     />
                     <span className="toggle-slider"></span>
                   </label>
@@ -185,7 +203,7 @@ export default function Settings() {
                     <input
                       type="checkbox"
                       checked={reducedMotion}
-                      onChange={(e) => setReducedMotion(e.target.checked)}
+                      onChange={updateSetting(setReducedMotion)}
                     />
                     <span className="toggle-slider"></span>
                   </label>
@@ -200,7 +218,7 @@ export default function Settings() {
                     <input
                       type="checkbox"
                       checked={largeText}
-                      onChange={(e) => setLargeText(e.target.checked)}
+                      onChange={updateSetting(setLargeText)}
                     />
                     <span className="toggle-slider"></span>
                   </label>
@@ -215,7 +233,7 @@ export default function Settings() {
                     <input
                       type="checkbox"
                       checked={soundEnabled}
-                      onChange={(e) => setSoundEnabled(e.target.checked)}
+                      onChange={updateSetting(setSoundEnabled)}
                     />
                     <span className="toggle-slider"></span>
                   </label>
@@ -256,6 +274,13 @@ export default function Settings() {
           </div>
         </div>
       )}
+
+      {/* METTAIRE loading screen while a toggled change applies */}
+      {applying && (
+        <div className="settings-loading-overlay">
+          <Loading />
+        </div>
+      )}
     </>
   );
-} 
+}

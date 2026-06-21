@@ -905,6 +905,17 @@ nav #logo span.special-char,
   background: radial-gradient(circle at 50% 45%, #0c0c0c 0%, #050505 70%);
 }
 
+/* Full-screen overlay so the loading screen covers the page (and the settings
+   panel) while a toggled change applies. */
+.settings-loading-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+}
+.settings-loading-overlay .loading {
+  height: 100%;
+}
+
 .loading-image {
   width: 100%;
   height: 100vh;
@@ -5482,12 +5493,12 @@ input:checked + .toggle-slider:before {
   opacity: 0;
 }
 
-/* Deepen the card shadows in dark mode, where soft light shadows disappear;
-   restore the subtle edge highlight (harmless against the dark page). */
+/* Deepen the card shadows in dark mode, where soft light shadows disappear.
+   (No border — the faint-white border over the dark card reads as a dark
+   1px outline, same as it did in light mode.) */
 [data-theme="dark"] .coverflow-card {
   --cf-ground-side: 0 14px 30px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0, 0, 0, 0.38);
   --cf-ground: 0 22px 44px rgba(0, 0, 0, 0.55), 0 7px 16px rgba(0, 0, 0, 0.42);
-  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 /* Larger viewports: let the coverflow grow taller (and a touch wider) so it
