@@ -1780,8 +1780,9 @@ nav #logo span.special-char,
 }
 
 .upcoming-projects-column-2 {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  /* One project per full-width row (editorial layout) */
+  display: flex;
+  flex-direction: column;
   gap: var(--spacing-xl);
 }
 
@@ -1793,6 +1794,15 @@ nav #logo span.special-char,
   transition: var(--transition-normal);
   display: flex;
   flex-direction: column;
+}
+
+/* The whole card links to the piece — keep the original flex-column layout */
+.upcoming-project-link {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  text-decoration: none;
+  color: inherit;
 }
 
 .chrome-text,
@@ -1874,7 +1884,7 @@ nav #logo span.special-char,
   font-family: var(--font-family-display);
   font-size: var(--font-size-xl);
   font-weight: bold;
-  margin-bottom: var(--spacing-md);
+  margin-bottom: var(--spacing-xs);
   color: #ffffff;
   padding: var(--spacing-md) var(--spacing-md) 0 var(--spacing-md);
 }
@@ -1905,6 +1915,129 @@ nav #logo span.special-char,
   height: 400px;
   object-fit: cover;
   transition: var(--transition-normal);
+}
+
+/* Shift the left tattoo image's crop so its lower portion shows (it was being
+   cut off) — only changes which part is visible, not the card layout. */
+.image-column-1 img {
+  object-position: center bottom;
+}
+
+/* ── Projects-in-Progress layout ────────────────────────────────────────────
+   Mobile + tablet (<748px): media-forward overlay cards (title + blurb in a
+   gradient over the media). Desktop (>=748px): alternating editorial rows with
+   a 70/30 media/text split. */
+
+/* Overlay cards (mobile + tablet) */
+@media (max-width: 747px) {
+  .upcoming-projects-column-2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+
+  .upcoming-project-link {
+    position: relative;
+    flex-direction: column;
+  }
+
+  .image-with-description video,
+  .tattoo-mini-gallery {
+    width: 100%;
+    height: 300px;
+  }
+
+  .tattoo-mini-gallery {
+    grid-template-columns: 1fr 1fr;
+    gap: 0; /* the two images read as one tile — no gap between them */
+  }
+  .image-column-1,
+  .image-column-2 {
+    border-radius: 0;
+  }
+  .image-column-1 img,
+  .image-column-2 img {
+    height: 300px;
+  }
+
+  /* The video already shows the "Heart in Chrome" wordmark, so the overlay
+     title is redundant here — hide it and keep just the blurb. */
+  .chrome-text h3 {
+    display: none;
+  }
+
+  .chrome-text,
+  .tattoo-text {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.92) 0%, rgba(0, 0, 0, 0.5) 55%, transparent 100%);
+    animation: none;
+  }
+  .chrome-text::before,
+  .tattoo-text::before {
+    display: none;
+  }
+  .chrome-text p,
+  .tattoo-text p {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Dark mode sets these panels to position:relative with an opaque shimmer
+     background, which cancels the overlay. Re-apply the overlay treatment with
+     higher specificity so dark mode matches light mode. */
+  [data-theme="dark"] .upcoming-projects-column-2 .chrome-text,
+  [data-theme="dark"] .upcoming-projects-column-2 .tattoo-text {
+    position: absolute;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.92) 0%, rgba(0, 0, 0, 0.5) 55%, transparent 100%);
+    animation: none;
+  }
+  [data-theme="dark"] .upcoming-projects-column-2 .chrome-text::before,
+  [data-theme="dark"] .upcoming-projects-column-2 .tattoo-text::before {
+    display: none;
+  }
+}
+
+/* Editorial rows, 70/30 (desktop). DOM order alternates the side: Heart in
+   Chrome is media-left/text-right, Tattooing is text-left/media-right. */
+@media (min-width: 748px) {
+  .upcoming-project-link {
+    flex-direction: row;
+    align-items: stretch;
+    min-height: 360px;
+  }
+
+  .image-with-description video,
+  .tattoo-mini-gallery {
+    flex: 0 0 70%;
+    width: 70%;
+    min-width: 0;
+    height: auto;
+  }
+
+  .tattoo-mini-gallery {
+    grid-template-columns: 1fr 1fr;
+  }
+  .image-column-1 img,
+  .image-column-2 img {
+    height: 100%;
+  }
+
+  .chrome-text,
+  .tattoo-text {
+    flex: 1 1 30%;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .chrome-text p {
+    flex-grow: 0;
+  }
 }
 
 .image-column-1 img:hover,

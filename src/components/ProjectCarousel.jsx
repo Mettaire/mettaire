@@ -59,6 +59,7 @@ const ProjectCarousel = ({ products, getProtectedImageUrl }) => {
       items={items}
       getImageUrl={(img) => getProtectedImageUrl(img, products)}
       showCaption
+      onNavigate={() => sessionStorage.setItem('aboutReturn', 'carousel')}
     />
   );
 };

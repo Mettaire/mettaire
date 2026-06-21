@@ -10,7 +10,7 @@ import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons
  * @param {Function} getImageUrl - (filename) => url
  * @param {boolean} showCaption - render a caption block inside each card
  */
-const Coverflow = ({ items = [], getImageUrl, showCaption = false }) => {
+const Coverflow = ({ items = [], getImageUrl, showCaption = false, onNavigate }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const navigate = useNavigate();
@@ -93,9 +93,13 @@ const Coverflow = ({ items = [], getImageUrl, showCaption = false }) => {
               key={item.key ?? index}
               className={`coverflow-card ${isActive ? 'active' : ''}`}
               style={cardStyle(index)}
-              onClick={() =>
-                isActive ? item.to && navigate(item.to) : goToSlide(index)
-              }
+              onClick={() => {
+                if (!isActive) return goToSlide(index);
+                if (item.to) {
+                  onNavigate?.(item);
+                  navigate(item.to);
+                }
+              }}
               role="button"
               aria-label={
                 isActive

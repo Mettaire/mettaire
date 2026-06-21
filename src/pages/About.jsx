@@ -22,6 +22,14 @@ const getProtectedVideoUrl = (filename, products) => {
 
 const AboutPage = () => {
   const { products } = useProducts();
+  // Map a piece's media filename to its detail-page id, so the in-progress
+  // project cards link straight to that piece in the cache.
+  const findProductId = (filename) =>
+    (Array.isArray(products)
+      ? products.find((p) => p.image && p.image.some((img) => img.includes(filename)))
+      : null)?.id ?? null;
+  const chromeId = findProductId('HCteaser.mp4');
+  const tattooId = findProductId('tattoopray.webp');
   // Whether we arrived from a piece's detail page — captured at first render,
   // before the app-level route tracker overwrites the "came from" path.
   const cameFromDetailRef = useRef(getLastPath().startsWith('/cache/'));
@@ -80,12 +88,16 @@ const AboutPage = () => {
   useEffect(() => {
     let raf;
     if (cameFromDetailRef.current) {
-      // Returning from a piece: anchor to the carousel and keep it pinned while
-      // the lazy media above (profile image, videos, carousel art) loads. A
-      // saved pixel offset drifts onto the wrong section as the page grows.
+      // Returning from a piece: anchor to whichever section the piece was opened
+      // from (the carousel, or the Projects-in-Progress cards) and keep it pinned
+      // while the lazy media above loads — a saved pixel offset drifts onto the
+      // wrong section as the page grows.
+      const section = sessionStorage.getItem('aboutReturn') || 'carousel';
+      sessionStorage.removeItem('aboutReturn');
+      const selector = section === 'projects' ? '.upcoming-projects' : '.project-carousel';
       const start = performance.now();
       const pin = () => {
-        const el = document.querySelector('.project-carousel');
+        const el = document.querySelector(selector);
         if (el) el.scrollIntoView({ block: 'center', behavior: 'auto' });
         if (performance.now() - start < 1200) raf = requestAnimationFrame(pin);
       };
@@ -202,24 +214,23 @@ root@wound.os ~ % $ echo 'Accessing the artist's cache.'
         </Reveal>
         <div className="upcoming-projects-column-2">
         <Reveal className="image-with-description" id="chrome-container">
+      <Link to={chromeId ? `/cache/${chromeId}` : '/cache'} className="upcoming-project-link" onClick={() => sessionStorage.setItem('aboutReturn', 'projects')}>
       <video autoPlay muted width="auto" loop playsInline controls={false}>
             <source src={getProtectedVideoUrl('HCteaser.mp4', products)} type="video/mp4" />
             Your browser does not support the video tag.
           </video>
       <div className='chrome-text'>
         <h3>Heart in Chrome</h3>
-        <p>A psychological neo-noir thriller unfolds in <i>Heart in Chrome</i>, a graphic novel currently in the throes of creation, exploring the nexus of art, technology, identity, and power.
-        <br /><br /> 
-        * You can now check out some concept designs for <i>Heart in Chrome</i> in the cache section!</p>
+        <p>A psychological neo-noir thriller unfolds in <i>Heart in Chrome</i>, a graphic novel currently in the throes of creation, exploring the nexus of art, technology, identity, and power.</p>
       </div>
+      </Link>
     </Reveal>
 
     <Reveal className="image-with-description" id="tats">
+    <Link to={tattooId ? `/cache/${tattooId}` : '/cache'} className="upcoming-project-link" onClick={() => sessionStorage.setItem('aboutReturn', 'projects')}>
     <div className="tattoo-text">
       <h3>Tattooing</h3>
-      <p> As my journey unfolds, I aim to use tattooing as another layer of my creative odyssey to explore different ways to connect art with personal experiences and cultural influences.
-      <br /><br />
-         *You can find more designs and practice in the cache section!</p>
+      <p> As my journey unfolds, I aim to use tattooing as another layer of my creative odyssey to explore different ways to connect art with personal experiences and cultural influences.</p>
     </div>
     <div className="tattoo-mini-gallery">
       <div className='image-column-1'>
@@ -228,8 +239,9 @@ root@wound.os ~ % $ echo 'Accessing the artist's cache.'
       <div className='image-column-2'>
       {/* <img src = {`/images/${tattooImages[4]}`} alt= {"tat-4"} /> */}
                   <img src={getProtectedImageUrl(tattooImages[3], products)} alt={"tat-3"} />
-      </div>  
+      </div>
     </div>
+    </Link>
     </Reveal>
     </div>
       </section>
