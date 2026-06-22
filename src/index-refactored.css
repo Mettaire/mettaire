@@ -1543,6 +1543,19 @@ nav #logo span.special-char,
   text-align: left;
 }
 
+/* Text column for THE CREATIVE: divider + heading + paragraph stacked */
+.intro-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* Same two-dash divider as the other section headers, left-aligned */
+.introduction .rect-container {
+  justify-content: flex-start;
+  margin-bottom: var(--spacing-md);
+}
+
 .introduction:hover p {
   color: var(--color-text);
   transition: var(--transition-normal);

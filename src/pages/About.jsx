@@ -117,9 +117,15 @@ const AboutPage = () => {
       <section className="about-row-1">
         <Reveal as="section" className="introduction">
         <img src={getProtectedImageUrl(getProfileImage(), products)} loading="lazy" alt="selfportrait"/>
-        <h2>THE CREATIVE</h2>
-        <p>I'm Daniel Nelson, the creator behind METTAIRE. As an artist, graphic designer, and software engineer, METTAIRE is my way of leaving a piece of myself within the machine—a space where my work exists on its own, independent of an intended audience (unless rooted in code). Inspired by thinkers like Dostoevsky, Camus, Schopenhauer, and Musashi, my creations explore individualism, transformation, and the human condition. Through code, multimedia paintings, and graphic design, I merge fine art with technology, weaving existential themes—absurdism, nihilism, and existentialism—into experiences open to being encountered, absorbed, and interpreted freely.
-        </p>
+        <section className="intro-text">
+          <section className="rect-container">
+            <section className="rect-1"></section>
+            <section className="rect-2"></section>
+          </section>
+          <h2>THE CREATIVE</h2>
+          <p>I'm Daniel Nelson, the creator behind METTAIRE. As an artist, graphic designer, and software engineer, METTAIRE is my way of leaving a piece of myself within the machine—a space where my work exists on its own, independent of an intended audience (unless rooted in code). Inspired by thinkers like Dostoevsky, Camus, Schopenhauer, and Musashi, my creations explore individualism, transformation, and the human condition. Through code, multimedia paintings, and graphic design, I merge fine art with technology, weaving existential themes—absurdism, nihilism, and existentialism—into experiences open to being encountered, absorbed, and interpreted freely.
+          </p>
+        </section>
         </Reveal>
         <Reveal as="section" className="philosophy-inspiration-container">
           <section>
