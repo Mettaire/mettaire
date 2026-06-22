@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import Loading from '../components/Loading';
 import ProjectCarousel from '../components/ProjectCarousel';
+import AboutConsole from '../components/AboutConsole';
 import Reveal from '../components/Reveal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInstagram, faGithub, faMedium, faLinkedin} from '@fortawesome/free-brands-svg-icons';
@@ -35,10 +36,8 @@ const AboutPage = () => {
   const cameFromDetailRef = useRef(getLastPath().startsWith('/cache/'));
   const tattooImages = ["tattoopray.webp", "tat-2.webp", "tat-3.webp", "customsnake.webp"]
   const [loading, setLoading] = useState(true);
-  const [typedText, setTypedText] = useState('');
   const [isSliding, setIsSliding] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   // Check for dark mode setting
   useEffect(() => {
@@ -60,18 +59,6 @@ const AboutPage = () => {
     window.addEventListener('settingsChanged', handleSettingsChanged);
     return () => {
       window.removeEventListener('settingsChanged', handleSettingsChanged);
-    };
-  }, []);
-
-  // Track window width for responsive text
-  useEffect(() => {
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
     };
   }, []);
 
@@ -118,64 +105,13 @@ const AboutPage = () => {
     };
   }, []);
 
-  useEffect(() => {
-    // Get current time for Last login
-    const now = new Date();
-    const lastLogin = now.toLocaleString('en-US', {
-      weekday: 'short',
-      month: 'short',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-      hour12: false
-    });
-    
-    // Simple approach - just set the text directly
-    let baseText = `Last login: ${lastLogin}\nroot@wound.os ~ % $ echo '01001000 01100101 01110010 01100101 00101100 00100000 01001001 00100000 01100001 01101101 00100000 01101001 01101110 01100110 01101001 01101110 01101001 01110100 01100101 00101110 00100000 01011001 01101111 01110101 00100000 01100011 01100001 01101110 00100111 01110100 00100000 01101011 01101001 01101100 01101100 00100000 01101101 01100101 00100000 01001001 00100111 01101101 00100000 01111010 01100101 01110010 01101111 01110011 00100000 01100001 01101110 01100100 00100000 01101111 01101110 01100101 01110011 00101110'\n`;
-    
-    // Additional text for viewports wider than 1200px
-    if (windowWidth >= 1200) {
-      baseText += `\nroot@wound.os ~ % $ cat /proc/artistic/philosophy
-  Loading philosophy...
-  Boundaries dissolve.
-  Each pixel is a choice, every color a statement.
-  Philosophy: installed.
-
-root@wound.os ~ % $ ./execute_vision.sh
-  > Allocating cycles...
-  > Pulling fragments from cache...
-  > Recompiling vision...
-  > Render initialized. No undo.
-  > Initializing creative process...
-
-root@wound.os ~ % $ systemctl status creativity
-● vision.service - Active Interpretation Daemon
-   Loaded: loaded (/etc/systemd/system/creativity.service; enabled)
-   Active: active (running)
-   Status: "Reconstruction in progress"
-   Process: 1337 (artistic_expression)
-   Memory: ∞
-   CGroup: /system.slice/creativity.service
-           └─1337 /usr/bin/expression --recurse --override
-
-root@wound.os ~ % $ echo 'Accessing the artist's cache.'
-  Cache unlocked.
-`;
-    }
-    
-    // Just set the text directly - no animation
-    setTypedText(baseText);
-  }, [windowWidth]);
 
   return (
     <div className="about-container">
       
       <header className="about-header">
         <h1>ABOUT</h1>
-        <section className="about-caption">
-        <p>{typedText}</p>
-        </section>
+        <AboutConsole />
       </header>
 
       <section className="about-row-1">
