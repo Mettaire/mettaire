@@ -29,15 +29,18 @@
 /* CSS Custom Properties (Variables) */
 :root {
   /* Colors */
-  --color-primary: #000000;
+  /* Light theme — soft, cold "Gen X" palette on pure white (flushes with the
+     About profile image + contact video). Cool charcoal + cool greys; the
+     brushed-metal surfaces + cyan glimmers carry the cold-metal feel. */
+  --color-primary: #1a1c1f;
   --color-secondary: #ffffff;
-  --color-accent: #333333;
-  --color-text: #000000;
-  --color-text-light: #666666;
+  --color-accent: #383e45;
+  --color-text: #1a1c1f;
+  --color-text-light: #5e656d;
   --color-background: #ffffff;
-  --color-border: #e0e0e0;
-  --color-hover: #f5f5f5;
-  --color-active: #e8e8e8;
+  --color-border: #e1e4e8;
+  --color-hover: #f0f2f5;
+  --color-active: #e6eaee;
   /* Cold "soft club" accent — cyan neon (wordmark glow + interactive cues) */
   --color-club: #5ce1e6;
   --color-club-rgb: 92, 225, 230;
@@ -189,7 +192,8 @@ input {
   position: fixed;
   top: 0;
   width: 100%;
-  background-color: var(--color-text);
+  /* Always pure black (both themes), not the theme text color */
+  background-color: #000000;
   z-index: var(--z-dropdown);
   border-bottom: 1px solid #5f5e5e;
 }
@@ -267,11 +271,11 @@ nav .right {
   outline: none;
 }
 
-/* Don't let the generic button:hover grey-out apply to the hamburger — keep it
-   black and just darken the icon, the same as dark mode. */
+/* Keep the hamburger transparent (matching the nav) on hover — just dim the
+   icon, instead of the generic button:hover grey-out. */
 .dropdown-btn:hover {
-  background-color: black;
-  color: #cccccc;
+  background-color: transparent;
+  color: rgba(255, 255, 255, 0.65);
 }
 
 .main-menu {
@@ -501,11 +505,11 @@ nav #logo.active,
   object-fit: cover;
 }
 
-/* On phones the full-bleed cover crop lops the (landscape) video off — scale
-   the whole thing down to fit the portrait viewport instead. */
+/* Phones + small tablets: fill the area so the video sits flush under the nav
+   and reads larger (contain left a letterbox gap above it and looked small). */
 @media (max-width: 768px) {
   .landingpage-image {
-    object-fit: contain;
+    object-fit: cover;
   }
 }
 
@@ -2130,7 +2134,7 @@ nav #logo span.special-char,
   font-family: var(--font-family-display);
   text-align: center;
   font-size: var(--font-size-3xl);
-  margin-bottom: var(--spacing-lg);
+  margin-bottom: var(--spacing-sm);
 }
 
 .contact-information-container p {
@@ -2141,7 +2145,7 @@ nav #logo span.special-char,
 }
 
 .social-media-row {
-  margin-top: var(--spacing-lg);
+  margin-top: 0;
 }
 
 .social-media-links {
@@ -4184,7 +4188,8 @@ nav #logo span.special-char,
    ======================================== */
 
 .footer {
-  background-color: var(--color-primary);
+  /* Always pure black (both themes), not the theme primary color */
+  background-color: #000000;
   color: var(--color-secondary);
   padding: var(--spacing-3xl) var(--spacing-lg);
   margin-top: 0px !important;
@@ -4467,8 +4472,10 @@ nav #logo span.special-char,
   .dropdown-btn {
     display: block;
     padding: 10px;
-    background-color: black;
-    color: #fff;
+    /* Transparent so it matches the (dark) nav background; icon matches the
+       settings icon next to it (var(--color-secondary)). */
+    background-color: transparent;
+    color: var(--color-secondary);
     cursor: pointer;
     border: none;
   }
@@ -6565,7 +6572,7 @@ input:checked + .toggle-slider:before {
 
 [data-theme="dark"] .dropdown-btn {
   color: #ffffff;
-  background-color: #000000;
+  background-color: transparent;
 }
 
 [data-theme="dark"] .main-menu {

@@ -195,7 +195,7 @@ const AboutPage = () => {
               <section className="rect-1"></section>
               <section className="rect-2"></section>
           </section>
-          <h2>Contact Information</h2>
+          <h2>Contact</h2>
           
           <div className="social-media-row">
             <div className="social-media-links">
