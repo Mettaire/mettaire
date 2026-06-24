@@ -1,29 +1,73 @@
-# METTAIRE - Portfolio
+# METTAIRE
 
-Welcome to METTAIRE, my portfolio showcasing my work created using React, JavaScript, and CSS. Explore various projects, learn more about me, and delve into my creative journey.
+**[www.mettaire.com](https://www.mettaire.com)**
 
-## About
+METTAIRE is the personal portfolio of Daniel Nelson — a DevOps engineer at Salesforce and a visual artist. It's a single space where engineering and fine art sit side by side, both circling the same existential themes: absurdism, nihilism, and the search for meaning.
 
-METTAIRE is more than just a portfolio – it's an immersive experience providing insights into each project and even glimpses into my personal journey.
+The site is built as an immersive, terminal-flavored experience rather than a résumé wall — part gallery, part engineering record.
 
-## Cache
+## Tech stack
 
-Browse through my extensive cache of projects, each a testament to my creativity and passion. Click on a project to discover more about it, including details such as the title, media used, creation date, and potentially a description.
+- **React 18 + Vite** single-page app
+- **React Router v6** for client-side routing
+- **Framer Motion** for scroll-reveal and transitions
+- A single global stylesheet driven by **CSS custom properties** (theming, spacing scale, accents)
+- **Express / serverless API** serving protected media from **Cloudflare R2**
+- Deployed on **Vercel**
 
-### Filter and Sort
+## Major features
 
-Easily navigate through my work by filtering or sorting projects based on specific categories such as date, media, or name. Find exactly what you're looking for with ease and efficiency.
+### The Cache — gallery
 
-### Search
+The Cache is the visual archive: paintings, code, sculpture, tattoo work, and video.
 
-Looking for a specific project? Utilize the search feature to quickly locate projects by their title. Effortlessly find the perfect piece to spark your interest or inspire your creativity.
+- **Detail pages** for every piece — title, media, date, dimensions, description, and a full-screen lightbox.
+- **Filter & sort** by year, media type, and order (recent / oldest / name).
+- **Search** across title, media, collection, description, and year.
+- **Viewer discretion** toggle that masks sensitive pieces behind a content warning until revealed.
+- **3D coverflow carousels** — a native CSS perspective slider (autoplay, swipe, keyboard/arrow nav) used for featured works.
 
-## Get Started
+### Saved
 
-Ready to embark on a journey through METTAIRE? Visit [here](https://www.mettaire.com) to begin exploring my portfolio and discovering the depth of my creative endeavors.
+Heart any piece to keep it in a personal **Saved** collection (persisted locally), with the same search, filter, and sort controls as the Cache.
 
-## Connect with Me
+### Engineering Log
 
-Have questions, feedback, or just want to say hello? Feel free to reach out to me via [email](mailto:lukannelson@gmail.com) or connect on [LinkedIn](https://www.linkedin.com/in/dnelson777/).
+A dedicated record of professional work as **STAR-format case studies** — situation, task, action, result — covering DevOps and cloud security work (CI/CD and patching pipelines, FedRAMP remediation, supply-chain incident response, observability integrations, and more).
 
-Thank you for visiting Solisphere – where creativity knows no bounds.
+- An index of terminal-styled **case-study cards**.
+- A detail page per study where section headers read as console commands (`cat problem`, `cat approach`, `tree architecture`, …), with the architecture rendered as an inline terminal diagram.
+- Surfaced throughout the site: linked from the About page, the home hero, and interleaved as engineering cards inside the featured-work carousels.
+
+### About
+
+The story behind METTAIRE — the creative and engineering halves of the work — anchored by an **animated terminal console** that types out a live "session," plus a Projects-in-Progress section for ongoing work.
+
+### Accessibility & settings
+
+A settings panel exposes:
+
+- **Dark / light themes** (a dedicated cold light theme on pure white)
+- **High-contrast** mode
+- **Large-text** mode
+- **Reduced-motion** mode (honors the OS preference and disables animation)
+
+## Local development
+
+```bash
+# install
+yarn install      # or: npm install
+
+# front end (Vite dev server, proxies /api to production by default)
+yarn dev
+
+# optional: run the local API instead of the production proxy
+#   set VITE_API_TARGET=http://localhost:3001 in .env.local, then:
+npm run server:dev
+```
+
+## Connect
+
+Questions, feedback, or just want to say hello? Reach out by [email](mailto:lukannelson@gmail.com) or connect on [LinkedIn](https://www.linkedin.com/in/dnelson777/).
+
+Thank you for visiting METTAIRE — where engineering and art share the same machine.
