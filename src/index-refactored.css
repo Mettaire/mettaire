@@ -8026,3 +8026,19 @@ input:checked + .toggle-slider:before {
   color: var(--color-club);
   margin-top: 4px;
 }
+
+/* Desktop+ (≥1025px): tighten the gap between the "cache" title and the search
+   bar, and slim the bar's width slightly. Height/styling otherwise unchanged. */
+@media (min-width: 1025px) {
+  .gallery-title {
+    padding-right: var(--spacing-sm);
+  }
+
+  .search-bar {
+    margin-left: var(--spacing-xs);
+  }
+
+  .search-bar-input {
+    width: 90%;
+  }
+}
