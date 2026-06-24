@@ -2962,6 +2962,7 @@ nav #logo span.special-char,
   margin-bottom: var(--spacing-md);
 }
 
+/* Terminal-card treatment, matching the Engineering Log + saved cards */
 .details-title{
   margin-right: 1%;
   max-width: 25%;
@@ -2969,21 +2970,18 @@ nav #logo span.special-char,
   border-radius: 8px;
   background: linear-gradient(
     135deg,
-    rgba(170, 170, 170, 0.1) 0%,
-    rgba(170, 170, 170, 0.2) 25%,
-    rgba(170, 170, 170, 0.3) 50%,
-    rgba(170, 170, 170, 0.2) 75%,
-    rgba(170, 170, 170, 0.1) 100%
+    rgba(0, 0, 0, 0.95) 0%,
+    rgba(18, 18, 18, 0.9) 50%,
+    rgba(0, 0, 0, 0.95) 100%
   );
   background-size: 200% 200%;
-  animation: liquid-shimmer 2s ease-in-out infinite;
+  animation: liquid-shimmer 6s ease-in-out infinite;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
   position: relative;
   overflow: hidden;
 }
@@ -2995,14 +2993,15 @@ nav #logo span.special-char,
   left: -100%;
   width: 100%;
   height: 100%;
+  z-index: 1;
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(255, 255, 255, 0.4),
+    rgba(255, 255, 255, 0.1),
     transparent
   );
-  transition: left 0.8s ease;
-  animation: shimmer-sweep 2s ease-in-out infinite;
+  transition: left 0.6s ease;
+  pointer-events: none;
 }
 
 .details-title:hover::before {
@@ -3041,22 +3040,36 @@ nav #logo span.special-char,
   gap: var(--spacing-md);
 }
 
+/* Terminal-card treatment, matching the Engineering Log + saved cards */
 .related-card {
   display: flex;
   flex-direction: column;
   text-decoration: none;
-  color: var(--color-text);
+  color: #ffffff;
   border-radius: 8px;
   overflow: hidden;
-  background: var(--color-hover);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.95) 0%,
+    rgba(18, 18, 18, 0.9) 50%,
+    rgba(0, 0, 0, 0.95) 100%
+  );
+  background-size: 200% 200%;
+  animation: liquid-shimmer 6s ease-in-out infinite;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
 .related-card:hover {
   transform: translateY(-4px);
+  border-color: rgba(var(--color-club-rgb), 0.45);
   box-shadow:
-    0 12px 28px rgba(0, 0, 0, 0.25),
-    0 0 14px rgba(var(--color-club-rgb), 0.25);
+    0 14px 40px rgba(0, 0, 0, 0.4),
+    0 0 18px rgba(var(--color-club-rgb), 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .related-card img,
@@ -3087,13 +3100,23 @@ nav #logo span.special-char,
   align-items: center;
   gap: var(--spacing-sm);
   max-width: 48%;
-  background: none;
-  border: 1px solid var(--color-border);
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.95) 0%,
+    rgba(18, 18, 18, 0.9) 50%,
+    rgba(0, 0, 0, 0.95) 100%
+  );
+  background-size: 200% 200%;
+  animation: liquid-shimmer 6s ease-in-out infinite;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
   padding: var(--spacing-md);
   cursor: pointer;
-  color: var(--color-text);
-  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  color: #ffffff;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .artwork-pager-btn.next {
@@ -3114,15 +3137,17 @@ nav #logo span.special-char,
 }
 
 .artwork-pager-label {
+  font-family: var(--font-family-mono);
   font-size: var(--font-size-xs);
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--color-text-light);
+  color: var(--color-club);
 }
 
 .artwork-pager-name {
   font-family: var(--font-family-display);
   font-size: var(--font-size-base);
+  color: #ffffff;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -3667,27 +3692,26 @@ nav #logo span.special-char,
   break-inside: avoid-column;
 }
 
+/* Terminal-card treatment (matches the Engineering Log cards): dark glass in
+   both themes, a cyan sweep on hover (not a constant shimmer), cyan lift glow. */
 .saved-artwork-card {
   background: linear-gradient(
     135deg,
-    rgba(170, 170, 170, 0.1) 0%,
-    rgba(170, 170, 170, 0.2) 25%,
-    rgba(170, 170, 170, 0.3) 50%,
-    rgba(170, 170, 170, 0.2) 75%,
-    rgba(170, 170, 170, 0.1) 100%
+    rgba(0, 0, 0, 0.95) 0%,
+    rgba(18, 18, 18, 0.9) 50%,
+    rgba(0, 0, 0, 0.95) 100%
   );
   background-size: 200% 200%;
-  animation: liquid-shimmer 2s ease-in-out infinite;
+  animation: liquid-shimmer 6s ease-in-out infinite;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
   border-radius: var(--border-radius-lg);
   overflow: hidden;
-  transition: var(--transition-normal);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
   position: relative;
 }
 
@@ -3698,19 +3722,24 @@ nav #logo span.special-char,
   left: -100%;
   width: 100%;
   height: 100%;
+  z-index: 2;
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(255, 255, 255, 0.4),
+    rgba(255, 255, 255, 0.1),
     transparent
   );
-  transition: left 0.8s ease;
-  animation: shimmer-sweep 2s ease-in-out infinite;
+  transition: left 0.6s ease;
+  pointer-events: none;
 }
 
 .saved-artwork-card:hover {
   transform: translateY(-4px);
-  box-shadow: var(--shadow-lg);
+  border-color: rgba(var(--color-club-rgb), 0.45);
+  box-shadow:
+    0 14px 40px rgba(0, 0, 0, 0.4),
+    0 0 18px rgba(var(--color-club-rgb), 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .saved-artwork-card:hover::before {
@@ -3788,13 +3817,13 @@ nav #logo span.special-char,
 .artwork-info h3 {
   font-family: var(--font-family-display);
   font-size: var(--font-size-xl);
-  color: var(--color-text);
+  color: #ffffff;
   margin: 0 0 var(--spacing-sm) 0;
 }
 
 .artwork-description {
   font-size: var(--font-size-sm);
-  color: var(--color-text-light);
+  color: rgba(255, 255, 255, 0.72);
   margin: 0 0 var(--spacing-md) 0;
   line-height: 1.5;
   display: -webkit-box;
@@ -3805,7 +3834,7 @@ nav #logo span.special-char,
 
 .saved-date {
   font-size: var(--font-size-xs);
-  color: var(--color-text-light);
+  color: rgba(255, 255, 255, 0.5);
   margin: 0 0 var(--spacing-md) 0;
 }
 
@@ -3860,8 +3889,9 @@ nav #logo span.special-char,
 }
 
 .view-details-link:hover {
-  background: none !important;
-  color: #aaaaaa;
+  color: var(--color-club);
+  border-color: rgba(var(--color-club-rgb), 0.5);
+  box-shadow: 0 0 14px rgba(var(--color-club-rgb), 0.3);
 }
 
 /* Save Button Styles */
@@ -7080,14 +7110,12 @@ input:checked + .toggle-slider:before {
 [data-theme="dark"] .saved-artwork-card {
   background: linear-gradient(
     135deg,
-    rgba(0, 0, 0, 0.9) 0%,
-    rgba(20, 20, 20, 0.8) 25%,
-    rgba(40, 40, 40, 0.7) 50%,
-    rgba(20, 20, 20, 0.8) 75%,
-    rgba(0, 0, 0, 0.9) 100%
+    rgba(0, 0, 0, 0.95) 0%,
+    rgba(18, 18, 18, 0.9) 50%,
+    rgba(0, 0, 0, 0.95) 100%
   );
   background-size: 200% 200%;
-  animation: liquid-shimmer 10s ease-in-out infinite;
+  animation: liquid-shimmer 6s ease-in-out infinite;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -7177,12 +7205,13 @@ input:checked + .toggle-slider:before {
 }
 
 [data-theme="dark"] .view-details-link:hover {
-  background-color: #cccccc;
+  color: var(--color-club);
   transform: translateY(-2px);
-  box-shadow: 
+  border-color: rgba(var(--color-club-rgb), 0.5);
+  box-shadow:
     0 12px 40px rgba(0, 0, 0, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+    0 0 14px rgba(var(--color-club-rgb), 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
 }
 
 [data-theme="dark"] .empty-state h2 {
@@ -7604,7 +7633,7 @@ input:checked + .toggle-slider:before {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(var(--color-club-rgb), 0.12), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
   transition: left 0.6s ease;
   pointer-events: none;
 }
@@ -7835,4 +7864,20 @@ input:checked + .toggle-slider:before {
   .log-arch {
     font-size: 0.7rem;
   }
+}
+
+/* ---- Gallery detail panel: light-mode text parity on the dark terminal
+   glass (dark theme already sets these white). Cyan accent on the series
+   label to match the Engineering Log feel. ---- */
+.details-title h3,
+.details-title p {
+  color: #ffffff;
+}
+
+.details-title .gallery-item-collection {
+  color: var(--color-club);
+}
+
+.details-title .gallery-bio p {
+  color: rgba(255, 255, 255, 0.8);
 }
