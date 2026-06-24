@@ -7,6 +7,8 @@ import AboutPage from './pages/About';
 import TermsAndConditions from './pages/TermsAndConditions';
 import BlackSite from './pages/BlackSite';
 import ProgramsAccess from './pages/ProgramsAccess';
+import EngineeringLog from './pages/EngineeringLog';
+import EngineeringLogDetail from './pages/EngineeringLogDetail';
 import SiteHeadingAndNav from './components/SiteHeadingAndNav';
 import Footer from './components/Footer';
 import NotFoundPage from './pages/NotFound';
@@ -121,6 +123,8 @@ export default function App() {
           <Route path="/about" element={<AboutPage />} />
           <Route path="/cache" element={<GalleryPage />} />
           <Route path="/cache/:id" element={<GalleryItemDetail />} />
+          <Route path="/log" element={<EngineeringLog />} />
+          <Route path="/log/:id" element={<EngineeringLogDetail />} />
           <Route path="/saved" element={<SavedArtworks />} />
           <Route path="/terms" element={<TermsAndConditions />} />
           <Route path="/programs" element={<ProgramsAccess />} />

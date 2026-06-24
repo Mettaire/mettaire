@@ -1,0 +1,270 @@
+// Engineering Log — STAR-format work-experience entries.
+//
+// Each entry condenses a real project into a recruiter-readable narrative:
+//   summary      one-line hook shown on the card
+//   problem      the situation / why it mattered
+//   constraints  the role + constraints (the "task" in STAR)
+//   approach     the actions taken (bullet steps)
+//   architecture optional ascii diagram (rendered monospace, on-brand)
+//   outcome      the result + business impact
+//   reflection   first-person takeaway — the narrative recruiters connect with
+//
+// Ordered strongest-first (not strictly chronological); each card still shows
+// its org + period so the timeline reads clearly.
+
+export const logMeta = {
+  role: 'Software Engineering AMTS · Salesforce / OWN',
+  timeline:
+    'Intern @ OWN (Aug 2024 – Feb 2025) → AMTS @ Salesforce (Feb 2025 – Present)',
+  stack: [
+    'AWS', 'GovCloud', 'Terraform', 'Ansible', 'Jenkins', 'Packer',
+    'Python', 'Lambda', 'Datadog', 'CrowdStrike', 'Tenable', 'GitLab',
+    'ArgoCD', 'Splunk/SIEM', 'Linux',
+  ],
+};
+
+const caseStudies = [
+  {
+    id: 'supply-chain-incident-response',
+    title: 'Supply Chain Incident Response',
+    org: 'Salesforce',
+    period: 'Feb 2025 – Present',
+    stack: ['CrowdStrike Falcon', 'GitLab API', 'Nexus IQ', 'GitHub Actions', 'Incident Response'],
+    summary:
+      'Led the org-wide investigation when axios@1.14.1 shipped malware — scanned 62+ GitLab projects in hours and confirmed zero compromise under TLP:RED.',
+    problem:
+      'A poisoned axios@1.14.1 and its malware dependency plain-crypto-js@4.2.1 were disclosed while scheduled CI/CD jobs were actively running. We needed to know within hours whether any of 62+ GitLab projects or GitHub Actions had pulled the malicious package.',
+    constraints:
+      'Led the investigation for the Trusted Services team under TLP:RED — exposure had to be assessed and reported to VP-level leadership and the Security Architect within the same business day.',
+    approach: [
+      'Scanned all 62 GitLab projects with CrowdStrike Falcon Code Search and the GitLab API /trace endpoint for npm/yarn install activity in the compromise window.',
+      'Narrowed to 7 priority repos using caret ranges (^1.x) that could resolve to the poisoned version.',
+      'Confirmed archiver-supervisor jobs attempted to fetch the malware via yarn install — and that Nexus IQ Firewall auto-blocked it (403, Security-Malicious policy) before the payload landed.',
+      'Verified datadog-ci ran as a standalone binary (safe) and that no GitHub Actions workflow used npm install.',
+      'Produced two formal evidence documents for the security incident channel.',
+    ],
+    architecture: `disclosure event
+  └─ Falcon Code Search ── 62 repos scanned
+     └─ GitLab API /trace ── 7 priority repos deep-dived
+        └─ Nexus IQ logs ── plain-crypto-js blocked (403)
+           └─ GitHub Actions ── no npm workflows
+              └─ finding: no compromise · evidence logged`,
+    outcome:
+      'Confirmed zero compromise across the org and delivered an evidence-backed finding to VP and Security Architect inside the incident window. The Nexus IQ Firewall investment proved itself by blocking the malware automatically — and the work shipped audit-ready.',
+    reflection:
+      "Highest-stakes work of my first year, with leadership watching. What made it work wasn't speed, it was methodology: define the attack surface, enumerate every vector, and document every step as you go so you can hand off a complete picture the moment it matters.",
+  },
+  {
+    id: 'nat-refresh-pipeline',
+    title: 'FedRAMP NAT Refresh Automation Pipeline',
+    org: 'Salesforce',
+    period: 'Feb 2025 – Present',
+    stack: ['Jenkins', 'Packer', 'Terraform', 'AWS GovCloud', 'Linux', 'kpatch'],
+    summary:
+      'Built a rolling, AZ-by-AZ NAT instance refresh pipeline for FedRAMP GovCloud — AMI-baked kernel patches with zero outbound-connectivity loss.',
+    problem:
+      "OWN's FedRAMP GovCloud relied on singleton NAT instances for outbound routing that needed periodic refresh for kernel patching and compliance — but there was no automated, safe way to do it. Cut the wrong instance and you sever outbound connectivity for the whole environment. It was also unclear whether live kernel patching (kpatch) was even viable.",
+    constraints:
+      'Sole engineer from research through production cutover, in a FedRAMP environment with zero tolerance for unplanned outages. Jenkins agents ran in the very environment being modified — a subtle self-disruption risk.',
+    approach: [
+      "Ran a kpatch POC and found the running kernel fell between Red Hat's quarterly release boundaries with zero kpatch content available — produced a documented no-go and closed the spike.",
+      'Wrote a Jenkins + Packer pipeline to bake a NAT AMI with the patched kernel, making fixes durable across ASG instance replacements (PR #176).',
+      'Pointed ASG launch templates at the new AMI via Terraform (PR #558).',
+      'Built a rolling, AZ-by-AZ refresh pipeline that launches the replacement before terminating the old instance, with a post-cutover connectivity checklist — IP forwarding, MASQUERADE iptables, pod reachability (PR #179).',
+      'Fixed a Jenkins agent that severed itself mid-refresh by making the polling logic reconnect-tolerant (PR #188), then ran a clean live cutover on AZ 1C — zero pod restarts, zero Datadog alerts.',
+    ],
+    architecture: `kernel CVE / compliance trigger
+  └─ Packer build ── baked NAT AMI (kernel patched)
+     └─ Terraform ── ASG launch template → new AMI
+        └─ Jenkins: nat_instance_refresh_fedramp
+           ├─ select target NAT (per AZ)
+           ├─ launch new before terminating old
+           ├─ validate (IP fwd · iptables · pods)
+           └─ terminate old
+              └─ Datadog + manual verify ── clean`,
+    outcome:
+      'A fully automated, safe NAT refresh pipeline operational in FedRAMP GovCloud. Rolling execution removes single-point connectivity loss, baked AMIs make patches self-inheriting on future ASG replacements, and the agent reconnect fix cleared a blocker that only surfaced under real cutover.',
+    reflection:
+      "The kpatch dead-end was one of the most valuable parts — going deep enough to confidently say 'this won't work here' protected the team from building on a shaky foundation. And the Jenkins agent bug only appeared because I ran the pipeline in the same environment it was modifying: the kind of edge case you only find in production.",
+  },
+  {
+    id: 'csoc-log-integration',
+    title: 'FedRAMP CSOC Log Integration',
+    org: 'Salesforce / OWN',
+    period: 'Feb 2025 – Present',
+    stack: ['CloudTrail', 'GuardDuty', 'CrowdStrike FDR', 'Okta', 'Splunk/SIEM', 'Terraform'],
+    summary:
+      "Owned OWN's FedRAMP side of a cross-team integration piping CloudTrail, GuardDuty, CrowdStrike FDR and Okta logs into Salesforce's CSOC/SIEM — closing GovCloud security blind spots.",
+    problem:
+      "OWN's FedRAMP environment had siloed security logs — CloudTrail, GuardDuty, CrowdStrike FDR, Okta, VPC Flow Logs — none integrated into Salesforce's Centralized Security Operations Center. That meant detection blind spots, slower incident response, and FedRAMP audit risk for insufficient continuous monitoring.",
+    constraints:
+      "OWN's point-of-contact engineer, working cross-functionally with Salesforce's Trust Intelligence Platform (TIP) team. TIP owned the ingestion side; I owned the OWN FedRAMP side — log sources, S3 delivery, and pipeline correctness. All in GovCloud.",
+    approach: [
+      'Configured CloudTrail to deliver to the ogc-security-logs S3 bucket for TIP ingestion.',
+      'Stood up the CrowdStrike Falcon Data Replicator (FDR) export into the CSOC bucket.',
+      'Configured Okta log export to S3 with correct routing.',
+      'Drove GuardDuty from dev through prod promotion with TIP — logs officially went live in Asgard/Splunk.',
+      'Expanded prod VPC Flow Log retention to 365 days for FedRAMP, and codified the S3 bucket in Terraform (PR #743).',
+    ],
+    architecture: `FedRAMP log sources
+  ├─ CloudTrail
+  ├─ CrowdStrike FDR    ──→  ogc-security-logs S3 (GovCloud)
+  ├─ Okta                     └─ TIP platform → Asgard/Splunk SIEM
+  └─ GuardDuty                    └─ CSOC analysts
+VPC Flow Logs → 365-day retention`,
+    outcome:
+      "3 of 4 targeted log types fully integrated into the CSOC production bucket, GuardDuty live in Splunk, and VPC Flow retention meeting the FedRAMP 365-day bar. OWN's GovCloud security blind spot eliminated, directly supporting the FedRAMP ATO and continuous-monitoring requirements.",
+    reflection:
+      'My first major cross-team, cross-org project — coordinating with four senior TIP engineers who owned the SIEM while I owned the OWN side. It taught me what a real dependency on another team feels like, and how to keep things moving with clear async status updates without blocking anyone.',
+  },
+  {
+    id: 'datadog-gus-alerting',
+    title: 'Datadog → GUS Alerting Integration',
+    org: 'Salesforce',
+    period: 'Feb 2025 – Present',
+    stack: ['OAuth 2.0', 'Connected App', 'Datadog', 'Webhooks', 'GUS API'],
+    summary:
+      "Wired Datadog alerts straight into Salesforce's GUS via OAuth 2.0 Client Credentials and webhooks across commercial and FedRAMP — killing manual alert-to-ticket triage.",
+    problem:
+      'Datadog monitors fired with no path into GUS, where the team tracked operational work. Engineers manually translated alerts into tickets — slow, error-prone, and alerts slipped through untracked.',
+    constraints:
+      'Sole engineer, navigating Salesforce internal tooling. GUS uses a Connected App for service-to-service auth, and the webhooks had to work across two distinct environments (commercial + FedRAMP) with different endpoints. OAuth 2.0 Client Credentials was new territory.',
+    approach: [
+      'Registered a GUS Connected App to enable OAuth 2.0 Client Credentials auth — letting Datadog authenticate as a trusted service with no user login.',
+      'Wired the flow: Datadog exchanges client_id/secret for an access token, then calls the GUS API with it.',
+      'Configured Datadog webhooks in both commercial and FedRAMP to POST alert payloads on monitor state changes.',
+      'Mapped alert metadata (monitor, severity, status, URL) to the right GUS fields, routing to the support dashboard.',
+      'Validated end-to-end in both environments.',
+    ],
+    architecture: `Datadog monitor (commercial + FedRAMP)
+  └─ webhook on alert state change
+     └─ OAuth 2.0 client credentials
+        └─ GUS Connected App ── access token issued
+           └─ authenticated POST → GUS API
+              └─ alert on support dashboard ── actionable`,
+    outcome:
+      'Datadog alerts now surface directly on the GUS support dashboard in both commercial and FedRAMP, immediately actionable with no manual translation — closing the gap between observability and work tracking and cutting mean time to acknowledge (MTTA).',
+    reflection:
+      'The OAuth 2.0 Client Credentials handshake was the most interesting part — service-to-service trust established at the app level, not the user level. Getting it right across two regulated environments with different endpoints took careful config. The result looks deceptively simple — alerts just show up — but the plumbing spans two platforms and two regulated environments.',
+  },
+  {
+    id: 'fedramp-vuln-remediation',
+    title: 'FedRAMP Vulnerability Remediation',
+    org: 'Salesforce / OWN',
+    period: 'Feb 2025 – Present',
+    stack: ['Tenable', 'Linux', 'dnf / RPM', 'AWS GovCloud', 'FedRAMP'],
+    summary:
+      "Closed Tenable-flagged CVEs across FedRAMP EC2 fleets within assigned SLAs — hands-on Linux patching that kept OWN's authorization posture clean.",
+    problem:
+      "The Threat & Vulnerability Management (TVM) team regularly flagged CVEs on EC2 assets across OWN's FedRAMP environments via Tenable, each with an assigned SLA. Miss them and you risk POA&M findings, audit gaps, and FedRAMP authorization issues.",
+    constraints:
+      "Primary engineer for assigned findings, in FedRAMP GovCloud where a careless reboot or broken package state on a production host isn't an option. Required Linux + RPM proficiency and enough security context to weigh each CVE's actual risk.",
+    approach: [
+      'Took CVE findings from TVM with severity and SLA from Tenable scan reports.',
+      'SSH’d into each impacted host and ran targeted dnf update <package> to pull the remediated version.',
+      'Verified post-patch versions met or exceeded the RHSA-specified fix.',
+      'Confirmed no service disruption via logs and connectivity checks.',
+      'Reported back for Tenable re-scan and finding closure.',
+    ],
+    architecture: `Tenable scan → CVE finding (RHSA · severity · SLA)
+  └─ TVM team ── assigns to engineer
+     └─ SSH into impacted EC2 host
+        └─ dnf update <affected-package>
+           └─ verify version + service check
+              └─ TVM re-scan ── finding closed within SLA`,
+    outcome:
+      "CVE findings closed within TVM SLAs across FedRAMP EC2 hosts, preventing POA&M accumulation and keeping OWN's authorization posture clean — direct vulnerability ownership, not just automation.",
+    reflection:
+      "This sits at the security/ops intersection a lot of SWEs never touch. It's not glamorous — SSH in, update packages — but understanding why a CVE matters, what it exposes, and verifying the fix actually landed takes real security literacy. A FedRAMP environment makes every action feel accountable.",
+  },
+  {
+    id: 'falcon-sensor-coverage',
+    title: 'CrowdStrike Falcon Sensor Coverage',
+    org: 'Salesforce / OWN',
+    period: 'Feb 2025 – Present',
+    stack: ['CrowdStrike Falcon', 'EKS', 'ArgoCD', 'AWS', 'kubectl', 'Linux'],
+    summary:
+      'Closed CrowdStrike coverage gaps across 6+ EKS clusters and multiple AWS accounts — separating real gaps from false positives and tracing them to missing ArgoCD daemonsets.',
+    problem:
+      "A compliance report flagged multiple EKS nodes and EC2 instances across OWN's AWS accounts as lacking CrowdStrike Falcon coverage — a control required everywhere, including FedRAMP. A GovCloud host was also under investigation for Falcon network containment suspected of causing severe slowness.",
+    constraints:
+      'Spanned multiple AWS accounts, two ArgoCD instances (prod + staging), and cross-team coordination with Endpoint Protection. Had to distinguish false positives (AWS-managed EKS nodes where Falcon deploys differently) from genuine gaps.',
+    approach: [
+      'SSH’d into flagged EC2 instances and confirmed via falconctl -g --aid + systemctl that all 6 were running Falcon (report false positives).',
+      'Checked EKS clusters with kubectl get pods -A | grep falcon — found stg/prod-ob-mgmt had zero Falcon pods and weren’t registered in ArgoCD at all.',
+      'Identified the ArgoCD apps needed to deploy Falcon daemonsets across archiver (CA, UK) and local clusters.',
+      'Surfaced ownership/lifecycle questions on dev01-esbs-eks and devops-ci clusters.',
+      'Opened an AWS Support case correlating CrowdStrike’s networkcontain_nf kernel module with GovCloud network degradation.',
+    ],
+    architecture: `CrowdStrike compliance report
+  ├─ EC2 instances ── verified running (false positives)
+  └─ EKS clusters (multi-account)
+     ├─ stg/prod-ob-mgmt ── not in ArgoCD ── no daemonset
+     └─ archiver-ca1 · archiver-uk1 · local
+        └─ ArgoCD sync ── falcon daemonset ── gap closed`,
+    outcome:
+      'Closed Falcon coverage gaps across multiple prod and staging EKS clusters, separated genuine gaps from false positives to avoid wasted effort, and uncovered a broader ArgoCD registration gap with implications beyond security tooling.',
+    reflection:
+      'The hardest part was the false positives — real gaps mixed in with hosts that were actually fine. Verifying directly at the host level instead of trusting report output was the key lesson, and it drove home that ArgoCD is the source of truth: if a cluster isn’t registered, nothing gets managed — not just CrowdStrike.',
+  },
+  {
+    id: 'ec2-reboot-alerting',
+    title: 'EC2 Reboot Alerting System',
+    org: 'OWN',
+    period: 'Aug 2024 – Feb 2025',
+    stack: ['AWS Lambda', 'EventBridge', 'AWS Health API', 'Datadog', 'Python'],
+    summary:
+      "Built OWN's first end-to-end cloud pipeline — EventBridge → Lambda → Datadog — giving the on-call team proactive visibility into AWS-scheduled EC2 reboots.",
+    problem:
+      'EC2 instances rebooted for AWS-scheduled maintenance with no team visibility into when or why. Surprise reboots caused outages with no warning, making incident response entirely reactive.',
+    constraints:
+      'Sole builder of the pipeline, with limited prior Lambda/EventBridge experience, working across two tooling ecosystems (AWS and Datadog).',
+    approach: [
+      'Configured EventBridge to capture EC2 reboot/retirement events from the AWS Health API.',
+      'Wrote a Lambda triggered by those events to forward structured data to Datadog as a log event.',
+      'Created a Datadog Monitor to detect those events and alert the on-call team.',
+    ],
+    architecture: `AWS Health (EC2 maintenance events)
+  └─ EventBridge rule (reboot / retirement)
+     └─ Lambda function
+        └─ Datadog Logs API (custom event)
+           └─ Datadog monitor
+              └─ alert → on-call notification`,
+    outcome:
+      'The team gained proactive visibility into maintenance windows — engineers could drain or prep instances ahead of reboots instead of reacting to surprise downtime — and it established a reusable observability pattern for other AWS event types.',
+    reflection:
+      'My first end-to-end cloud pipeline. Understanding how three separate services hand data off to each other was a real systems-thinking challenge, and debugging the Lambda → Datadog log structure so the monitor actually fired taught me to test the full chain, not just the pieces.',
+  },
+  {
+    id: 'cron-email-reputation',
+    title: 'Cron Cleanup & Email Reputation Protection',
+    org: 'OWN',
+    period: 'Aug 2024 – Feb 2025',
+    stack: ['Ansible', 'Linux', 'Cron'],
+    summary:
+      "Audited and standardized mail-host cron jobs with Ansible to kill spam-generating processes and protect OWN's email sender reputation — production-safe work as a first-semester intern.",
+    problem:
+      "Misconfigured and legacy cron jobs on OWN's mail infrastructure were generating spam-like behavior, threatening the company's email sender reputation — the metric that governs deliverability and domain trust. Unchecked, ISPs could flag or block outbound mail entirely.",
+    constraints:
+      'First engineering internship and first hands-on exposure to Ansible and Linux cron, in a production environment where every change carried real business risk.',
+    approach: [
+      'Audited cron jobs across the mail fleet to identify problematic and legacy entries.',
+      'Standardized cron configuration across hosts with Ansible playbooks.',
+      'Removed the offending jobs causing spam behavior.',
+      'Made every change idempotent so the fixes survive future deployments.',
+    ],
+    architecture: `Linux hosts
+  └─ cron daemon
+     └─ [legacy / spam jobs] ── identified & removed
+        └─ Ansible playbooks (managed via inventory)
+           └─ standardized, safe job schedule`,
+    outcome:
+      "Reduced the risk of domain blacklisting and preserved OWN's sender-reputation score and deliverability for customer-facing mail — production-safe remediation delivered as a first-semester intern.",
+    reflection:
+      'My first taste of infrastructure and config management. Ansible felt intimidating but the declarative model clicked fast — you describe what you want, not how to get there. It taught me that infra bugs aren’t always code bugs; sometimes it’s just legacy entropy nobody cleaned up.',
+  },
+];
+
+export const findCaseStudy = (id) => caseStudies.find((c) => c.id === id) || null;
+
+export default caseStudies;

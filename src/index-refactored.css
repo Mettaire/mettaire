@@ -7481,3 +7481,358 @@ input:checked + .toggle-slider:before {
     opacity: 0.7;
   }
 }
+/* ============================================================
+   ENGINEERING LOG — STAR case-study cards + terminal detail
+   ============================================================ */
+
+.log-page {
+  min-height: 60vh;
+}
+
+/* ---- Index header --------------------------------------- */
+.log-header {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--spacing-3xl) var(--spacing-lg) var(--spacing-xl);
+}
+
+.log-header h1 {
+  font-family: var(--font-family-display);
+  font-size: clamp(2rem, 6vw, 3.4rem);
+  letter-spacing: 0.04em;
+  margin-bottom: var(--spacing-md);
+}
+
+.log-prompt-line {
+  font-family: var(--font-family-mono);
+  font-size: 0.85rem;
+  color: var(--color-text-light);
+  margin-bottom: var(--spacing-md);
+  word-break: break-word;
+}
+
+.log-prompt-sign {
+  color: var(--color-club);
+}
+
+.log-role {
+  font-weight: 600;
+  font-size: 1.05rem;
+  margin-bottom: 4px;
+}
+
+.log-timeline {
+  color: var(--color-text-light);
+  font-size: 0.9rem;
+  margin-bottom: var(--spacing-md);
+}
+
+/* ---- Chips (cyan, always-on) ---------------------------- */
+.log-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.log-chip {
+  font-family: var(--font-family-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
+  color: var(--color-club);
+  background: rgba(var(--color-club-rgb), 0.08);
+  border: 1px solid rgba(var(--color-club-rgb), 0.28);
+  border-radius: 4px;
+  padding: 3px 8px;
+  white-space: nowrap;
+}
+
+.log-chip--more {
+  color: var(--color-text-light);
+  background: transparent;
+  border-color: var(--color-border);
+}
+
+.log-chips--stack {
+  margin-top: var(--spacing-md);
+}
+
+/* ---- Card grid ------------------------------------------ */
+.log-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: var(--spacing-lg);
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-lg) var(--spacing-4xl);
+}
+
+.log-card {
+  display: flex;
+}
+
+/* Dark-glass "terminal card" in both themes, to anchor the log identity */
+.log-card-link {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  width: 100%;
+  padding: var(--spacing-lg);
+  border-radius: 12px;
+  text-decoration: none;
+  color: #ffffff;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.95) 0%,
+    rgba(18, 18, 18, 0.9) 50%,
+    rgba(0, 0, 0, 0.95) 100%
+  );
+  background-size: 200% 200%;
+  animation: liquid-shimmer 6s ease-in-out infinite;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.log-card-link::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(var(--color-club-rgb), 0.12), transparent);
+  transition: left 0.6s ease;
+  pointer-events: none;
+}
+
+.log-card-link:hover {
+  transform: translateY(-4px);
+  border-color: rgba(var(--color-club-rgb), 0.45);
+  box-shadow:
+    0 14px 40px rgba(0, 0, 0, 0.4),
+    0 0 18px rgba(var(--color-club-rgb), 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.log-card-link:hover::before {
+  left: 100%;
+}
+
+.log-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-sm);
+}
+
+.log-card-index {
+  font-family: var(--font-family-mono);
+  font-size: 0.78rem;
+  color: var(--color-club);
+  letter-spacing: 0.08em;
+}
+
+.log-card-org {
+  font-family: var(--font-family-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.log-card-title {
+  font-family: var(--font-family-display);
+  font-size: 1.25rem;
+  line-height: 1.25;
+  color: #ffffff;
+  margin: 2px 0 0;
+}
+
+.log-card-period {
+  font-family: var(--font-family-mono);
+  font-size: 0.74rem;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.log-card-summary {
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.82);
+  margin-bottom: var(--spacing-sm);
+}
+
+.log-card .log-chips {
+  margin-top: auto;
+}
+
+.log-card-cta {
+  font-family: var(--font-family-mono);
+  font-size: 0.78rem;
+  color: var(--color-club);
+  opacity: 0.65;
+  margin-top: var(--spacing-sm);
+  transition: opacity 0.25s ease, letter-spacing 0.25s ease;
+}
+
+.log-card-link:hover .log-card-cta {
+  opacity: 1;
+  letter-spacing: 0.03em;
+}
+
+/* ---- Detail page ---------------------------------------- */
+.log-detail {
+  padding: var(--spacing-2xl) var(--spacing-lg) var(--spacing-4xl);
+}
+
+.log-detail-inner {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.log-back {
+  font-family: var(--font-family-mono);
+  font-size: 0.82rem;
+  color: var(--color-club);
+  text-decoration: none;
+  display: inline-block;
+}
+
+.log-back:hover {
+  text-decoration: underline;
+}
+
+.log-detail-head .log-back,
+.log-detail-inner > .log-back:first-child {
+  margin-bottom: var(--spacing-2xl);
+}
+
+.log-back--bottom {
+  margin-top: var(--spacing-xl);
+}
+
+.log-detail-head {
+  margin-bottom: var(--spacing-2xl);
+  padding-bottom: var(--spacing-lg);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.log-detail-org {
+  font-family: var(--font-family-mono);
+  font-size: 0.8rem;
+  color: var(--color-text-light);
+  display: block;
+  margin-bottom: var(--spacing-sm);
+}
+
+.log-detail-head h1 {
+  font-family: var(--font-family-display);
+  font-size: clamp(1.7rem, 5vw, 2.6rem);
+  line-height: 1.15;
+  margin-bottom: var(--spacing-md);
+}
+
+.log-detail-summary {
+  font-size: 1.05rem;
+  color: var(--color-text-light);
+  line-height: 1.6;
+  margin-bottom: var(--spacing-md);
+}
+
+.log-section {
+  margin-bottom: var(--spacing-2xl);
+}
+
+.log-section-head {
+  font-family: var(--font-family-mono);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  margin-bottom: var(--spacing-md);
+  word-break: break-word;
+}
+
+.log-section-head .log-cmd {
+  color: var(--color-text);
+}
+
+.log-section > p {
+  line-height: 1.7;
+  color: var(--color-text);
+}
+
+.log-approach {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.log-approach li {
+  position: relative;
+  padding-left: 1.5em;
+  line-height: 1.6;
+  color: var(--color-text);
+}
+
+.log-approach li::before {
+  content: '▹';
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--color-club);
+}
+
+/* Architecture diagram — terminal block in both themes */
+.log-arch {
+  font-family: var(--font-family-mono);
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: var(--color-club);
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.96) 0%,
+    rgba(14, 14, 14, 0.92) 50%,
+    rgba(0, 0, 0, 0.96) 100%
+  );
+  border: 1px solid rgba(var(--color-club-rgb), 0.22);
+  border-radius: 8px;
+  padding: var(--spacing-md);
+  margin: 0;
+  overflow-x: auto;
+  white-space: pre;
+  -webkit-overflow-scrolling: touch;
+}
+
+.log-section--reflection blockquote {
+  margin: 0;
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-left: 2px solid var(--color-club);
+  background: rgba(var(--color-club-rgb), 0.05);
+  border-radius: 0 8px 8px 0;
+  font-style: italic;
+  line-height: 1.7;
+  color: var(--color-text-light);
+}
+
+.log-detail--missing {
+  text-align: center;
+  padding-top: var(--spacing-4xl);
+}
+
+@media (max-width: 600px) {
+  .log-header {
+    padding-top: var(--spacing-2xl);
+  }
+  .log-card-title {
+    font-size: 1.15rem;
+  }
+  .log-arch {
+    font-size: 0.7rem;
+  }
+}
