@@ -6,7 +6,7 @@ Welcome to METTAIRE, my portfolio showcasing my work created using React, JavaSc
 
 METTAIRE is more than just a portfolio – it's an immersive experience providing insights into each project and even glimpses into my personal journey.
 
-## cache
+## Cache
 
 Browse through my extensive cache of projects, each a testament to my creativity and passion. Click on a project to discover more about it, including details such as the title, media used, creation date, and potentially a description.
 
