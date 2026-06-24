@@ -7916,7 +7916,12 @@ input:checked + .toggle-slider:before {
   /* Larger than the plain tagline so the tappable words are easy to hit,
      especially on phones (bigger floor on the clamp). */
   font-size: clamp(0.95rem, 4.2vw, 1.25rem);
-  animation: none; /* the cursor blinks instead of the whole line */
+  /* Fade + rise in on load, mirroring the title reveal but trailing it so the
+     command appears just after METTAIRE settles. The cursor blinks on its own. */
+  opacity: 0;
+  transform: translateY(30px);
+  filter: blur(3px);
+  animation: title-reveal 2.2s ease-out 0.45s forwards;
 }
 
 .tagline-cmd {
