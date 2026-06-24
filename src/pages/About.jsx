@@ -123,7 +123,7 @@ const AboutPage = () => {
             <section className="rect-2"></section>
           </section>
           <h2>THE CREATIVE</h2>
-          <p>I'm Daniel Nelson, the creator behind METTAIRE. As an artist, graphic designer, and software engineer, METTAIRE is my way of leaving a piece of myself within the machine—a space where my work exists on its own, independent of an intended audience (unless rooted in code). Inspired by thinkers like Dostoevsky, Camus, Schopenhauer, and Musashi, my creations explore individualism, transformation, and the human condition. Through code, multimedia paintings, and graphic design, I merge fine art with technology, weaving existential themes—absurdism, nihilism, and existentialism—into experiences open to being encountered, absorbed, and interpreted freely.
+          <p>I'm Daniel Nelson, the creator behind METTAIRE—a DevOps engineer at Salesforce by profession, and an artist, designer, and builder by nature. METTAIRE is how I leave a piece of myself inside the machine: a space where my work exists on its own terms. Inspired by thinkers like Dostoevsky, Camus, Schopenhauer, and Musashi, my creations explore individualism, transformation, and the human condition. Whether I'm shaping cloud infrastructure or a multimedia painting, the craft is the same—merging fine art with technology and weaving existential themes (absurdism, nihilism, existentialism) into work meant to be encountered, absorbed, and interpreted freely.
           </p>
         </section>
         </Reveal>
@@ -134,8 +134,7 @@ const AboutPage = () => {
               <section className="rect-2"></section>
             </section>
               <h2>Beyond the Canvas</h2>
-              <p>My journey extends beyond traditional means of art and design, driven by a passion for impactful software projects like Second Wind and CareerSpring's Interest Finder feature.
-                Each line of code and project is designed to empower individuals, helping them face their paths with courage and resilience. This vision, in harmony with the themes of METTAIRE, seeks to make technology a transformative force, illuminating our collective journey and offering direction in challenging times. </p>
+              <p>My work extends well beyond the canvas. As a DevOps engineer at Salesforce, I build and secure cloud infrastructure in FedRAMP environments—automating CI/CD and patching pipelines, leading security incident response, and keeping critical systems reliable at scale. That same intent shaped projects like Second Wind and CareerSpring's Interest Finder: software built to help people move through hard moments with clarity and resilience. Whether it's art or engineering, the throughline holds—technology as a force for building things that endure and genuinely matter. Explore the full case studies in my <Link to="/log" className="log-inline-link">engineering log</Link>.</p>
                 </section>
                 {/* Project Carousel */}
                 <ProjectCarousel products={products} getProtectedImageUrl={getProtectedImageUrl} />

@@ -74,7 +74,7 @@ return (
           <section className="rect-2"></section>
         </section>
         <h2>THE VISION</h2>
-        <p>Welcome to METTAIRE. I'm Daniel Nelson, and I've developed this space to store my personal works, ranging from software to paintings. Each piece delves into existential themes—absurdism, nihilism, and existentialism—inviting you to explore the intricate interplay of existential inquiry.   
+        <p>Welcome to METTAIRE. I'm Daniel Nelson — a DevOps engineer at Salesforce and a visual artist. By day I build and secure cloud infrastructure at scale; outside it, I paint, design, and write code that's entirely my own. This space holds both sides—where engineering discipline meets fine art, and every piece circles the same existential themes: absurdism, nihilism, and the search for meaning.
         </p>
         <div className="home-button-row">
           <Link to="/about" className="home-about-link"><button className="home-about-button">Learn More</button></Link> 

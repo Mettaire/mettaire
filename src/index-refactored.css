@@ -2075,6 +2075,11 @@ nav #logo span.special-char,
 
   .tattoo-mini-gallery {
     grid-template-columns: 1fr 1fr;
+    gap: 0; /* the two images touch and read as one tile */
+  }
+  .image-column-1,
+  .image-column-2 {
+    border-radius: 0;
   }
   .image-column-1 img,
   .image-column-2 img {
@@ -7880,4 +7885,24 @@ input:checked + .toggle-slider:before {
 
 .details-title .gallery-bio p {
   color: rgba(255, 255, 255, 0.8);
+}
+
+/* Inline "code chip" link — on-brand with the log */
+.log-inline-link {
+  font-family: var(--font-family-mono);
+  font-size: 0.9em;
+  color: var(--color-club);
+  text-decoration: none;
+  white-space: nowrap;
+  background: rgba(var(--color-club-rgb), 0.08);
+  border: 1px solid rgba(var(--color-club-rgb), 0.28);
+  border-radius: 5px;
+  padding: 0.05em 0.45em;
+  transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.log-inline-link:hover {
+  background: rgba(var(--color-club-rgb), 0.16);
+  border-color: rgba(var(--color-club-rgb), 0.5);
+  box-shadow: 0 0 10px rgba(var(--color-club-rgb), 0.22);
 }
