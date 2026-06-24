@@ -1,5 +1,6 @@
 import React from 'react';
 import Coverflow from './Coverflow';
+import { toLogCard } from '../data/caseStudies';
 
 const ProjectCarousel = ({ products, getProtectedImageUrl }) => {
   // Short captions fit the smaller mobile/tablet cards; the full descriptions
@@ -53,6 +54,10 @@ const ProjectCarousel = ({ products, getProtectedImageUrl }) => {
       descriptionFull: p.descriptionFull,
     };
   });
+
+  // Drop an engineering case study (terminal card) in among the project works.
+  const logCard = toLogCard('ec2-reboot-alerting');
+  if (logCard) items.splice(2, 0, logCard);
 
   return (
     <Coverflow

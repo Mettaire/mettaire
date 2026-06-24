@@ -7906,3 +7906,118 @@ input:checked + .toggle-slider:before {
   border-color: rgba(var(--color-club-rgb), 0.5);
   box-shadow: 0 0 10px rgba(var(--color-club-rgb), 0.22);
 }
+
+/* Landing hero entry as a single terminal command — > grep -E "cache|log" —
+   where "cache" and "log" are the clickable alternatives in the pattern. */
+.tagline-command {
+  font-family: var(--font-family-mono);
+  text-transform: none;
+  letter-spacing: 0.02em;
+  /* Larger than the plain tagline so the tappable words are easy to hit,
+     especially on phones (bigger floor on the clamp). */
+  font-size: clamp(0.95rem, 4.2vw, 1.25rem);
+  animation: none; /* the cursor blinks instead of the whole line */
+}
+
+.tagline-cmd {
+  color: inherit;
+}
+
+.tagline-pipe {
+  color: rgba(255, 255, 255, 0.45);
+  margin: 0 1px;
+}
+
+.tagline-target {
+  display: inline-block;
+  /* Padding widens the touch zone so the words aren't a fat-finger hazard */
+  padding: 0.12em 0.22em;
+  color: var(--color-club);
+  font-weight: 600;
+  text-decoration: none;
+  transition: text-shadow 0.2s ease;
+}
+
+.tagline-target:hover {
+  text-decoration: underline;
+  text-shadow: 0 0 10px rgba(var(--color-club-rgb), 0.6);
+}
+
+/* Coverflow "log card" face — an image-less terminal card the carousel renders
+   inline among the visual works (kind: 'log'). Lives inside .coverflow-card,
+   which already supplies the dark glass + side-card dimming + active glow. */
+.coverflow-log-face {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+  padding: var(--spacing-lg);
+  text-align: left;
+  overflow: hidden;
+}
+
+.cf-log-prompt {
+  font-family: var(--font-family-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--color-club);
+  opacity: 0.85;
+}
+
+.coverflow-log-face h3 {
+  font-family: var(--font-family-display);
+  font-size: 20px;
+  line-height: 1.2;
+  color: #ffffff;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.cf-log-org {
+  font-family: var(--font-family-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.coverflow-log-face p {
+  font-size: 13px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.78);
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.cf-log-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.cf-log-chip {
+  font-family: var(--font-family-mono);
+  font-size: 10px;
+  color: var(--color-club);
+  background: rgba(var(--color-club-rgb), 0.08);
+  border: 1px solid rgba(var(--color-club-rgb), 0.28);
+  border-radius: 4px;
+  padding: 2px 6px;
+  white-space: nowrap;
+}
+
+.cf-log-cta {
+  font-family: var(--font-family-mono);
+  font-size: 12px;
+  color: var(--color-club);
+  margin-top: 4px;
+}

@@ -107,8 +107,25 @@ const Coverflow = ({ items = [], getImageUrl, showCaption = false, onNavigate })
                   : `Go to ${item.title ?? `item ${index + 1}`}`
               }
             >
-              <img src={getImageUrl(item.image)} loading="lazy" alt={item.title ?? ''} />
-              {showCaption && (
+              {item.kind === 'log' ? (
+                <div className="coverflow-log-face">
+                  <span className="cf-log-prompt">root@wound.os</span>
+                  <h3>{item.title}</h3>
+                  {item.org && <span className="cf-log-org">{item.org}</span>}
+                  {item.summary && <p>{item.summary}</p>}
+                  {item.stack && (
+                    <div className="cf-log-chips">
+                      {item.stack.slice(0, 4).map((t) => (
+                        <span key={t} className="cf-log-chip">{t}</span>
+                      ))}
+                    </div>
+                  )}
+                  <span className="cf-log-cta">read log →</span>
+                </div>
+              ) : (
+                <img src={getImageUrl(item.image)} loading="lazy" alt={item.title ?? ''} />
+              )}
+              {showCaption && item.kind !== 'log' && (
                 <div className="coverflow-card-text">
                   <h3>{item.title}</h3>
                 </div>

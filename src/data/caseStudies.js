@@ -267,4 +267,20 @@ VPC Flow Logs → 365-day retention`,
 
 export const findCaseStudy = (id) => caseStudies.find((c) => c.id === id) || null;
 
+// Shape a case study as a Coverflow "log card" — an image-less terminal face
+// the carousel renders inline among the visual works.
+export const toLogCard = (id) => {
+  const c = findCaseStudy(id);
+  if (!c) return null;
+  return {
+    key: `log-${c.id}`,
+    kind: 'log',
+    to: `/log/${c.id}`,
+    title: c.title,
+    org: c.org,
+    summary: c.summary,
+    stack: c.stack,
+  };
+};
+
 export default caseStudies;

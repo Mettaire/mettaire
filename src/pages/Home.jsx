@@ -4,6 +4,7 @@ import { useProducts } from '../context/ProductsProvider';
 import Reveal from '../components/Reveal';
 import Coverflow from '../components/Coverflow';
 import { useGalleryScrollRestore } from '../utils/useScrollRestore';
+import { toLogCard } from '../data/caseStudies';
 
 export default function HomePage() {
 const { products } = useProducts();
@@ -29,10 +30,16 @@ const findProductByImage = (imageFilename) => {
 };
 
 // Featured items for the 3D coverflow, each linking to its detail page
-const featuredItems = featuredImages.map((image) => {
+const baseFeatured = featuredImages.map((image) => {
   const product = findProductByImage(image);
   return { key: image, image, to: product ? `/cache/${product.id}` : null };
 });
+
+// Slot an engineering case study (terminal card) in among the visual works.
+const featuredLogCard = toLogCard('nat-refresh-pipeline');
+const featuredItems = featuredLogCard
+  ? [baseFeatured[0], featuredLogCard, ...baseFeatured.slice(1)]
+  : baseFeatured;
 
 // Top on fresh entry; restore to the mini-gallery when returning from a piece.
 useGalleryScrollRestore('homeScrollY');
@@ -55,9 +62,9 @@ return (
         </div>
         <div className="content">
           <h1 className="landingpage-title">METTAIRE</h1>
-          <Link to="/cache?page=1" className="no-underline">
-            <h2 className="tagline">&gt; THE CACHE</h2>
-          </Link>
+          <h2 className="tagline tagline-command">
+            <span className="tagline-cmd">&gt; grep -E &quot;</span><Link to="/log" className="tagline-target">log</Link><span className="tagline-pipe">|</span><Link to="/cache?page=1" className="tagline-target">cache</Link><span className="tagline-cmd">&quot;</span><span className="terminal-cursor" aria-hidden="true">▮</span>
+          </h2>
         </div>
       </div>
     </div>
@@ -74,11 +81,12 @@ return (
           <section className="rect-2"></section>
         </section>
         <h2>THE VISION</h2>
-        <p>Welcome to METTAIRE. I'm Daniel Nelson — a DevOps engineer at Salesforce and a visual artist. By day I build and secure cloud infrastructure at scale; outside it, I paint, design, and write code that's entirely my own. This space holds both sides—where engineering discipline meets fine art, and every piece circles the same existential themes: absurdism, nihilism, and the search for meaning.
+        <p>Welcome to METTAIRE. I'm Daniel Nelson — a DevOps engineer at Salesforce and a visual artist. By day I build and secure cloud infrastructure at scale; outside it, I paint, design, and write code that's entirely my own. This space holds both sides—where engineering discipline meets fine art, and every piece circles the same existential themes: absurdism, nihilism, and the search for meaning. The engineering work lives in my <Link to="/log" className="log-inline-link">engineering log</Link>.
         </p>
         <div className="home-button-row">
-          <Link to="/about" className="home-about-link"><button className="home-about-button">Learn More</button></Link> 
+          <Link to="/about" className="home-about-link"><button className="home-about-button">Learn More</button></Link>
           <Link to='/cache?page=1' className="explore-gallery-link"><button className="explore-gallery-button">Explore cache</button></Link>
+          <Link to='/log' className="engineering-log-link"><button className="home-about-button engineering-log-button">Engineering Log</button></Link>
         </div>
       </Reveal>
     </div>
