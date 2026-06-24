@@ -1,7 +1,12 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import Reveal from '../components/Reveal';
 import { findCaseStudy } from '../data/caseStudies';
+import { getLastPath } from '../utils/navTracker';
+
+// Pages a log entry can be opened from (carousel cards or the log index), so
+// "back" returns to wherever the user actually came from.
+const PAGE_LABELS = { '/': 'home', '/about': 'about', '/log': 'log' };
 
 // One log entry rendered as a terminal-styled STAR write-up. Section headers
 // read like console commands (cat problem, cat outcome ...) to tie into the
@@ -17,6 +22,15 @@ const EngineeringLogDetail = () => {
   const { id } = useParams();
   const entry = findCaseStudy(id);
 
+  // Capture the origin at mount (before the route tracker overwrites it) so the
+  // back button returns to the page that opened this entry, not always /log.
+  const originRef = useRef(getLastPath());
+  const origin = originRef.current;
+  const originLabel = PAGE_LABELS[origin];
+  const backTo = originLabel ? origin : '/log';
+  const backWhere = originLabel || 'log';
+  const backCmd = backTo === '/' ? 'cd ~' : backTo === '/log' ? 'cd ..' : `cd ~${backTo}`;
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [id]);
@@ -29,7 +43,7 @@ const EngineeringLogDetail = () => {
             <span className="log-prompt-sign" aria-hidden="true">root@wound.os ~ %</span>{' '}
             cat {id}: no such entry
           </p>
-          <Link to="/log" className="log-back">← back to log</Link>
+          <Link to={backTo} className="log-back">← back to {backWhere}</Link>
         </div>
       </div>
     );
@@ -38,8 +52,8 @@ const EngineeringLogDetail = () => {
   return (
     <div className="log-detail">
       <div className="log-detail-inner">
-        <Link to="/log" className="log-back">
-          <span className="log-prompt-sign" aria-hidden="true">root@wound.os ~ %</span> cd ..
+        <Link to={backTo} className="log-back">
+          <span className="log-prompt-sign" aria-hidden="true">root@wound.os ~ %</span> {backCmd}
         </Link>
 
         <header className="log-detail-head">
@@ -89,7 +103,7 @@ const EngineeringLogDetail = () => {
           <blockquote>{entry.reflection}</blockquote>
         </Reveal>
 
-        <Link to="/log" className="log-back log-back--bottom">← back to all entries</Link>
+        <Link to={backTo} className="log-back log-back--bottom">← back to {backWhere}</Link>
       </div>
     </div>
   );

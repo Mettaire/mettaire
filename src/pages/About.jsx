@@ -31,9 +31,10 @@ const AboutPage = () => {
       : null)?.id ?? null;
   const chromeId = findProductId('HCteaser.mp4');
   const tattooId = findProductId('tattoopray.webp');
-  // Whether we arrived from a piece's detail page — captured at first render,
-  // before the app-level route tracker overwrites the "came from" path.
-  const cameFromDetailRef = useRef(getLastPath().startsWith('/cache/'));
+  // Whether we arrived from a detail page (a /cache/:id piece or a /log/:id
+  // case study opened from the carousel) — captured at first render, before the
+  // app-level route tracker overwrites the "came from" path.
+  const cameFromDetailRef = useRef(/^\/(cache|log)\//.test(getLastPath()));
   const tattooImages = ["tattoopray.webp", "tat-2.webp", "tat-3.webp", "customsnake.webp"]
   const [loading, setLoading] = useState(true);
   const [isSliding, setIsSliding] = useState(false);

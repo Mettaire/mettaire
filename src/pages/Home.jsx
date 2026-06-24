@@ -81,7 +81,7 @@ return (
           <section className="rect-2"></section>
         </section>
         <h2>THE VISION</h2>
-        <p>Welcome to METTAIRE. I'm Daniel Nelson — a DevOps engineer at Salesforce and a visual artist. By day I build and secure cloud infrastructure at scale; outside it, I paint, design, and write code that's entirely my own. This space holds both sides—where engineering discipline meets fine art, and every piece circles the same existential themes: absurdism, nihilism, and the search for meaning. The engineering work lives in my <Link to="/log" className="log-inline-link">engineering log</Link>.
+        <p>Welcome to METTAIRE. I'm Daniel Nelson — a DevOps engineer at Salesforce and a visual artist. I build and secure cloud infrastructure at scale, and I paint, design, and write code that's entirely my own—two crafts I never really clock out of. This space holds both sides—where engineering discipline meets fine art, and every piece circles the same existential themes: absurdism, nihilism, and the search for meaning. The engineering work lives in my <Link to="/log" className="log-inline-link">engineering log</Link>.
         </p>
         <div className="home-button-row">
           <Link to="/about" className="home-about-link"><button className="home-about-button">Learn More</button></Link>
