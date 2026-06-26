@@ -320,6 +320,7 @@ export const schools = [
     name: 'Marcy Lab School',
     focus: 'Software Development',
     period: '2022 – 2023',
+    anchor: 'edu-marcy',
     projects: [
       {
         id: 'second-wind',
@@ -330,16 +331,6 @@ export const schools = [
         summary:
           'A full-stack community platform providing resources, support, and employment for people impacted by the justice system — built as project manager and backend engineer.',
         stack: ['Node', 'Express', 'PostgreSQL', 'Knex', 'SQL'],
-      },
-      {
-        id: 'careerspring-interest-finder',
-        title: 'CareerSpring Interest Finder',
-        type: 'Career-assessment tool',
-        year: '2023',
-        cacheId: 59,
-        summary:
-          'A custom WordPress career-interest profiler — design, wireframing, and build — that guides people toward careers aligned with their interests.',
-        stack: ['JavaScript', 'HTML', 'CSS', 'WordPress'],
       },
       {
         id: 'metvoyager',
@@ -357,6 +348,7 @@ export const schools = [
     name: 'Parsons School of Design',
     focus: 'Design & Technology',
     period: '2020 – 2022',
+    anchor: 'edu-parsons',
     projects: [
       {
         id: 'sap-forthesoul',
@@ -380,6 +372,30 @@ export const schools = [
       },
     ],
   },
+];
+
+// Career internships that aren't deep case studies — links to the Cache piece.
+export const internships = [
+  {
+    id: 'careerspring-interest-finder',
+    title: 'CareerSpring Interest Finder',
+    type: 'Internship · Developer',
+    year: '2023',
+    cacheId: 59,
+    summary:
+      'A custom WordPress career-interest profiler — design, wireframing, and build — that guides people toward careers aligned with their interests.',
+    stack: ['JavaScript', 'HTML', 'CSS', 'WordPress'],
+  },
+];
+
+// Career "metro line" — the institutions and companies, in order. Each station
+// scrolls to that place's projects in the sections below (anchor ids).
+export const timeline = [
+  { year: '2020', label: 'Parsons', sub: 'School of Design', to: '#edu-parsons', origin: true },
+  { year: '2022', label: 'Marcy Lab School', sub: 'Software Dev', to: '#edu-marcy' },
+  { year: '2023', label: 'CareerSpring', sub: 'Internship', to: '#exp-careerspring' },
+  { year: '2024', label: 'OWN', sub: 'Internship', to: '#exp-salesforce' },
+  { year: '2025', label: 'Salesforce', sub: 'AMTS', to: '#exp-salesforce', current: true },
 ];
 
 export default caseStudies;

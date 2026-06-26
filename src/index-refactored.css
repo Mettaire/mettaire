@@ -8181,3 +8181,190 @@ input:checked + .toggle-slider:before {
   padding-top: var(--spacing-md);
   padding-bottom: var(--spacing-lg);
 }
+
+/* ============================================================
+   LOG TIMELINE — Cyberpunk-style career "metro line"
+   ============================================================ */
+.log-timeline {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--spacing-md) var(--spacing-lg) var(--spacing-lg);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.metro-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-family-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-club);
+  margin-bottom: var(--spacing-md);
+  white-space: nowrap;
+}
+
+.metro-tag-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-club);
+  box-shadow: 0 0 8px rgba(var(--color-club-rgb), 0.8);
+}
+
+.metro-line {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  min-width: 760px; /* keep stations from cramming; the track scrolls if narrow */
+}
+
+.metro-stop {
+  flex: 1 1 0;
+  min-width: 110px;
+}
+
+.metro-btn {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: var(--color-text);
+  font-family: var(--font-family-mono);
+}
+
+.metro-btn:disabled {
+  cursor: default;
+}
+
+.metro-year {
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  color: var(--color-text-light);
+}
+
+.metro-node {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 22px;
+}
+
+/* The neon track runs through the node row; first/last trim to the dot */
+.metro-node::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  transform: translateY(-50%);
+  background: var(--color-club);
+  box-shadow: 0 0 6px rgba(var(--color-club-rgb), 0.5);
+  z-index: 0;
+}
+
+.metro-stop:first-child .metro-node::before { left: 50%; }
+.metro-stop:last-child .metro-node::before { right: 50%; }
+
+.metro-dot {
+  position: relative;
+  z-index: 1;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  border: 2px solid var(--color-club);
+  background: var(--color-background);
+  box-shadow: 0 0 8px rgba(var(--color-club-rgb), 0.5);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.metro-btn:not(:disabled):hover .metro-dot {
+  transform: scale(1.35);
+  box-shadow: 0 0 14px rgba(var(--color-club-rgb), 0.95);
+}
+
+.metro-label {
+  font-size: 0.74rem;
+  line-height: 1.25;
+  text-align: center;
+  max-width: 13ch;
+  letter-spacing: 0.02em;
+  transition: color 0.2s ease, text-shadow 0.2s ease;
+}
+
+.metro-btn:not(:disabled):hover .metro-label {
+  color: var(--color-club);
+  text-shadow: 0 0 8px rgba(var(--color-club-rgb), 0.45);
+}
+
+.metro-sub {
+  font-size: 0.62rem;
+  color: var(--color-text-light);
+}
+
+/* Origin terminus + present-day station get a filled, brighter node */
+.metro-stop.is-origin .metro-dot,
+.metro-stop.is-current .metro-dot {
+  width: 16px;
+  height: 16px;
+  background: var(--color-club);
+  box-shadow: 0 0 12px rgba(var(--color-club-rgb), 0.85);
+}
+
+.metro-stop.is-current .metro-dot {
+  animation: metro-pulse 1.6s ease-in-out infinite;
+}
+
+.metro-stop.is-current .metro-year {
+  color: var(--color-club);
+  font-weight: 700;
+}
+
+@keyframes metro-pulse {
+  0%, 100% { box-shadow: 0 0 10px rgba(var(--color-club-rgb), 0.6); }
+  50% { box-shadow: 0 0 20px rgba(var(--color-club-rgb), 1); }
+}
+
+[data-motion="reduced"] .metro-stop.is-current .metro-dot {
+  animation: none;
+}
+
+/* Work header (Software Engineering AMTS · Salesforce / OWN) uses the same
+   treatment as the school headers, with a little more breathing room under the
+   career line. */
+.log-work-head {
+  padding-top: var(--spacing-lg);
+}
+
+/* CASE STUDIES reads as a smaller sub-label tucked under the work header */
+.log-section-label--sub {
+  padding-top: var(--spacing-xs);
+}
+
+.log-section-label--sub h2 {
+  font-size: 1rem;
+  letter-spacing: 0.08em;
+}
+
+/* Timeline buttons: no grey box on hover (overrides the global button:hover) */
+.metro-btn:hover,
+.metro-btn:active {
+  background: none;
+}
+
+/* Anchor targets the career line scrolls to — clear the fixed nav header */
+.log-work-head,
+.log-school {
+  scroll-margin-top: 100px;
+}
