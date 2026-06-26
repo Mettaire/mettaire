@@ -65,6 +65,9 @@ const EngineeringLogDetail = () => {
               <span key={tech} className="log-chip">{tech}</span>
             ))}
           </div>
+          {entry.launch && (
+            <Link to={entry.launch.to} className="log-launch">{entry.launch.label}</Link>
+          )}
         </header>
 
         <Reveal as="section" className="log-section">

@@ -9,7 +9,7 @@ import Loading from './Loading';
 import { getLastPath } from '../utils/navTracker';
 
 // Where the back button should return to, based on the route the user came from
-const PAGE_LABELS = { '/': 'home', '/cache': 'cache', '/saved': 'saved', '/about': 'about' };
+const PAGE_LABELS = { '/': 'home', '/cache': 'cache', '/saved': 'saved', '/about': 'about', '/log': 'log' };
 
 // Convert a media filename to its full API URL
 const getFullImageUrl = (filename) => {

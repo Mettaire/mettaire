@@ -263,6 +263,36 @@ VPC Flow Logs → 365-day retention`,
     reflection:
       'My first taste of infrastructure and config management. Ansible felt intimidating but the declarative model clicked fast — you describe what you want, not how to get there. It taught me that infra bugs aren’t always code bugs; sometimes it’s just legacy entropy nobody cleaned up.',
   },
+  {
+    id: 'blacksite',
+    title: 'BLACKSITE — Browser Game Arcade',
+    org: 'Personal',
+    period: 'Ongoing',
+    stack: ['React', 'Canvas', 'Game Loop', 'JavaScript', 'UX'],
+    summary:
+      'An immersive "secure terminal" that opens into an arcade — two playable browser games I built from scratch in React and canvas, wrapped in the site’s root@wound.os fiction.',
+    problem:
+      "I wanted the portfolio to *show* front-end skill, not just describe it — something a visitor could actually play, woven into the site's terminal fiction rather than bolted on as a generic demo.",
+    constraints:
+      'Built solo and in-repo, with no game engine — just React, the canvas API, and requestAnimationFrame. It had to run smoothly in the browser, match the site aesthetic, and stay maintainable alongside everything else.',
+    approach: [
+      'Designed a multi-stage "secure access" flow — a typing terminal that authenticates the visitor (CLEARANCE LEVEL 5) into a BLACKSITE program grid.',
+      'Built two complete games from scratch — DataSpike and NullEscape — each with its own game loop, input handling, state, collision, and canvas rendering.',
+      'Wrapped it all in a draggable terminal-window UI (minimize / maximize / close) with a glitch aesthetic that ties into the rest of the site.',
+      'Left "classified" programs locked as forward hooks for future games.',
+    ],
+    architecture: `/programs  (access terminal)
+  └─ typed access sequence → CLEARANCE LEVEL 5
+     └─ /programs/blacksite  (program grid)
+        ├─ DataSpike   ── canvas game loop
+        ├─ NullEscape  ── canvas game loop
+        └─ [classified] ── locked (future games)`,
+    outcome:
+      'A fully playable arcade living inside the portfolio — proof of interactive front-end and game-loop engineering, not just a description of it. Two complete games, an immersive access narrative, and room to keep adding.',
+    reflection:
+      "This is the piece that backs up the line about writing code that's entirely my own. Game loops force you to think about timing, state, and rendering every single frame — a completely different muscle from infrastructure work, and the most fun I've had building for the browser.",
+    launch: { to: '/programs', label: '▶ access the arcade' },
+  },
 ];
 
 export const findCaseStudy = (id) => caseStudies.find((c) => c.id === id) || null;
@@ -282,5 +312,74 @@ export const toLogCard = (id) => {
     stack: c.stack,
   };
 };
+
+// Education — schooling and the projects built there. Each project links to its
+// existing Cache piece (cacheId) rather than a separate write-up.
+export const schools = [
+  {
+    name: 'Marcy Lab School',
+    focus: 'Software Development',
+    period: '2022 – 2023',
+    projects: [
+      {
+        id: 'second-wind',
+        title: 'Second Wind',
+        type: 'Full-stack platform',
+        year: '2023',
+        cacheId: 58,
+        summary:
+          'A full-stack community platform providing resources, support, and employment for people impacted by the justice system — built as project manager and backend engineer.',
+        stack: ['Node', 'Express', 'PostgreSQL', 'Knex', 'SQL'],
+      },
+      {
+        id: 'careerspring-interest-finder',
+        title: 'CareerSpring Interest Finder',
+        type: 'Career-assessment tool',
+        year: '2023',
+        cacheId: 59,
+        summary:
+          'A custom WordPress career-interest profiler — design, wireframing, and build — that guides people toward careers aligned with their interests.',
+        stack: ['JavaScript', 'HTML', 'CSS', 'WordPress'],
+      },
+      {
+        id: 'metvoyager',
+        title: 'METVoyager',
+        type: 'Web app',
+        year: '2023',
+        cacheId: 60,
+        summary:
+          'A web app on the MET API that recommends artworks by search or category and lets users save favorites to a personal gallery.',
+        stack: ['JavaScript', 'MET API', 'HTML', 'CSS'],
+      },
+    ],
+  },
+  {
+    name: 'Parsons School of Design',
+    focus: 'Design & Technology',
+    period: '2020 – 2022',
+    projects: [
+      {
+        id: 'sap-forthesoul',
+        title: 'SAP (FORTHESOUL)',
+        type: 'Interactive sculpture',
+        year: '2022',
+        cacheId: 3,
+        summary:
+          'An AutoCAD-modeled sculpture with Arduino + a PIR motion sensor that speaks an existential narrative drawn from Sartre, Camus, and my own words.',
+        stack: ['Arduino', 'AutoCAD', 'PIR Sensor', 'Electronics'],
+      },
+      {
+        id: 'motion-heat-cutter',
+        title: 'Motion Heat Cutter / Gluttony',
+        type: 'Interactive sculpture',
+        year: '2021',
+        cacheId: 101,
+        summary:
+          'A motion-activated nichrome cutter that burns foam to sculpt a critique of the transatlantic sugar trade and the exploitation of Black labor.',
+        stack: ['Arduino', '3D Modeling', 'Electronics', 'Foam'],
+      },
+    ],
+  },
+];
 
 export default caseStudies;
