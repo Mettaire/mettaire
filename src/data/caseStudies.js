@@ -391,11 +391,22 @@ export const internships = [
 // Career "metro line" — the institutions and companies, in order. Each station
 // scrolls to that place's projects in the sections below (anchor ids).
 export const timeline = [
-  { year: '2020', label: 'Parsons', sub: 'School of Design', to: '#edu-parsons', origin: true },
-  { year: '2022', label: 'Marcy Lab School', sub: 'Software Dev', to: '#edu-marcy' },
+  { year: '2020', label: 'Parsons School of Design', sub: 'Education', to: '#edu-parsons', origin: true },
+  { year: '2022', label: 'Marcy Lab School', sub: 'Education', to: '#edu-marcy' },
   { year: '2023', label: 'CareerSpring', sub: 'Internship', to: '#exp-careerspring' },
   { year: '2024', label: 'OWN', sub: 'Internship', to: '#exp-salesforce' },
   { year: '2025', label: 'Salesforce', sub: 'AMTS', to: '#exp-salesforce', current: true },
+];
+
+// Skills grouped by domain — its own section (cat /var/log/skills).
+export const skills = [
+  { group: 'Cloud & Infrastructure', items: ['AWS', 'GovCloud', 'Terraform', 'Ansible', 'Packer', 'Jenkins', 'ArgoCD', 'Lambda'] },
+  { group: 'Security & Compliance', items: ['FedRAMP', 'CrowdStrike', 'Tenable', 'Nexus IQ'] },
+  { group: 'Observability', items: ['Datadog', 'Splunk / SIEM'] },
+  { group: 'Languages', items: ['Python', 'JavaScript', 'SQL', 'Bash'] },
+  { group: 'Web & Frameworks', items: ['React', 'Node', 'Express', 'PostgreSQL', 'WordPress'] },
+  { group: 'Tools & Platforms', items: ['Linux', 'Git', 'GitLab'] },
+  { group: 'Creative Tech', items: ['Canvas', 'Arduino', 'AutoCAD', '3D Modeling'] },
 ];
 
 export default caseStudies;

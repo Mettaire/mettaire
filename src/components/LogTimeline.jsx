@@ -21,7 +21,7 @@ export default function LogTimeline() {
     <nav className="log-timeline" aria-label="Career timeline">
       <div className="metro-tag">
         <span className="metro-tag-dot" aria-hidden="true" />
-        CAREER LINE — PARSONS ▸ SALESFORCE
+        THE JOURNEY — PARSONS ▸ SALESFORCE
       </div>
       <ol className="metro-line">
         {timeline.map((stop, i) => {
