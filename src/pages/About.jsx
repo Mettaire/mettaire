@@ -5,7 +5,7 @@ import ProjectCarousel from '../components/ProjectCarousel';
 import AboutConsole from '../components/AboutConsole';
 import Reveal from '../components/Reveal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faInstagram, faGithub, faMedium, faLinkedin} from '@fortawesome/free-brands-svg-icons';
+import { faGithub, faMedium, faLinkedin} from '@fortawesome/free-brands-svg-icons';
 import { useProducts } from '../context/ProductsProvider';
 import { getLastPath } from '../utils/navTracker';
 
@@ -199,9 +199,6 @@ const AboutPage = () => {
           
           <div className="social-media-row">
             <div className="social-media-links">
-                <a href="https://www.instagram.com/dan.da.solo/" target="_blank" rel="noopener noreferrer">
-                    <FontAwesomeIcon icon={faInstagram} size="2x" />
-                </a>
                 <a href="https://github.com/danielnelson37" target="_blank" rel="noopener noreferrer">
                     <FontAwesomeIcon icon={faGithub} size="2x" />
                 </a>

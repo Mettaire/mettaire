@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { NavLink } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowUp } from '@fortawesome/free-solid-svg-icons'; // Change to free-solid-svg-icons for arrow up
-import { faInstagram, faGithub, faMedium, faLinkedin} from '@fortawesome/free-brands-svg-icons';
+import { faGithub, faMedium, faLinkedin} from '@fortawesome/free-brands-svg-icons';
 
 const Footer = () => {
     const currentYear = new Date().getFullYear();
@@ -56,9 +56,6 @@ const Footer = () => {
 
             <div className="footer-row">
                 <div className="social-media-links">
-                    <a href="https://www.instagram.com/dan.da.solo/" target="_blank" rel="noopener noreferrer">
-                        <FontAwesomeIcon icon={faInstagram} size="2x" />
-                    </a>
                     <a href="https://github.com/danielnelson37" target="_blank" rel="noopener noreferrer">
                         <FontAwesomeIcon icon={faGithub} size="2x" />
                     </a>
