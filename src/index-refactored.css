@@ -8191,6 +8191,12 @@ input:checked + .toggle-slider:before {
   padding: var(--spacing-xs) var(--spacing-lg) var(--spacing-sm);
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+  animation: log-timeline-in 0.7s ease-out both;
+}
+
+@keyframes log-timeline-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .metro-tag {
@@ -8209,9 +8215,22 @@ input:checked + .toggle-slider:before {
 .metro-tag-dot {
   width: 8px;
   height: 8px;
+  flex-shrink: 0;
   border-radius: 50%;
   background: var(--color-club);
   box-shadow: 0 0 8px rgba(var(--color-club-rgb), 0.8);
+  animation: metro-tag-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes metro-tag-pulse {
+  0%, 100% { box-shadow: 0 0 6px rgba(var(--color-club-rgb), 0.55); opacity: 0.8; }
+  50% { box-shadow: 0 0 13px rgba(var(--color-club-rgb), 1); opacity: 1; }
+}
+
+.metro-tag-cursor {
+  margin-left: 1px;
+  color: var(--color-club);
+  animation: terminal-blink 1.05s steps(1) infinite;
 }
 
 .metro-line {
@@ -8260,7 +8279,7 @@ input:checked + .toggle-slider:before {
   height: 22px;
 }
 
-/* The neon track runs through the node row; first/last trim to the dot */
+/* The neon track runs through the node row; a brighter pip flows along it */
 .metro-node::before {
   content: '';
   position: absolute;
@@ -8269,9 +8288,21 @@ input:checked + .toggle-slider:before {
   right: 0;
   height: 2px;
   transform: translateY(-50%);
-  background: var(--color-club);
+  background-color: var(--color-club);
+  background-image: repeating-linear-gradient(
+    90deg,
+    transparent 0,
+    transparent 30px,
+    rgba(225, 255, 255, 0.85) 38px,
+    transparent 46px
+  );
   box-shadow: 0 0 6px rgba(var(--color-club-rgb), 0.5);
+  animation: metro-flow-x 1.5s linear infinite;
   z-index: 0;
+}
+
+@keyframes metro-flow-x {
+  to { background-position: 46px 0; }
 }
 
 /* Dots sit at the left of each station; the line runs from one dot to the next,
@@ -8314,8 +8345,7 @@ input:checked + .toggle-slider:before {
   color: var(--color-text-light);
 }
 
-/* Origin terminus + present-day station get a filled, brighter node */
-.metro-stop.is-origin .metro-dot,
+/* Only the present-day station gets a filled, brighter node */
 .metro-stop.is-current .metro-dot {
   width: 16px;
   height: 16px;
@@ -8439,7 +8469,7 @@ input:checked + .toggle-slider:before {
     padding: 6px 0 var(--spacing-md) 32px;
     position: relative;
   }
-  /* continuous vertical rail (stops stack with no gap) */
+  /* continuous vertical rail (stops stack with no gap); energy flows downward */
   .metro-btn::before {
     content: '';
     position: absolute;
@@ -8447,9 +8477,19 @@ input:checked + .toggle-slider:before {
     top: 0;
     bottom: 0;
     width: 2px;
-    background: var(--color-club);
+    background-color: var(--color-club);
+    background-image: repeating-linear-gradient(
+      180deg,
+      transparent 0,
+      transparent 30px,
+      rgba(225, 255, 255, 0.85) 38px,
+      transparent 46px
+    );
     box-shadow: 0 0 6px rgba(var(--color-club-rgb), 0.5);
+    animation: metro-flow-y 1.5s linear infinite;
   }
+  /* the desktop horizontal flow doesn't apply to the vertical rail */
+  .metro-node::before { animation: none; }
   /* column-reverse: last child (Salesforce) is visually top, first (Parsons) bottom */
   .metro-stop:last-child .metro-btn::before { top: 12px; }
   .metro-stop:first-child .metro-btn::before { bottom: auto; height: 12px; }
@@ -8468,4 +8508,21 @@ input:checked + .toggle-slider:before {
   .metro-year {
     color: var(--color-text-light);
   }
+}
+
+@keyframes metro-flow-y {
+  to { background-position: 0 -46px; }
+}
+
+/* Reduced motion: no intro, pulse, typed cursor, or flowing energy */
+[data-motion="reduced"] .log-timeline,
+[data-motion="reduced"] .metro-tag-dot,
+[data-motion="reduced"] .metro-tag-cursor {
+  animation: none !important;
+}
+
+[data-motion="reduced"] .metro-node::before,
+[data-motion="reduced"] .metro-btn::before {
+  animation: none !important;
+  background-image: none;
 }
