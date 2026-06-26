@@ -7960,6 +7960,7 @@ input:checked + .toggle-slider:before {
   padding: var(--spacing-lg);
   text-align: left;
   overflow: hidden;
+  background: #000000; /* pure black, overriding the card's gradient */
 }
 
 .cf-log-prompt {
