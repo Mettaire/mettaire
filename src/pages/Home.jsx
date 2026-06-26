@@ -71,6 +71,10 @@ return (
     <div className="featured-art-content">
       <Reveal className="featured-art-container">
         <div className="featured-work-title">
+          <section className="rect-home-container">
+            <section className="rect-1"></section>
+            <section className="rect-2"></section>
+          </section>
           <h2 className="rotate-text">Featured Works</h2>
         </div>
         <Coverflow items={featuredItems} getImageUrl={getProtectedImageUrl} />
